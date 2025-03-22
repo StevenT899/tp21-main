@@ -1,0 +1,31 @@
+name: Deploy Flask Backend to EC2
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy to EC2 and Run Flask
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd ~
+          if [ ! -d "5120-main" ]; then
+            git clone https://github.com/StevenT899/tp21-main.git 5120-main
+          fi
+          cd 5120-main
+          git pull
+          cd backend
+          pip3 install -r requirements.txt
+          pkill -f "python3 main.py" || true
+          nohup python3 main.py &
