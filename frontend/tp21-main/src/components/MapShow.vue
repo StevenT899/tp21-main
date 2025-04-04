@@ -1,0 +1,444 @@
+<template>
+    <div class="map-container">
+      <div class="filter-section flex flex-col md:flex-row gap-4 mb-4">
+        <div class="filter-group">
+          <label for="school-type" class="block text-sm font-medium text-gray-700 mb-1">School Type</label>
+          <select 
+            id="school-type" 
+            v-model="filters.schoolType"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="ALL">ALL</option>
+            <option v-for="type in availableSchoolTypes" :key="type" :value="type">{{ type }}</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="language-program" class="block text-sm font-medium text-gray-700 mb-1">Language Program</label>
+          <select 
+            id="language-program" 
+            v-model="filters.languageProgram"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="ALL">ALL</option>
+            <option v-for="language in availableLanguages" :key="language" :value="language">{{ language }}</option>
+          </select>
+        </div>
+        
+        <div class="filter-actions flex items-end gap-2">
+          <button 
+            @click="applyFilters"
+            class="flex items-center gap-2 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Filter
+          </button>
+          
+          <button 
+            @click="resetFilters"
+            class="flex items-center gap-2 bg-white text-gray-700 px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            Reset
+          </button>
+        </div>
+      </div>
+      
+      <div class="map-instruction flex items-center gap-2 mb-2 text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>Click on any school icon on the map to preview key info and add to compare.</span>
+      </div>
+      
+      <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300" style="height: 500px;">
+        <div id="map" ref="mapContainer" class="w-full h-full"></div>
+        
+        <!-- School Popup -->
+        <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg" style="top: 50%; right: 20px; transform: translateY(-50%); width: 300px; z-index: 10;">
+          <div class="flex justify-between items-start">
+            <h3 class="text-lg font-bold">{{ selectedSchool.name }}</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <p class="text-gray-600 mb-3">{{ selectedSchool.type }} school</p>
+          
+          <div class="grid grid-cols-2 gap-2 mb-4">
+            <div v-for="(language, index) in selectedSchool.languages" :key="index" class="bg-gray-100 rounded-md p-2 text-center text-sm">
+              {{ language }}
+            </div>
+          </div>
+          
+          <div class="flex justify-between">
+            <button class="text-blue-500 hover:underline">View details</button>
+            <button class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add to compare
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref, onMounted, reactive, defineProps, watch, computed } from 'vue'
+  import mapboxgl from 'mapbox-gl'
+  import 'mapbox-gl/dist/mapbox-gl.css'
+  import schoolIcon from '@/assets/images/school.png';
+  
+  // Receive query searching parameters and if a school is identified from HomeView.vue
+  const props = defineProps({
+    searchQuery: {
+      type: String,
+      default: ''
+    },
+    isSchool: {
+      type: Boolean,
+      default: false
+    },
+    selectedSuburb: {
+      type: String,
+      default: ''
+    },
+    selectedType: {
+      type: String,
+      default: ''
+    }
+  })
+  
+  // Reference the map container
+  const mapContainer = ref(null)
+  let map = null
+  const mapLoaded = ref(false)
+  
+  // Filter conditions
+  const filters = reactive({
+    schoolType: 'ALL',
+    languageProgram: 'ALL'
+  })
+  
+  // Selected school
+  const selectedSchool = ref(null)
+  
+  // Store school data from the backend
+  const schools = ref([])
+  
+  // Computed property to get filtered schools
+  const filteredSchools = computed(() => {
+    let result = [...schools.value];
+    const query = props.searchQuery.toLowerCase().trim();
+  
+    // Select by selected type and value
+    if (props.selectedType ==='school') {
+      // If the selected type is school, filter schools with exact name match (case-insensitive)
+      result = result.filter(school => 
+        school.School_Name.toLowerCase() === query
+      );
+    } else if (props.selectedType ==='suburb' && props.selectedSuburb) {
+      const isPostcode = /^\d+$/.test(props.selectedSuburb);
+      if (isPostcode) {
+        // If it's a postcode, filter schools with matching postcode
+        result = result.filter(school => 
+          school.Postcode && school.Postcode.toString() === props.selectedSuburb
+        );
+      } else {
+        // If it's a suburb, filter schools in that suburb
+        result = result.filter(school => 
+          school.Suburb && school.Suburb.toLowerCase() === props.selectedSuburb.toLowerCase()
+        );
+      }
+    } else if (query) {
+      const isPostcode = /^\d+$/.test(query);
+      if (isPostcode) {
+        // If it's a postcode, filter schools with matching postcode
+        result = result.filter(school => 
+          school.Postcode && school.Postcode.toString() === query
+        );
+      } else {
+        // If it's a school name or suburb name, perform an exact match (case-insensitive)
+        const exactSchoolMatches = result.filter(school => 
+          school.School_Name.toLowerCase() === query
+        );
+        
+        if (exactSchoolMatches.length > 0) {
+          result = exactSchoolMatches;
+        } else {
+          const exactSuburbMatches = result.filter(school => 
+            school.Suburb && school.Suburb.toLowerCase() === query
+          );
+          
+          if (exactSuburbMatches.length > 0) {
+            result = exactSuburbMatches;
+          } 
+        }
+      }
+    }
+  
+    // Apply filters
+    if (filters.schoolType!== 'ALL') {
+      result = result.filter(school => school.School_Sector === filters.schoolType);
+    }
+  
+    if (filters.languageProgram!== 'ALL') {
+      result = result.filter(school => 
+        Array.isArray(school.languages) && school.languages.some(lang => lang === filters.languageProgram)
+      );
+    }
+  
+    return result;
+  })
+  
+  // Computed property to get available school types after filtering
+  const availableSchoolTypes = computed(() => {
+    const types = new Set();
+    filteredSchools.value.forEach(school => {
+      if (school.School_Sector) {
+        types.add(school.School_Sector);
+      }
+    });
+    return Array.from(types);
+  })
+  
+  // Computed property to get available language programs after filtering
+  const availableLanguages = computed(() => {
+    const languages = new Set();
+    filteredSchools.value.forEach(school => {
+      if (Array.isArray(school.languages)) {
+        school.languages.forEach(lang => {
+          languages.add(lang);
+        });
+      }
+    });
+    return Array.from(languages);
+  })
+  
+  // Watch for changes in search-related parameters and reapply filters when they change
+  watch([
+    () => props.searchQuery,
+    () => props.isSchool,
+    () => props.selectedSuburb,
+    () => props.selectedType
+  ], (newValues, oldValues) => {
+    if (newValues!== oldValues && mapLoaded.value) {
+      applyFilters();
+    }
+  }, { immediate: false })
+  
+  // Initialize the map
+  const initializeMap = () => {
+    mapboxgl.accessToken = 'pk.eyJ1IjoicmV2aXZlZGVzaXJlIiwiYSI6ImNtOG50dzNmbDA0cGQyam9od2QzMjRnOHMifQ.1TH3sOapBo7eXNQ-2hBu6A'
+  
+    map = new mapboxgl.Map({
+      container: mapContainer.value,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [144.9631, -37.8136], // Near Melbourne
+      zoom: 11
+    })
+  
+    // Add navigation control
+    map.addControl(new mapboxgl.NavigationControl(), 'top-right')
+  
+    // Ensure the map is fully loaded before setting markers and initializing schools
+    map.on('load', () => {
+      console.log('Map fully loaded');
+      mapLoaded.value = true;
+      initializeSchools();
+    })
+  }
+  
+  // Initialize school data and layers
+  const initializeSchools = () => {
+    // Add school icon
+    map.loadImage(
+      schoolIcon, // School icon
+      (error, image) => {
+        if (error) throw error
+  
+        map.addImage('school-icon', image)
+  
+        // Add school points
+        map.addSource('schools', {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: schools.value.map(school => ({
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: [school.Longitude, school.Latitude] // Generate coordinates based on backend data
+              },
+              properties: {
+                id: school.School_AGE_ID, // Use School_AGE_ID as id
+                name: school.School_Name, // Use School_Name as name
+                type: school.School_Sector, // Use School_Sector as type
+                languages: Array.isArray(school.languages)? school.languages.join(',') : '',
+                suburb: school.Suburb // Ensure correct case for Suburb
+              }
+            }))
+          }
+        })
+  
+        map.addLayer({
+          id: 'school-points',
+          type: 'symbol',
+          source: 'schools',
+          layout: {
+            'icon-image': 'school-icon',
+            'icon-size': 0.9,
+            'icon-allow-overlap': true
+          }
+        })
+  
+        // Click on a school icon to show details
+        map.on('click', 'school-points', (e) => {
+          if (e.features && e.features.length > 0) {
+            const properties = e.features[0].properties;
+            selectedSchool.value = {
+              id: properties.id,
+              name: properties.name,
+              type: properties.type,
+              languages: properties.languages? properties.languages.split(',') : []
+            };
+          }
+        });
+  
+        // Change cursor style on mouse hover
+        map.on('mouseenter','school-points', () => {
+          map.getCanvas().style.cursor = 'pointer'
+        })
+  
+        map.on('mouseleave','school-points', () => {
+          map.getCanvas().style.cursor = ''
+        })
+  
+        // Apply initial filters
+        setTimeout(() => {
+          applyFilters();
+        }, 100);
+      }
+    )
+  }
+  
+  // Apply filter conditions
+  const applyFilters = () => {
+    if (!mapLoaded.value) {
+      console.log('Map not ready yet');
+      return;
+    }
+  
+    if (!map.getSource('schools')) {
+      console.log('Schools source not ready yet');
+      return;
+    }
+  
+    // Update map data
+    try {
+      map.getSource('schools').setData({
+        type: 'FeatureCollection',
+        features: filteredSchools.value.map(school => ({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [school.Longitude, school.Latitude]
+          },
+          properties: {
+            id: school.School_AGE_ID,
+            name: school.School_Name,
+            type: school.School_Sector,
+            languages: Array.isArray(school.languages)? school.languages.join(',') : '',
+            suburb: school.Suburb
+          }
+        }))
+      });
+      
+      // If there are schools after filtering, zoom the map to these school locations
+      if (filteredSchools.value.length > 0) {
+        const bounds = new mapboxgl.LngLatBounds();
+        filteredSchools.value.forEach(school => {
+          bounds.extend([school.Longitude, school.Latitude]);
+        });
+        map.fitBounds(bounds, { padding: 50 });
+      }
+    } catch (error) {
+      console.error('Error updating map data:', error);
+    }
+  }
+  
+  // Reset filter conditions
+  const resetFilters = () => {
+    filters.schoolType = 'ALL';
+    filters.languageProgram = 'ALL';
+  
+    // Reset map data
+    if (mapLoaded.value && map.getSource('schools')) {
+      try {
+        map.getSource('schools').setData({
+          type: 'FeatureCollection',
+          features: schools.value.map(school => ({
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [school.Longitude, school.Latitude]
+            },
+            properties: {
+              id: school.School_AGE_ID,
+              name: school.School_Name,
+              type: school.School_Sector,
+              languages: Array.isArray(school.languages)? school.languages.join(',') : '',
+              suburb: school.Suburb
+            }
+          }))
+        });
+      } catch (error) {
+        console.error('Error resetting map data:', error);
+      }
+    }
+  
+    // Clear the selected school
+    selectedSchool.value = null;
+  }
+  
+  // Initialize the map and fetch backend data after the component is mounted
+  onMounted(() => {
+    fetch('http://127.0.0.1:5000/schools')
+      .then(response => response.json())
+      .then(data => {
+        schools.value = data;
+        initializeMap();
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  });
+  </script>
+  
+  <style scoped>
+  .map-container {
+    width: 100%;
+  }
+  
+  .filter-group {
+    flex: 1;
+  }
+  
+  :deep(.mapboxgl-ctrl-top-right) {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  
+  .school-popup {
+    max-width: 300px;
+  }
+  </style>
