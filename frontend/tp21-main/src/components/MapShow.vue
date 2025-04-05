@@ -79,7 +79,9 @@
           
           <div class="flex justify-between">
             <button class="text-blue-500 hover:underline">View details</button>
-            <button class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
+            <button  @click="handleAddToCompare(selectedSchool)"
+             :disabled="!isSchoolLoaded"
+             class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -97,6 +99,33 @@
   import mapboxgl from 'mapbox-gl'
   import 'mapbox-gl/dist/mapbox-gl.css'
   import schoolIcon from '@/assets/images/school.png';
+  
+  const isSchoolLoaded = ref(false);
+
+  const handleAddToCompare = (school) => {
+  console.log('Add to compare clicked for:', school);
+
+  if (!school || !school.School_AGE_ID) {
+    console.warn('Invalid school object or missing School_AGE_ID');
+    alert('⚠️ Invalid school data. Cannot add to compare.');
+    return;
+  }
+
+  const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+
+  const exists = compareList.some(item => item.School_AGE_ID === school.School_AGE_ID);
+
+  if (!exists) {
+    compareList.push(school);
+    sessionStorage.setItem('compareList', JSON.stringify(compareList));
+    console.log('School added to compareList:', school.School_Name);
+    alert(`"${school.School_Name}" added to compare!`);
+  } else {
+    console.log('⚠️ School already exists in compareList:', school.School_Name);
+    alert(`"${school.School_Name}" is already in your compare list.`);
+  }
+};
+
   
   // Receive query searching parameters and if a school is identified from HomeView.vue
   const props = defineProps({
@@ -302,17 +331,53 @@
         })
   
         // Click on a school icon to show details
+        // map.on('click', 'school-points', (e) => {
+        //   if (e.features && e.features.length > 0) {
+        //     const properties = e.features[0].properties;
+        //     selectedSchool.value = {
+        //       id: properties.id,
+        //       name: properties.name,
+        //       type: properties.type,
+        //       languages: properties.languages? properties.languages.split(',') : []
+        //     };
+        //   }
+        // });
+
+
         map.on('click', 'school-points', (e) => {
-          if (e.features && e.features.length > 0) {
-            const properties = e.features[0].properties;
+  if (e.features && e.features.length > 0) {
+    const properties = e.features[0].properties;
             selectedSchool.value = {
               id: properties.id,
               name: properties.name,
               type: properties.type,
               languages: properties.languages? properties.languages.split(',') : []
-            };
+            }; 
+
+isSchoolLoaded.value = false;
+
+const sid = properties.id;
+fetch(`http://127.0.0.1:5000/school/${sid}`)
+  .then(response => response.json())
+  .then(fullData => {
+    if (fullData && !fullData.error) {
+      selectedSchool.value = {
+        ...fullData,
+        id: fullData.School_AGE_ID,
+        name: fullData.School_Name,
+        type: fullData.School_Sector,
+        languages: fullData.languages || []
+      };
+      isSchoolLoaded.value = true;
+    }
+  });
+
+
+
+
+
           }
-        });
+});
   
         // Change cursor style on mouse hover
         map.on('mouseenter','school-points', () => {
@@ -426,19 +491,24 @@
   
   <style scoped>
   .map-container {
-    width: 100%;
-  }
-  
-  .filter-group {
-    flex: 1;
-  }
-  
-  :deep(.mapboxgl-ctrl-top-right) {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  
-  .school-popup {
-    max-width: 300px;
-  }
+  width: 100%;
+}
+
+.filter-group {
+  flex: 1;
+}
+
+:deep(.mapboxgl-ctrl-top-right) {
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+
+.school-popup {
+  max-width: 360px;  
+  font-size: 16px;
+  line-height: 1.5;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+}
   </style>
