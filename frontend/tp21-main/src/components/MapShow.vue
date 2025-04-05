@@ -65,7 +65,7 @@
         <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg" style="top: 50%; right: 20px; transform: translateY(-50%); width: 300px; z-index: 10;">
           <div class="flex justify-between items-start">
             <h3 class="text-lg font-bold">{{ selectedSchool.name }}</h3>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500">
+            <svg v-if="isInCompareList" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
           </div>
@@ -99,6 +99,13 @@
   import mapboxgl from 'mapbox-gl'
   import 'mapbox-gl/dist/mapbox-gl.css'
   import schoolIcon from '@/assets/images/school.png';
+
+
+  const isInCompareList = computed(() => {
+    if (!selectedSchool.value) return false
+    const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]')
+    return compareList.some(item => item.School_AGE_ID === selectedSchool.value.id)
+  })
   
   const isSchoolLoaded = ref(false);
 
@@ -107,7 +114,7 @@
 
   if (!school || !school.School_AGE_ID) {
     console.warn('Invalid school object or missing School_AGE_ID');
-    alert('⚠️ Invalid school data. Cannot add to compare.');
+    alert('Invalid school data. Cannot add to compare.');
     return;
   }
 
@@ -115,16 +122,23 @@
 
   const exists = compareList.some(item => item.School_AGE_ID === school.School_AGE_ID);
 
-  if (!exists) {
-    compareList.push(school);
-    sessionStorage.setItem('compareList', JSON.stringify(compareList));
-    console.log('School added to compareList:', school.School_Name);
-    alert(`"${school.School_Name}" added to compare!`);
-  } else {
-    console.log('⚠️ School already exists in compareList:', school.School_Name);
+  if (exists) {
+    console.log('School already exists in compareList:', school.School_Name);
     alert(`"${school.School_Name}" is already in your compare list.`);
+    return;
   }
+
+  if (compareList.length >= 3) {
+    alert('You can only compare up to 3 schools.');
+    return;
+  }
+
+  compareList.push(school);
+  sessionStorage.setItem('compareList', JSON.stringify(compareList));
+  console.log('School added to compareList:', school.School_Name);
+  alert(`"${school.School_Name}" added to compare!`);
 };
+
 
   
   // Receive query searching parameters and if a school is identified from HomeView.vue
