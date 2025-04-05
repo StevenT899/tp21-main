@@ -100,7 +100,7 @@
   import 'mapbox-gl/dist/mapbox-gl.css'
   import schoolIcon from '@/assets/images/school.png';
 
-  const API_BASE = 'http://3.107.27.249:5000';
+  // const API_BASE = 'http://3.107.27.249:5000';
 
   const isInCompareList = computed(() => {
     if (!selectedSchool.value) return false
@@ -361,7 +361,8 @@
 isSchoolLoaded.value = false;
 
 const sid = properties.id;
-fetch(`${API_BASE}/school/${sid}`)
+// fetch(`${API_BASE}/school/${sid}`)
+fetch(`http://127.0.0.1:5000/school/${sid}`)
   .then(response => response.json())
   .then(fullData => {
     if (fullData && !fullData.error) {

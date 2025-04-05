@@ -1,12 +1,12 @@
 <template>
   <div class="min-h-screen bg-gray-50 p-8 mx-auto max-w-[1400px]">
-    <!-- Page header -->
+    <!-- Page Header -->
     <div class="text-start mb-10">
       <h1 class="text-3xl font-semibold text-blue-600 mb-2">COMPARE YOUR SELECTED SCHOOLS</h1>
       <p class="text-lg text-gray-600">You can select up to 3 schools. See how they compare side-by-side.</p>
     </div>
 
-    <!-- No schools case -->
+    <!-- No school selected case -->
     <div v-if="schools.length === 0" class="text-center text-lg text-gray-600">
       <p>No schools available to compare.</p>
       <button @click="goToHome" class="mt-4 text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700">
@@ -14,14 +14,14 @@
       </button>
     </div>
 
-    <!-- Comparison cards -->
+    <!-- School Comparison Cards -->
     <div v-else class="flex flex-wrap justify-center gap-x-20">
       <div
         v-for="(school, index) in schools"
         :key="index"
         class="relative w-full sm:w-1/3 p-4 max-w-md bg-white rounded-lg shadow-lg"
       >
-        <!-- Remove button (top-right corner) -->
+        <!-- Remove Button -->
         <button
           @click="removeSchool(index)"
           class="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold z-10"
@@ -30,10 +30,11 @@
           ×
         </button>
 
-        <!-- School name and website link -->
+        <!-- School Header -->
         <div class="flex flex-col mb-4">
           <h2 class="text-3xl font-bold text-center text-600 mb-6 mt-6">{{ school.name }}</h2>
 
+          <!-- Website Link -->
           <div v-if="school.url" class="text-right mt-[-1rem] mb-4">
             <a
               :href="school.url"
@@ -51,7 +52,7 @@
           </div>
         </div>
 
-        <!-- School information -->
+        <!-- School Info -->
         <div class="space-y-6 text-xl text-gray-800">
           <!-- Type -->
           <div class="pb-4 border-b border-gray-300">
@@ -59,13 +60,13 @@
             <span class="block">{{ school.type }}</span>
           </div>
 
-          <!-- Year range -->
+          <!-- Year Range -->
           <div class="pb-4 border-b border-gray-300">
             <span class="block font-bold">Year Range</span>
             <span class="block">{{ school.yearRange }}</span>
           </div>
 
-          <!-- Language programs -->
+          <!-- Language Programs -->
           <div class="pb-4 border-b border-gray-300">
             <span class="block font-bold mb-2">Language Program</span>
             <div v-if="school.languageProgramArr && school.languageProgramArr.length" class="flex flex-wrap gap-2">
@@ -80,7 +81,7 @@
             <div v-else class="text-white-500">None</div>
           </div>
 
-          <!-- Staff per student -->
+          <!-- Staff-Student Ratio -->
           <div class="pb-4 border-b border-gray-300">
             <span class="block font-bold">Teaching Staff Per Student</span>
             <span class="block">{{ formatNumber(school.staffPerStudent) }}</span>
@@ -92,7 +93,7 @@
             <span class="block">{{ school.icsea }}</span>
           </div>
 
-          <!-- Enrolment and charts -->
+          <!-- Enrolment and Charts -->
           <div>
             <span class="block font-bold">Enrolments</span>
             <span class="block">Total enrolment: {{ school.totalEnrolment }}</span>
@@ -108,6 +109,31 @@
         </div>
       </div>
     </div>
+
+    <!-- Confirmation Modal -->
+    <div
+      v-if="showConfirm"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+        <h2 class="text-2xl font-semibold mb-4">Remove School</h2>
+        <p class="text-gray-600 text-xl mb-6">Are you sure you want to remove this school from the comparison?</p>
+        <div class="flex justify-center gap-4">
+          <button
+            @click="confirmRemove"
+            class="px-4 py-2 bg-red-600 text-white text-lg rounded-md hover:bg-red-700"
+          >
+            Remove
+          </button>
+          <button
+            @click="cancelRemove"
+            class="px-4 py-2 bg-gray-200 text-gray-700 text-lg rounded-md hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -117,43 +143,62 @@ import { useRouter } from 'vue-router'
 import GenderBarChart from '../components/GenderBarChart.vue'
 import LanguageBarChart from '../components/LanguageBarChart.vue'
 
-// Vue Router
+// Router
 const router = useRouter()
 
-// School data for comparison
+// School data list
 const schools = ref([])
 
-// Remove school from comparison
+// Modal control
+const showConfirm = ref(false)
+const pendingRemoveIndex = ref(null)
+
+// Trigger remove
 const removeSchool = (index) => {
-  const confirmed = window.confirm('Are you sure you want to remove this school from the comparison?')
-  if (!confirmed) return
+  pendingRemoveIndex.value = index
+  showConfirm.value = true
+}
 
-  schools.value.splice(index, 1)
+// Confirm removal
+const confirmRemove = () => {
+  const index = pendingRemoveIndex.value
+  if (index !== null && index >= 0 && index < schools.value.length) {
+    schools.value.splice(index, 1)
 
-  const stored = sessionStorage.getItem('compareList')
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored)
-      parsed.splice(index, 1)
-      sessionStorage.setItem('compareList', JSON.stringify(parsed))
-    } catch (err) {
-      console.error('Failed to update compareList in sessionStorage:', err)
+    const stored = sessionStorage.getItem('compareList')
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        parsed.splice(index, 1)
+        sessionStorage.setItem('compareList', JSON.stringify(parsed))
+      } catch (err) {
+        console.error('Failed to update compareList in sessionStorage:', err)
+      }
     }
   }
+
+  showConfirm.value = false
+  pendingRemoveIndex.value = null
+}
+
+// Cancel removal
+const cancelRemove = () => {
+  showConfirm.value = false
+  pendingRemoveIndex.value = null
 }
 
 // Navigate to home page
 const goToHome = () => {
-  router.push({ name: 'Home' }) 
+  router.push({ name: 'Home' })
 }
 
-// Format number with 2 decimal places
+// Format number with two decimal places
 const formatNumber = (value) => {
   const num = parseFloat(value)
   return isNaN(num) ? 'N/A' : num.toFixed(2)
 }
 
-// Load comparison data from sessionStorage
+// Load school data from sessionStorage
 onMounted(() => {
   const stored = sessionStorage.getItem('compareList')
   if (stored) {
