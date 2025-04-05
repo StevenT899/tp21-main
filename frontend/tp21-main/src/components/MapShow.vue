@@ -100,6 +100,7 @@
   import 'mapbox-gl/dist/mapbox-gl.css'
   import schoolIcon from '@/assets/images/school.png';
 
+  const API_BASE = 'http://3.107.27.249:5000';
 
   const isInCompareList = computed(() => {
     if (!selectedSchool.value) return false
@@ -344,18 +345,7 @@
           }
         })
   
-        // Click on a school icon to show details
-        // map.on('click', 'school-points', (e) => {
-        //   if (e.features && e.features.length > 0) {
-        //     const properties = e.features[0].properties;
-        //     selectedSchool.value = {
-        //       id: properties.id,
-        //       name: properties.name,
-        //       type: properties.type,
-        //       languages: properties.languages? properties.languages.split(',') : []
-        //     };
-        //   }
-        // });
+       
 
 
         map.on('click', 'school-points', (e) => {
@@ -371,7 +361,7 @@
 isSchoolLoaded.value = false;
 
 const sid = properties.id;
-fetch(`http://127.0.0.1:5000/school/${sid}`)
+fetch(`${API_BASE}/school/${sid}`)
   .then(response => response.json())
   .then(fullData => {
     if (fullData && !fullData.error) {

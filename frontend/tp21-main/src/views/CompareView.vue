@@ -1,36 +1,39 @@
 <template>
   <div class="min-h-screen bg-gray-50 p-8 mx-auto max-w-[1400px]">
+    <!-- Page header -->
     <div class="text-start mb-10">
       <h1 class="text-3xl font-semibold text-blue-600 mb-2">COMPARE YOUR SELECTED SCHOOLS</h1>
       <p class="text-lg text-gray-600">You can select up to 3 schools. See how they compare side-by-side.</p>
     </div>
 
+    <!-- No schools case -->
     <div v-if="schools.length === 0" class="text-center text-lg text-gray-600">
       <p>No schools available to compare.</p>
       <button @click="goToHome" class="mt-4 text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700">
         Go to Homepage
       </button>
     </div>
-    
+
+    <!-- Comparison cards -->
     <div v-else class="flex flex-wrap justify-center gap-x-20">
       <div
-  v-for="(school, index) in schools"
-  :key="index"
-  class="relative w-full sm:w-1/3 p-4 max-w-md bg-white rounded-lg shadow-lg"
->
-
-
-      <button
-        @click="removeSchool(index)"
-        class="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold z-10"
-        title="Remove this school"
+        v-for="(school, index) in schools"
+        :key="index"
+        class="relative w-full sm:w-1/3 p-4 max-w-md bg-white rounded-lg shadow-lg"
       >
-        ×
-      </button>
+        <!-- Remove button (top-right corner) -->
+        <button
+          @click="removeSchool(index)"
+          class="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold z-10"
+          title="Remove this school"
+        >
+          ×
+        </button>
 
+        <!-- School name and website link -->
         <div class="flex flex-col mb-4">
           <h2 class="text-3xl font-bold text-center text-600 mb-6 mt-6">{{ school.name }}</h2>
-          
+
           <div v-if="school.url" class="text-right mt-[-1rem] mb-4">
             <a
               :href="school.url"
@@ -46,53 +49,60 @@
               </svg>
             </a>
           </div>
+        </div>
 
-          <div class="space-y-6 text-xl text-gray-800">
-            <div class="pb-4 border-b border-gray-300">
-              <span class="block font-bold">School Type</span>
-              <span class="block">{{ school.type }}</span>
-            </div>
+        <!-- School information -->
+        <div class="space-y-6 text-xl text-gray-800">
+          <!-- Type -->
+          <div class="pb-4 border-b border-gray-300">
+            <span class="block font-bold">School Type</span>
+            <span class="block">{{ school.type }}</span>
+          </div>
 
-            <div class="pb-4 border-b border-gray-300">
-              <span class="block font-bold">Year Range</span>
-              <span class="block">{{ school.yearRange }}</span>
-            </div>
+          <!-- Year range -->
+          <div class="pb-4 border-b border-gray-300">
+            <span class="block font-bold">Year Range</span>
+            <span class="block">{{ school.yearRange }}</span>
+          </div>
 
-            <div class="pb-4 border-b border-gray-300">
-              <span class="block font-bold mb-2">Language Program</span>
-              <div v-if="school.languageProgramArr && school.languageProgramArr.length" class="flex flex-wrap gap-2">
-                <span
-                  v-for="(lang, i) in school.languageProgramArr.slice(0, 4)"
-                  :key="i"
-                  class="bg-blue-600 text-white text-xl px-3 py-1 rounded-full"
-                >
-                  {{ lang }}
-                </span>
-              </div>
-              <div v-else class="text-white-500">None</div>
+          <!-- Language programs -->
+          <div class="pb-4 border-b border-gray-300">
+            <span class="block font-bold mb-2">Language Program</span>
+            <div v-if="school.languageProgramArr && school.languageProgramArr.length" class="flex flex-wrap gap-2">
+              <span
+                v-for="(lang, i) in school.languageProgramArr.slice(0, 4)"
+                :key="i"
+                class="bg-blue-600 text-white text-xl px-3 py-1 rounded-full"
+              >
+                {{ lang }}
+              </span>
             </div>
+            <div v-else class="text-white-500">None</div>
+          </div>
 
-            <div class="pb-4 border-b border-gray-300">
-              <span class="block font-bold">Teaching Staff Per Student</span>
-              <span class="block">{{ formatNumber(school.staffPerStudent) }}</span>
-            </div>
+          <!-- Staff per student -->
+          <div class="pb-4 border-b border-gray-300">
+            <span class="block font-bold">Teaching Staff Per Student</span>
+            <span class="block">{{ formatNumber(school.staffPerStudent) }}</span>
+          </div>
 
-            <div class="pb-4 border-b border-gray-300">
-              <span class="block font-bold">Index of Community Socio-Educational Advantage (ICSEA)</span>
-              <span class="block">{{ school.icsea }}</span>
-            </div>
+          <!-- ICSEA -->
+          <div class="pb-4 border-b border-gray-300">
+            <span class="block font-bold">Index of Community Socio-Educational Advantage (ICSEA)</span>
+            <span class="block">{{ school.icsea }}</span>
+          </div>
 
-            <div>
-              <span class="block font-bold">Enrolments</span>
-              <span class="block">Total enrolment: {{ school.totalEnrolment }}</span>
-              <div class="flex justify-center items-end mt-6 pb-4"> 
-                <GenderBarChart :girls="school.Girls_Enrolment" :boys="school.Boys_Enrolment" />
-                <LanguageBarChart
-                  :english="school.english"
-                  :notEnglish="school.notEnglish"
-                  :notStated="school.notStated"
-                />
-            </div>
+          <!-- Enrolment and charts -->
+          <div>
+            <span class="block font-bold">Enrolments</span>
+            <span class="block">Total enrolment: {{ school.totalEnrolment }}</span>
+            <div class="flex justify-center items-end mt-6 pb-4"> 
+              <GenderBarChart :girls="school.Girls_Enrolment" :boys="school.Boys_Enrolment" />
+              <LanguageBarChart
+                :english="school.english"
+                :notEnglish="school.notEnglish"
+                :notStated="school.notStated"
+              />
             </div>
           </div>
         </div>
@@ -106,10 +116,14 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import GenderBarChart from '../components/GenderBarChart.vue'
 import LanguageBarChart from '../components/LanguageBarChart.vue'
+
+// Vue Router
 const router = useRouter()
+
+// School data for comparison
 const schools = ref([])
 
-
+// Remove school from comparison
 const removeSchool = (index) => {
   const confirmed = window.confirm('Are you sure you want to remove this school from the comparison?')
   if (!confirmed) return
@@ -128,21 +142,23 @@ const removeSchool = (index) => {
   }
 }
 
+// Navigate to home page
 const goToHome = () => {
   router.push({ name: 'Home' }) 
 }
 
+// Format number with 2 decimal places
 const formatNumber = (value) => {
   const num = parseFloat(value)
   return isNaN(num) ? 'N/A' : num.toFixed(2)
 }
 
+// Load comparison data from sessionStorage
 onMounted(() => {
   const stored = sessionStorage.getItem('compareList')
   if (stored) {
     try {
       const parsed = JSON.parse(stored)
-
       schools.value = parsed.slice(0, 3).map(s => ({
         name: s.School_Name || s.name || 'N/A',
         type: s.School_Sector || s.type || 'N/A',
@@ -170,5 +186,4 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
 </style>

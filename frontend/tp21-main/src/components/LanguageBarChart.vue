@@ -1,16 +1,23 @@
 <template>
-    <v-chart :option="chartOptions" autoresize style="height: 380px; width: 200px; margin: auto;" />
+    <!-- Vertical stacked bar chart displaying language background data -->
+    <v-chart
+      :option="chartOptions"
+      autoresize
+      style="height: 380px; width: 200px; margin: auto;"
+    />
   </template>
   
   <script setup>
   import { computed } from 'vue'
   
+  // Define props passed into the component for language data
   const props = defineProps({
-    english: Number,
-    notEnglish: Number,
-    notStated: Number
+    english: Number,       // Number of students from English background
+    notEnglish: Number,    // Number of students from other language backgrounds
+    notStated: Number      // Number of students whose background is not stated
   })
   
+  // Compute the total number of students, fallback to 1 to avoid division by zero
   const total = computed(() => {
     const e = props.english || 0
     const n = props.notEnglish || 0
@@ -18,49 +25,51 @@
     return e + n + ns || 1
   })
   
+  // Function to format values as percentage strings
   const percent = (val) => ((val / total.value) * 100).toFixed(0) + '%'
   
+  // Computed chart options for ECharts
   const chartOptions = computed(() => ({
-    tooltip: { show: false },
+    tooltip: { show: false }, // Disable tooltip popup on hover
     legend: {
-      data: ['Other Languages', 'English', 'Not Stated'],
-      bottom: 10,           
+      data: ['Other Languages', 'English', 'Not Stated'], // Legend labels
+      bottom: 10,            // Position legend near the bottom
       left: 'center',
-      orient: 'horizontal',
-      itemGap: 20
+      orient: 'horizontal',  // Horizontal legend
+      itemGap: 20            // Space between legend items
     },
     grid: {
       top: 10,
-      bottom: 100,          
+      bottom: 100,           // Extra space for the legend at the bottom
       left: 0,
       right: 0
     },
     xAxis: {
       type: 'category',
-      data: [''],
+      data: [''],            // Single bar
       axisTick: { show: false },
       axisLine: { show: false },
       axisLabel: { show: false }
     },
     yAxis: {
       type: 'value',
-      show: false
+      show: false            // Hide Y-axis
     },
     series: [
       {
         name: 'Not Stated',
         type: 'bar',
-        stack: 'total',
+        stack: 'total',      // Stack all bars vertically
         data: [props.notStated],
         label: {
           show: true,
           position: 'inside',
-          formatter: percent(props.notStated),
+          formatter: percent(props.notStated), // Show percentage inside bar
           color: '#fff',
           fontWeight: 'bold'
         },
         itemStyle: {
-          color: '#a3a3a3'
+          color: '#a3a3a3'  
         },
         barWidth: 50
       },
@@ -77,7 +86,7 @@
           fontWeight: 'bold'
         },
         itemStyle: {
-          color: '#86efac'
+          color: '#86efac' 
         },
         barWidth: 50
       },
@@ -94,7 +103,7 @@
           fontWeight: 'bold'
         },
         itemStyle: {
-          color: '#15803d'
+          color: '#15803d'   
         },
         barWidth: 50
       }
