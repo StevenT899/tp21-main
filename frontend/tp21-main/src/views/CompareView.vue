@@ -24,10 +24,10 @@
         <!-- Remove Button -->
         <button
           @click="removeSchool(index)"
-          class="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold z-10"
+          class="absolute top-2 right-2 text-sm font-semibold text-gray-400 hover:text-red-500 z-10 bg-white px-2 py-1 rounded shadow"
           title="Remove this school"
         >
-          ×
+          Remove School
         </button>
 
         <!-- School Header -->
