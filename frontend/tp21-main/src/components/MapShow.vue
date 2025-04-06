@@ -393,7 +393,7 @@ isSchoolLoaded.value = false;
 
 const sid = properties.id;
 // fetch(`${API_BASE}/school/${sid}`)
-fetch(`http://127.0.0.1:5000/school/${sid}`)
+fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
   .then(response => response.json())
   .then(fullData => {
     if (fullData && !fullData.error) {
@@ -513,7 +513,7 @@ fetch(`http://127.0.0.1:5000/school/${sid}`)
   
   // Initialize the map and fetch backend data after the component is mounted
   onMounted(() => {
-    fetch('http://127.0.0.1:5000/schools')
+    fetch(`${import.meta.env.VITE_API_URL}/schools`)
       .then(response => response.json())
       .then(data => {
         schools.value = data;

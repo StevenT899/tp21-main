@@ -128,7 +128,7 @@
   // fetch schools from database
   const fetchSchools = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/schools');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/schools`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
