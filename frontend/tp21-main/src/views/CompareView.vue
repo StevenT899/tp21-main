@@ -24,7 +24,7 @@
         <!-- Remove Button -->
         <button
           @click="removeSchool(index)"
-          class="absolute top-2 right-2 text-sm font-semibold text-gray-400 hover:text-red-500 z-10 bg-white px-2 py-1 rounded shadow"
+          class="absolute top-2 right-2 text-sm font-semibold text-gray-400 hover:text-blue-500 z-10 bg-white px-2 py-1 rounded shadow"
           title="Remove this school"
         >
           Remove School
