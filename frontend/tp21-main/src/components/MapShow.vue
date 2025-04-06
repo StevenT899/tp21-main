@@ -91,7 +91,26 @@
           </div>
         </div>
       </div>
+      
+      <!-- Toast Notification -->
+      <transition name="fade">
+        <div
+          v-if="toast.show"
+          :class="[
+            'fixed top-6 left-1/2 transform -translate-x-1/2',
+            'px-6 py-4 rounded-xl shadow-lg text-white z-50 text-lg max-w-xl w-full text-center',
+            toast.type === 'success' ? 'bg-green-600' :
+            toast.type === 'warning' ? 'bg-yellow-500' :
+            'bg-red-600'
+          ]"
+        >
+          {{ toast.message }}
+        </div>
+      </transition>
+
     </div>
+
+    
   </template>
   
   <script setup>
@@ -101,6 +120,19 @@
   import schoolIcon from '@/assets/images/school.png';
 
   // const API_BASE = 'http://3.107.27.249:5000';
+  const toast = ref({ show: false, type: '', message: '' })
+  let toastTimeout = null
+
+  const showToast = (type, message, duration = 3000) => {
+    toast.value = { show: true, type, message }
+    if (toastTimeout) clearTimeout(toastTimeout)
+    toastTimeout = setTimeout(() => {
+      toast.value.show = false
+    }, duration)
+  }
+
+
+  
 
   const isInCompareList = computed(() => {
     if (!selectedSchool.value) return false
@@ -111,34 +143,33 @@
   const isSchoolLoaded = ref(false);
 
   const handleAddToCompare = (school) => {
-  console.log('Add to compare clicked for:', school);
+  console.log('Add to compare clicked for:', school)
 
   if (!school || !school.School_AGE_ID) {
-    console.warn('Invalid school object or missing School_AGE_ID');
-    alert('Invalid school data. Cannot add to compare.');
-    return;
+    console.warn('Invalid school object or missing School_AGE_ID')
+    showToast('error', 'Invalid school data. Cannot add to compare.')
+    return
   }
 
-  const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
-
-  const exists = compareList.some(item => item.School_AGE_ID === school.School_AGE_ID);
+  const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]')
+  const exists = compareList.some(item => item.School_AGE_ID === school.School_AGE_ID)
 
   if (exists) {
-    console.log('School already exists in compareList:', school.School_Name);
-    alert(`"${school.School_Name}" is already in your compare list.`);
-    return;
+    console.log('School already exists in compareList:', school.School_Name)
+    showToast('warning', `"${school.School_Name}" is already in your compare list.`)
+    return
   }
 
   if (compareList.length >= 3) {
-    alert('You can only compare up to 3 schools.');
-    return;
+    showToast('warning', 'You can only compare up to 3 schools.')
+    return
   }
 
-  compareList.push(school);
-  sessionStorage.setItem('compareList', JSON.stringify(compareList));
-  console.log('School added to compareList:', school.School_Name);
-  alert(`"${school.School_Name}" added to compare!`);
-};
+  compareList.push(school)
+  sessionStorage.setItem('compareList', JSON.stringify(compareList))
+  console.log('School added to compareList:', school.School_Name)
+  showToast('success', `"${school.School_Name}" added to compare!`)
+}
 
 
   
@@ -517,3 +548,24 @@ fetch(`http://127.0.0.1:5000/school/${sid}`)
   border-radius: 12px;
 }
   </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
