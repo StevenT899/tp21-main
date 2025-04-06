@@ -330,6 +330,14 @@
       console.log('Map fully loaded');
       mapLoaded.value = true;
       initializeSchools();
+
+      // global listener for click incident
+      map.on('click', (e) => {
+        const features = map.queryRenderedFeatures(e.point, { layers: ['school-points'] });
+        if (features.length === 0) {
+          selectedSchool.value = null;
+        }
+      });
     })
   }
   
