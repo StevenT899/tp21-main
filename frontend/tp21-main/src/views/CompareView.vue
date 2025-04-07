@@ -163,7 +163,7 @@
     <div
       v-if="showToast"
       :class="[
-        'fixed top-6 left-1/2 transform -translate-x-1/2 px-8 py-5 rounded-lg shadow-lg text-white text-2xl z-50 transition-opacity duration-300',
+        'fixed top-6 left-1/2 transform -translate-x-1/2 px-8 py-5 rounded-lg shadow-lg text-white z-50 transition-opacity duration-300',
         toastType === 'success' ? 'bg-green-500' : 'bg-yellow-500'
       ]"
     >

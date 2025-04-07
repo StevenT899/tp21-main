@@ -1,5 +1,5 @@
 <template>
-    <!-- Vertical stacked bar chart displaying language background data -->
+    <!-- Vertical stacked bar chart showing language background data -->
     <v-chart
       :option="chartOptions"
       autoresize
@@ -10,14 +10,14 @@
   <script setup>
   import { computed } from 'vue'
   
-  // Define props passed into the component for language data
+  // Props: number of students by language background
   const props = defineProps({
-    english: Number,       // Number of students from English background
-    notEnglish: Number,    // Number of students from other language backgrounds
-    notStated: Number      // Number of students whose background is not stated
+    english: Number,       // Students from English-speaking background
+    notEnglish: Number,    // Students from non-English-speaking backgrounds
+    notStated: Number      // Students with unspecified background
   })
   
-  // Compute the total number of students, fallback to 1 to avoid division by zero
+  // Compute total number of students, fallback to 1 to prevent divide-by-zero
   const total = computed(() => {
     const e = props.english || 0
     const n = props.notEnglish || 0
@@ -25,55 +25,39 @@
     return e + n + ns || 1
   })
   
-  // Function to format values as percentage strings
+  // Utility: format a number as a percentage of the total
   const percent = (val) => ((val / total.value) * 100).toFixed(0) + '%'
   
-  // Computed chart options for ECharts
-  const chartOptions = computed(() => ({
-    tooltip: { show: false }, // Disable tooltip popup on hover
-    legend: {
-      data: ['Other Languages', 'English', 'Not Stated'], // Legend labels
-      bottom: 10,            // Position legend near the bottom
-      left: 'center',
-      orient: 'horizontal',  // Horizontal legend
-      itemGap: 20            // Space between legend items
-    },
-    grid: {
-      top: 10,
-      bottom: 100,           // Extra space for the legend at the bottom
-      left: 0,
-      right: 0
-    },
-    xAxis: {
-      type: 'category',
-      data: [''],            // Single bar
-      axisTick: { show: false },
-      axisLine: { show: false },
-      axisLabel: { show: false }
-    },
-    yAxis: {
-      type: 'value',
-      show: false            // Hide Y-axis
-    },
-    series: [
-      {
+  // Dynamically generate chart options based on available (non-zero) data
+  const chartOptions = computed(() => {
+    const series = []       // Chart series
+    const legendData = []   // Legend labels
+  
+    // Include 'Not Stated' if value > 0
+    if (props.notStated > 0) {
+      series.push({
         name: 'Not Stated',
         type: 'bar',
-        stack: 'total',      // Stack all bars vertically
+        stack: 'total',
         data: [props.notStated],
         label: {
           show: true,
           position: 'inside',
-          formatter: percent(props.notStated), // Show percentage inside bar
+          formatter: percent(props.notStated),
           color: '#fff',
           fontWeight: 'bold'
         },
         itemStyle: {
-          color: '#a3a3a3'  
+          color: '#a3a3a3'  // Gray color
         },
         barWidth: 50
-      },
-      {
+      })
+      legendData.push('Not Stated')
+    }
+  
+    // Include 'English' if value > 0
+    if (props.english > 0) {
+      series.push({
         name: 'English',
         type: 'bar',
         stack: 'total',
@@ -86,11 +70,16 @@
           fontWeight: 'bold'
         },
         itemStyle: {
-          color: '#86efac' 
+          color: '#86efac'  // Light green
         },
         barWidth: 50
-      },
-      {
+      })
+      legendData.push('English')
+    }
+  
+    // Include 'Other Languages' if value > 0
+    if (props.notEnglish > 0) {
+      series.push({
         name: 'Other Languages',
         type: 'bar',
         stack: 'total',
@@ -103,11 +92,41 @@
           fontWeight: 'bold'
         },
         itemStyle: {
-          color: '#15803d'   
+          color: '#15803d'  // Dark green
         },
         barWidth: 50
-      }
-    ]
-  }))
+      })
+      legendData.push('Other Languages')
+    }
+  
+    return {
+      tooltip: { show: false },  // Disable hover tooltips
+      legend: {
+        data: legendData,        // Only show legend items with non-zero data
+        bottom: 10,
+        left: 'center',
+        orient: 'horizontal',
+        itemGap: 20
+      },
+      grid: {
+        top: 10,
+        bottom: 100,             // Leave space for legend
+        left: 0,
+        right: 0
+      },
+      xAxis: {
+        type: 'category',
+        data: [''],              // Only one bar
+        axisTick: { show: false },
+        axisLine: { show: false },
+        axisLabel: { show: false }
+      },
+      yAxis: {
+        type: 'value',
+        show: false              // Hide vertical axis
+      },
+      series
+    }
+  })
   </script>
   
