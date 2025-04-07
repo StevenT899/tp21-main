@@ -6,131 +6,134 @@
       <p class="text-lg text-gray-600">You can select up to 3 schools. See how they compare side-by-side.</p>
     </div>
 
-    <!-- No school selected case -->
-    <div v-if="schools.length === 0" class="text-center text-lg text-gray-600">
-      <p>No schools available to compare.</p>
-      <button @click="goToHome" class="mt-4 text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700">
-        Go to Homepage
-      </button>
-    </div>
-
     <!-- School Comparison Cards -->
-    <div v-else class="flex flex-wrap justify-center gap-x-20">
+    <div class="flex flex-wrap justify-center gap-x-20">
+      <!-- Loop over 3 slots -->
       <div
-        v-for="(school, index) in schools"
-        :key="index"
-        class="relative w-full sm:w-1/3 p-4 max-w-md bg-white rounded-lg shadow-lg"
+        v-for="i in 3"
+        :key="i"
+        class="relative w-full sm:w-1/3 p-4 max-w-md bg-white rounded-lg shadow-lg min-h-[650px]"
       >
-        <!-- Remove Button -->
-        <button
-          @click="removeSchool(index)"
-          class="absolute top-2 right-2 text-sm font-semibold text-gray-400 hover:text-blue-500 z-10 bg-white px-2 py-1 rounded shadow"
-          title="Remove this school"
-        >
-          Remove School
-        </button>
+        <template v-if="schools[i - 1]">
+          <!-- Existing school info card -->
+          <button
+            @click="removeSchool(i - 1)"
+            class="absolute top-2 right-2 text-sm font-semibold text-gray-400 hover:text-blue-500 z-10 bg-white px-2 py-1 rounded shadow"
+            title="Remove this school"
+          >
+            Remove School
+          </button>
 
-        <!-- School Header -->
-        <div class="flex flex-col mb-4">
-          <h2 class="text-3xl font-bold text-center text-600 mb-6 mt-6">{{ school.name }}</h2>
-
-          <!-- Website Link -->
-          <div v-if="school.url" class="text-right mt-[-1rem] mb-4">
-            <a
-              :href="school.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-blue-500 text-sm hover:underline inline-flex items-center gap-1"
-            >
-              Visit school website
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                <polyline points="15 3 21 3 21 9"/>
-                <line x1="10" y1="14" x2="21" y2="3"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-
-        <!-- School Info -->
-        <div class="space-y-6 text-xl text-gray-800">
-          <!-- Type -->
-          <div class="pb-4 border-b border-gray-300">
-            <span class="block font-bold">School Type</span>
-            <span class="block">{{ school.type }}</span>
-          </div>
-
-          <!-- Year Range -->
-          <div class="pb-4 border-b border-gray-300">
-            <span class="block font-bold">Year Range</span>
-            <span class="block">{{ school.yearRange }}</span>
-          </div>
-
-          <!-- Language Programs -->
-          <div class="pb-4 border-b border-gray-300">
-            <span class="block font-bold mb-2">Language Program</span>
-            <div v-if="school.languageProgramArr && school.languageProgramArr.length" class="flex flex-wrap gap-2">
-              <span
-                v-for="(lang, i) in school.languageProgramArr.slice(0, 4)"
-                :key="i"
-                class="bg-blue-600 text-white text-xl px-3 py-1 rounded-full"
+          <!-- Fixed height for title and website -->
+          <div class="flex flex-col justify-between mb-4 h-28">
+            <h2 class="text-3xl font-bold text-center text-600 mt-6">{{ schools[i - 1].name }}</h2>
+            <div v-if="schools[i - 1].url" class="text-right mb-4">
+              <a
+                :href="schools[i - 1].url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-500 text-sm hover:underline inline-flex items-center gap-1"
               >
-                {{ lang }}
-              </span>
-            </div>
-            <div v-else class="text-white-500">None</div>
-          </div>
-
-          <!-- Staff-Student Ratio -->
-          <div class="pb-4 border-b border-gray-300">
-            <span class="block font-bold">Teaching Staff Per Student</span>
-            <span class="block">{{ formatNumber(school.staffPerStudent) }}</span>
-          </div>
-
-          <!-- ICSEA -->
-          <div class="pb-4 border-b border-gray-300">
-            <span class="block font-bold">Index of Community Socio-Educational Advantage (ICSEA)</span>
-            <span class="block">{{ school.icsea }}</span>
-          </div>
-
-          <!-- Enrolment and Charts -->
-          <div>
-            <span class="block font-bold">Enrolments</span>
-            <span class="block">Total enrolment: {{ school.totalEnrolment }}</span>
-            <div class="flex justify-center items-end mt-6 pb-4"> 
-              <GenderBarChart :girls="school.Girls_Enrolment" :boys="school.Boys_Enrolment" />
-              <LanguageBarChart
-                :english="school.english"
-                :notEnglish="school.notEnglish"
-                :notStated="school.notStated"
-              />
+                Visit school website
+              </a>
             </div>
           </div>
-        </div>
+
+          <!-- Fixed height for info section -->
+          <div class="space-y-6 text-xl text-gray-800 min-h-[460px]">
+            <div class="pb-4 border-b border-gray-300">
+              <span class="block font-bold">School Type</span>
+              <span class="block">{{ schools[i - 1].type }}</span>
+            </div>
+            <div class="pb-4 border-b border-gray-300">
+              <span class="block font-bold">Year Range</span>
+              <span class="block">{{ schools[i - 1].yearRange }}</span>
+            </div>
+            <div class="pb-4 border-b border-gray-300">
+              <span class="block font-bold mb-2">Language Program</span>
+              <div v-if="schools[i - 1].languageProgramArr && schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-2">
+                <span
+                  v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)"
+                  :key="j"
+                  class="bg-blue-600 text-white text-xl px-3 py-1 rounded-full"
+                >
+                  {{ lang }}
+                </span>
+              </div>
+              <div v-else class="text-white-500">None</div>
+            </div>
+            <div class="pb-4 border-b border-gray-300">
+              <span class="block font-bold">Teaching Staff Per Student</span>
+              <span class="block">{{ formatNumber(schools[i - 1].staffPerStudent) }}</span>
+            </div>
+            <div class="pb-4 border-b border-gray-300">
+              <span class="block font-bold">Index of Community Socio-Educational Advantage (ICSEA)</span>
+              <span class="block">{{ schools[i - 1].icsea }}</span>
+            </div>
+            <div>
+              <span class="block font-bold">Enrolments</span>
+              <span class="block">Total enrolment: {{ schools[i - 1].totalEnrolment }}</span>
+              <div class="flex justify-center items-end mt-6 pb-4">
+                <GenderBarChart :girls="schools[i - 1].Girls_Enrolment" :boys="schools[i - 1].Boys_Enrolment" />
+                <LanguageBarChart
+                  :english="schools[i - 1].english"
+                  :notEnglish="schools[i - 1].notEnglish"
+                  :notStated="schools[i - 1].notStated"
+                />
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <template v-else>
+          <!-- Placeholder card with top-aligned search -->
+          <div class="flex flex-col h-full justify-start text-gray-500">
+            <div class="mb-4 relative">
+              <h3 class="text-xl font-semibold mb-2">Search To Add A School</h3>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
+                <input
+                  v-model="searchQuery"
+                  @input="searchCompareSchools"
+                  type="text"
+                  placeholder="Enter school name"
+                  class="text-lg w-full py-2 pl-10 pr-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <ul v-if="recommendedSchool.length" class="absolute z-10 w-full border mt-1 rounded shadow bg-white max-h-60 overflow-y-auto">
+                  <li
+                    v-for="(item, index) in recommendedSchool"
+                    :key="index"
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    @click="selectRecommended(item)"
+                  >
+                    {{ item.School_Name }} ({{ item.Suburb }})
+                  </li>
+                </ul>
+              </div>
+              <div class="flex justify-end mt-2">
+                <button @click="addToCompare" class="bg-blue-600 text-lg text-white px-4 py-2 rounded shadow hover:bg-blue-700 w-fit">
+                  Add to compare
+                </button>
+              </div>
+            </div>
+          </div>
+        </template>
       </div>
     </div>
 
     <!-- Confirmation Modal -->
-    <div
-      v-if="showConfirm"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-    >
+    <div v-if="showConfirm" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
         <h2 class="text-2xl font-semibold mb-4">Remove School</h2>
         <p class="text-gray-600 text-xl mb-6">Are you sure you want to remove this school from the comparison?</p>
         <div class="flex justify-center gap-4">
-          <button
-            @click="confirmRemove"
-            class="px-4 py-2 bg-red-600 text-white text-lg rounded-md hover:bg-red-700"
-          >
-            Remove
-          </button>
-          <button
-            @click="cancelRemove"
-            class="px-4 py-2 bg-gray-200 text-gray-700 text-lg rounded-md hover:bg-gray-300"
-          >
-            Cancel
-          </button>
+          <button @click="confirmRemove" class="px-4 py-2 bg-red-600 text-white text-lg rounded-md hover:bg-red-700">Remove</button>
+          <button @click="cancelRemove" class="px-4 py-2 bg-gray-200 text-gray-700 text-lg rounded-md hover:bg-gray-300">Cancel</button>
         </div>
       </div>
     </div>
@@ -139,32 +142,87 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import GenderBarChart from '../components/GenderBarChart.vue'
 import LanguageBarChart from '../components/LanguageBarChart.vue'
 
-// Router
-const router = useRouter()
-
-// School data list
 const schools = ref([])
-
-// Modal control
 const showConfirm = ref(false)
 const pendingRemoveIndex = ref(null)
+const recommendedSchool = ref([])
+const allSchools = ref([])
+const searchQuery = ref('')
+let selectedSchool = null
 
-// Trigger remove
-const removeSchool = (index) => {
-  pendingRemoveIndex.value = index
-  showConfirm.value = true
+const searchCompareSchools = async () => {
+  const input = searchQuery.value.trim().toLowerCase()
+  if (!input) {
+    recommendedSchool.value = []
+    return
+  }
+  if (!allSchools.value.length) {
+    try {
+      const res = await fetch('http://127.0.0.1:5000/schools')
+      const data = await res.json()
+      allSchools.value = data
+    } catch (err) {
+      console.error('Failed to fetch schools:', err)
+      return
+    }
+  }
+  recommendedSchool.value = allSchools.value.filter(s => {
+    const name = (s.School_Name || '').toLowerCase()
+    const suburb = (s.Suburb || '').toLowerCase()
+    return name.includes(input) || suburb.includes(input)
+  }).slice(0, 8)
 }
 
-// Confirm removal
+const selectRecommended = (item) => {
+  searchQuery.value = item.School_Name
+  selectedSchool = item
+  recommendedSchool.value = []
+}
+
+const addToCompare = async () => {
+  if (!selectedSchool || schools.value.length >= 3) return
+  if (schools.value.find(s => s.name === selectedSchool.School_Name)) return
+
+  try {
+    const res = await fetch(`http://127.0.0.1:5000/school/${selectedSchool.School_AGE_ID}`)
+    const detailed = await res.json()
+
+    const formatted = {
+      name: detailed.School_Name || 'N/A',
+      type: detailed.School_Sector || 'N/A',
+      yearRange: detailed.Year_Range || 'N/A',
+      languageProgram: Array.isArray(detailed.languages) ? detailed.languages.join(', ') : detailed.languageProgram || 'None',
+      staffPerStudent: detailed.Teaching_staff_per_student || 'N/A',
+      totalEnrolment: detailed.Total_Enrolment || 'N/A',
+      studentLanguageBackground: detailed.Language_Flag || 'N/A',
+      icsea: detailed.ICSEA || 'N/A',
+      english: Number(detailed.English) || 0,
+      notEnglish: Number(detailed.not_English) || 0,
+      notStated: Number(detailed.not_stated) || 0,
+      Girls_Enrolment: Number(detailed.Girls_Enrolment) || 0,
+      Boys_Enrolment: Number(detailed.Boys_Enrolment) || 0,
+      languageProgramArr: Array.isArray(detailed.languages) ? detailed.languages : (detailed.languageProgram ? [detailed.languageProgram] : []),
+      url: detailed.School_URL || ''
+    }
+
+    schools.value.push(formatted)
+    const stored = JSON.parse(sessionStorage.getItem('compareList') || '[]')
+    stored.push(formatted)
+    sessionStorage.setItem('compareList', JSON.stringify(stored))
+    searchQuery.value = ''
+    selectedSchool = null
+  } catch (err) {
+    console.error('Failed to fetch detailed school data:', err)
+  }
+}
+
 const confirmRemove = () => {
   const index = pendingRemoveIndex.value
   if (index !== null && index >= 0 && index < schools.value.length) {
     schools.value.splice(index, 1)
-
     const stored = sessionStorage.getItem('compareList')
     if (stored) {
       try {
@@ -176,58 +234,53 @@ const confirmRemove = () => {
       }
     }
   }
-
   showConfirm.value = false
   pendingRemoveIndex.value = null
 }
 
-// Cancel removal
 const cancelRemove = () => {
   showConfirm.value = false
   pendingRemoveIndex.value = null
 }
 
-// Navigate to home page
-const goToHome = () => {
-  router.push({ name: 'Home' })
+const removeSchool = (index) => {
+  pendingRemoveIndex.value = index
+  showConfirm.value = true
 }
 
-// Format number with two decimal places
 const formatNumber = (value) => {
   const num = parseFloat(value)
   return isNaN(num) ? 'N/A' : num.toFixed(2)
 }
 
-// Load school data from sessionStorage
 onMounted(() => {
   const stored = sessionStorage.getItem('compareList')
   if (stored) {
     try {
       const parsed = JSON.parse(stored)
-      schools.value = parsed.slice(0, 3).map(s => ({
-        name: s.School_Name || s.name || 'N/A',
-        type: s.School_Sector || s.type || 'N/A',
-        yearRange: s.Year_Range || s.yearRange || 'N/A',
-        languageProgram: Array.isArray(s.languages)
-          ? s.languages.join(', ')
-          : s.languageProgram || 'None',
-        staffPerStudent: s.Teaching_staff_per_student || s.staffPerStudent || 'N/A',
-        totalEnrolment: s.Total_Enrolment || s.totalEnrolment || 'N/A',
-        studentLanguageBackground: s.Language_Flag || s.studentLanguageBackground || 'N/A',
-        icsea: s.ICSEA || s.icsea || 'N/A',
-        english: s.English || 0,
-        notEnglish: s.not_English || 0,
-        notStated: s.not_stated || 0,
-        Girls_Enrolment: s.Girls_Enrolment || 0,
-        Boys_Enrolment: s.Boys_Enrolment || 0,
-        languageProgramArr: Array.isArray(s.languages) ? s.languages : (s.languageProgram ? [s.languageProgram] : []),
-        url: s.School_URL || s.url || ''
+      schools.value = parsed.slice(0, 3).map(item => ({
+        name: item.name,
+        type: item.type,
+        yearRange: item.yearRange,
+        languageProgram: item.languageProgram,
+        staffPerStudent: item.staffPerStudent,
+        totalEnrolment: item.totalEnrolment,
+        studentLanguageBackground: item.studentLanguageBackground,
+        icsea: item.icsea,
+        english: Number(item.english ?? item.English ?? 0),
+        notEnglish: Number(item.notEnglish ?? item.not_English ?? 0),
+        notStated: Number(item.notStated ?? item.not_stated ?? 0),
+        Girls_Enrolment: Number(item.Girls_Enrolment ?? 0),
+        Boys_Enrolment: Number(item.Boys_Enrolment ?? 0),
+        languageProgramArr: item.languageProgramArr || item.languages || [],
+        url: item.url || ''
       }))
     } catch (err) {
       console.error('Failed to parse compareList from sessionStorage:', err)
     }
   }
 })
+
 </script>
 
 <style scoped>
