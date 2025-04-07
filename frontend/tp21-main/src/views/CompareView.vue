@@ -8,14 +8,12 @@
 
     <!-- School Comparison Cards -->
     <div class="flex flex-wrap justify-center gap-x-20">
-      <!-- Loop over 3 slots -->
       <div
         v-for="i in 3"
         :key="i"
         class="relative w-full sm:w-1/3 p-4 max-w-md bg-white rounded-lg shadow-lg min-h-[650px]"
       >
         <template v-if="schools[i - 1]">
-          <!-- Existing school info card -->
           <button
             @click="removeSchool(i - 1)"
             class="absolute top-2 right-2 text-sm font-semibold text-gray-400 hover:text-blue-500 z-10 bg-white px-2 py-1 rounded shadow"
@@ -24,7 +22,6 @@
             Remove School
           </button>
 
-          <!-- Fixed height for title and website -->
           <div class="flex flex-col justify-between mb-4 h-28">
             <h2 class="text-3xl font-bold text-center text-600 mt-6">{{ schools[i - 1].name }}</h2>
             <div v-if="schools[i - 1].url" class="text-right mb-4">
@@ -39,19 +36,20 @@
             </div>
           </div>
 
-          <!-- Fixed height for info section -->
           <div class="space-y-6 text-xl text-gray-800 min-h-[460px]">
             <div class="pb-4 border-b border-gray-300">
               <span class="block font-bold">School Type</span>
               <span class="block">{{ schools[i - 1].type }}</span>
             </div>
+
             <div class="pb-4 border-b border-gray-300">
               <span class="block font-bold">Year Range</span>
               <span class="block">{{ schools[i - 1].yearRange }}</span>
             </div>
+
             <div class="pb-4 border-b border-gray-300">
               <span class="block font-bold mb-2">Language Program</span>
-              <div v-if="schools[i - 1].languageProgramArr && schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-2">
+              <div v-if="schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-2">
                 <span
                   v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)"
                   :key="j"
@@ -62,14 +60,37 @@
               </div>
               <div v-else class="text-white-500">None</div>
             </div>
+
             <div class="pb-4 border-b border-gray-300">
               <span class="block font-bold">Teaching Staff Per Student</span>
               <span class="block">{{ formatNumber(schools[i - 1].staffPerStudent) }}</span>
             </div>
+
+            <!-- ICSEA with Tooltip -->
             <div class="pb-4 border-b border-gray-300">
-              <span class="block font-bold">Index of Community Socio-Educational Advantage (ICSEA)</span>
-              <span class="block">{{ schools[i - 1].icsea }}</span>
+              <div class="flex items-center justify-between">
+                <span class="font-bold">Index of Community Socio-Educational Advantage (ICSEA)</span>
+                <div class="relative group">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-5 h-5 text-gray-600 cursor-pointer"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                    <path d="M12 16h.01" />
+                    <path d="M12 12a2 2 0 1 0-2-2" />
+                  </svg>
+                  <div class="absolute top-full mt-2 right-0 w-64 bg-gray-800 text-white text-sm p-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50">
+                    ICSEA reflects the socio-educational background of students. The average is 1000. Higher scores indicate greater advantage.
+                  </div>
+                </div>
+              </div>
+              <span class="block mt-2">{{ schools[i - 1].icsea }}</span>
             </div>
+
             <div>
               <span class="block font-bold">Enrolments</span>
               <span class="block">Total enrolment: {{ schools[i - 1].totalEnrolment }}</span>
@@ -85,8 +106,8 @@
           </div>
         </template>
 
+        <!-- Placeholder card -->
         <template v-else>
-          <!-- Placeholder card with top-aligned search -->
           <div class="flex flex-col h-full justify-start text-gray-500">
             <div class="mb-4 relative">
               <h3 class="text-xl font-semibold mb-2">Search To Add A School</h3>
@@ -137,8 +158,20 @@
         </div>
       </div>
     </div>
+
+    <!-- Toast Notification -->
+    <div
+      v-if="showToast"
+      :class="[
+        'fixed top-6 left-1/2 transform -translate-x-1/2 px-8 py-5 rounded-lg shadow-lg text-white text-2xl z-50 transition-opacity duration-300',
+        toastType === 'success' ? 'bg-green-500' : 'bg-yellow-500'
+      ]"
+    >
+      {{ toastMessage }}
+    </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -153,6 +186,19 @@ const allSchools = ref([])
 const searchQuery = ref('')
 let selectedSchool = null
 
+
+const toastMessage = ref('')
+const toastType = ref('success')
+const showToast = ref(false)
+const triggerToast = (message, type = 'success') => {
+  toastMessage.value = message
+  toastType.value = type
+  showToast.value = true
+  setTimeout(() => {
+    showToast.value = false
+  }, 3000)
+}
+
 const searchCompareSchools = async () => {
   const input = searchQuery.value.trim().toLowerCase()
   if (!input) {
@@ -161,7 +207,8 @@ const searchCompareSchools = async () => {
   }
   if (!allSchools.value.length) {
     try {
-      const res = await fetch('http://127.0.0.1:5000/schools')
+      const res = await fetch('${import.meta.env.VITE_API_URL}/schools')
+      // const res = await fetch('http://127.0.0.1:5000/schools')
       const data = await res.json()
       allSchools.value = data
     } catch (err) {
@@ -183,11 +230,24 @@ const selectRecommended = (item) => {
 }
 
 const addToCompare = async () => {
-  if (!selectedSchool || schools.value.length >= 3) return
-  if (schools.value.find(s => s.name === selectedSchool.School_Name)) return
+  if (!selectedSchool) {
+    triggerToast('Please select a school first.', 'error')
+    return
+  }
+
+  if (schools.value.length >= 3) {
+    triggerToast('You can only compare up to 3 schools.', 'error')
+    return
+  }
+
+  if (schools.value.find(s => s.name === selectedSchool.School_Name)) {
+    triggerToast('This school has already been added.', 'error')
+    return
+  }
 
   try {
-    const res = await fetch(`http://127.0.0.1:5000/school/${selectedSchool.School_AGE_ID}`)
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/school/${selectedSchool.School_AGE_ID}`)
+    // const res = await fetch(`http://127.0.0.1:5000/school/${selectedSchool.School_AGE_ID}`)
     const detailed = await res.json()
 
     const formatted = {
@@ -214,8 +274,11 @@ const addToCompare = async () => {
     sessionStorage.setItem('compareList', JSON.stringify(stored))
     searchQuery.value = ''
     selectedSchool = null
+
+    triggerToast('School added successfully!', 'success')
   } catch (err) {
     console.error('Failed to fetch detailed school data:', err)
+    triggerToast('Failed to fetch school data.', 'error')
   }
 }
 
@@ -261,7 +324,7 @@ onMounted(() => {
       schools.value = parsed.slice(0, 3).map(item => ({
         name: item.name,
         type: item.type,
-        yearRange: item.yearRange,
+        yearRange: item.yearRange || item.Year_Range,
         languageProgram: item.languageProgram,
         staffPerStudent: item.staffPerStudent,
         totalEnrolment: item.totalEnrolment,
@@ -273,15 +336,11 @@ onMounted(() => {
         Girls_Enrolment: Number(item.Girls_Enrolment ?? 0),
         Boys_Enrolment: Number(item.Boys_Enrolment ?? 0),
         languageProgramArr: item.languageProgramArr || item.languages || [],
-        url: item.url || ''
+        url: item.url || item.School_URL || '' 
       }))
     } catch (err) {
       console.error('Failed to parse compareList from sessionStorage:', err)
     }
   }
 })
-
 </script>
-
-<style scoped>
-</style>

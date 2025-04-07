@@ -91,7 +91,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Toast Notification -->
       <transition name="fade">
         <div
@@ -119,7 +119,7 @@
   import 'mapbox-gl/dist/mapbox-gl.css'
   import schoolIcon from '@/assets/images/school.png';
 
-  // const API_BASE = 'http://3.107.27.249:5000';
+
   const toast = ref({ show: false, type: '', message: '' })
   let toastTimeout = null
 
