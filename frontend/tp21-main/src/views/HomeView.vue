@@ -33,10 +33,13 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
                 </span>
+                <!-- searching bar -->
                 <input
                   v-model="searchQuery"
                   @input="search"
+                  @keydown.enter = "showMapAndSearch"
                   type="text"
+                  maxlength="55"
                   placeholder="Enter suburb/ postcode/ school name"
                   class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -45,8 +48,8 @@
                 Search
               </button>
             </div>
-            <!-- searching result container -->
-            <div v-if="searchResults.length > 0" class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-md mt-1 z-10">
+            <!-- searching suggetion box -->
+            <div v-if="showSuggestions && searchResults.length > 0" class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-md mt-1 z-10">
               <div v-if="suburbResults.length > 0">
                 <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">Suburb</p>
                 <ul>
@@ -111,12 +114,15 @@
 import { ref } from 'vue';
 import MapShow from '@/components/MapShow.vue';
 
+// search bar
 const searchQuery = ref('');
+const showNoResultMessage = ref(false);
 const showMap = ref(false);
 const isSchool = ref(false);
+// search suggestion box
+const selectedType = ref(''); //'suburb' or 'school'
 const selectedSuburb = ref('');
-const selectedType = ref(''); //'suburb' or'school'
-const showNoResultMessage = ref(false);
+const showSuggestions = ref(false);
 
 // store searching results
 const searchResults = ref([]);
@@ -135,7 +141,7 @@ const fetchSchools = async () => {
     const data = await response.json();
     schools.value = data;
 
-    // create map: suburb -> postcode
+    // create suburbPostcodeMap
     data.forEach(school => {
       if (school.Suburb && school.Postcode) {
         suburbPostcodeMap.value[school.Suburb.toLowerCase()] = school.Postcode;
@@ -150,7 +156,6 @@ const search = async () => {
   const input = searchQuery.value;
   // judge: if input>2
   if (input.length <= 2) {
-    // <=2 clear 
     searchResults.value = [];
     suburbResults.value = [];
     schoolResults.value = [];
@@ -167,144 +172,122 @@ const search = async () => {
 
   const lowerCaseInput = input.toLowerCase().trim();
 
-  // searching exactly matching suburb(case insensitive)
   const uniqueSuburbs = new Set();
-  schools.value.forEach(school => {
-    if (school.Suburb && school.Suburb.toLowerCase() === lowerCaseInput) {
-      const formattedSuburb = `${school.Suburb}, ${school.Postcode}`;
-      uniqueSuburbs.add(formattedSuburb);
-    }
-  });
-
-  // searching exactly matching school name (case insensitive)
   const uniqueSchools = new Set();
+
   schools.value.forEach(school => {
-    if (school.School_Name.toLowerCase() === lowerCaseInput) {
-      uniqueSchools.add(school.School_Name);
-    }
-  });
+  const formattedSuburb = `${school.Suburb}, ${school.Postcode}`;
+  const lowerSuburb = school.Suburb?.toLowerCase();
+  const lowerSchool = school.School_Name?.toLowerCase();
+  const postcode = school.Postcode?.toString();
 
-  // searching exactly matching postcode
-  const uniquePostcodes = new Set();
-  schools.value.forEach(school => {
-    if (school.Postcode && school.Postcode.toString() === lowerCaseInput) {
-      const formattedSuburb = `${school.Suburb}, ${school.Postcode}`;
-      uniquePostcodes.add(formattedSuburb);
-    }
-  });
-
-  // if no exact matching, search suburb and school names according the input contents
-  if (uniqueSuburbs.size === 0 && uniqueSchools.size === 0 && uniquePostcodes.size === 0) {
-    schools.value.forEach(school => {
-      // searching suburb includes inputting content
-      if (school.Suburb && school.Suburb.toLowerCase().includes(lowerCaseInput)) {
-        const formattedSuburb = `${school.Suburb}, ${school.Postcode}`;
-        uniqueSuburbs.add(formattedSuburb);
-      }
-
-      // searching school includes inputting content
-      if (school.School_Name.toLowerCase().includes(lowerCaseInput)) {
-        uniqueSchools.add(school.School_Name);
-      }
-
-      // search matching postcode's suburb
-      if (school.Postcode && school.Postcode.toString() === lowerCaseInput) {
-        const formattedSuburb = `${school.Suburb}, ${school.Postcode}`;
-        uniqueSuburbs.add(formattedSuburb);
-      }
-    });
+  // exact match suburb
+  if (lowerSuburb === lowerCaseInput) {
+    uniqueSuburbs.add(formattedSuburb);
   }
 
-  suburbResults.value = [...uniqueSuburbs, ...uniquePostcodes];
+  // exact match school
+  if (lowerSchool === lowerCaseInput) {
+    uniqueSchools.add(school.School_Name);
+  }
+
+  // exact match postcode
+  if (postcode === lowerCaseInput) {
+    uniqueSuburbs.add(formattedSuburb);
+  }
+
+  // fuzzy suburb match
+  if (lowerSuburb?.includes(lowerCaseInput)) {
+    uniqueSuburbs.add(formattedSuburb);
+  }
+
+  // fuzzy school match
+  if (lowerSchool?.includes(lowerCaseInput)) {
+    uniqueSchools.add(school.School_Name);
+  }
+  });
+
+  suburbResults.value = [...uniqueSuburbs];
   schoolResults.value = [...uniqueSchools];
-  searchResults.value = [...uniqueSuburbs, ...uniqueSchools, ...uniquePostcodes];
+  searchResults.value = [...uniqueSuburbs, ...uniqueSchools];
+  // show suggetion box
+  showSuggestions.value = true;
 };
 
 const showMapAndSearch = async () => {
   if (searchQuery.value.trim().length === 0) {
-    return; // if nothing in searching bar, don't perform searching action
+    return; // if nothing in search bar, do nothing
   }
 
-  await search();
-
-  if (searchResults.value.length === 0) {
-    showNoResultMessage.value = true;
-    showMap.value = false;
-    return;
-  }
-
-  showNoResultMessage.value = false;
+  await search(); // run search to update suggestion results
 
   const input = searchQuery.value.toLowerCase().trim();
 
-  // reset status of select state
+  // reset state
   isSchool.value = false;
   selectedSuburb.value = '';
   selectedType.value = '';
 
-  // firstly: check exact matching school or suburb
   let exactSchoolMatch = false;
   let exactSuburbMatch = false;
-  let matchedSuburb = '';
 
-  // check if exist exact matching suburb
+  // check exact school match
   for (const school of schools.value) {
     if (school.School_Name.toLowerCase() === input) {
       exactSchoolMatch = true;
       isSchool.value = true;
-      selectedType.value ='school';
+      selectedType.value = 'school';
       break;
     }
   }
 
-  // if not exact matching school, check if exist exact matching suburb
+  // check exact suburb match (if not a school)
   if (!exactSchoolMatch) {
     for (const school of schools.value) {
       if (school.Suburb && school.Suburb.toLowerCase() === input) {
         exactSuburbMatch = true;
         selectedSuburb.value = school.Suburb;
-        selectedType.value ='suburb';
+        selectedType.value = 'suburb';
         break;
       }
     }
   }
 
-  // if not exact matching school or suburb, check if exist exact matching postcode
-  if (!exactSchoolMatch &&!exactSuburbMatch) {
+  // check if input is an exact postcode match (only digits)
+  if (!exactSchoolMatch && !exactSuburbMatch) {
     const isPostcode = /^\d+$/.test(input);
     if (isPostcode) {
-      exactSuburbMatch = true;
-      selectedSuburb.value = input; // transfer postcode as suburb value
-      selectedType.value ='suburb';
-    }
-  }
-
-  // if not exact matching, apply this searching rule
-  if (!exactSchoolMatch &&!exactSuburbMatch) {
-    // judge: suburb/school name searching
-    isSchool.value = schoolResults.value.some(school => 
-      school.toLowerCase().includes(input)
-    );
-
-    if (!isSchool.value) {
-      // searching matched suburb
-      const matchedSuburbResult = suburbResults.value.find(suburb => 
-        suburb.toLowerCase().includes(input)
+      const suburbExists = schools.value.some(
+        school => school.Postcode?.toString() === input
       );
-
-      if (matchedSuburbResult) {
-        // extract suburb name from formatted string
-        const suburbName = matchedSuburbResult.split(',')[0].trim();
-        selectedSuburb.value = suburbName;
-        selectedType.value ='suburb';
+      if (suburbExists) {
+        exactSuburbMatch = true;
+        selectedSuburb.value = input;
+        selectedType.value = 'suburb';
       }
-    } else {
-      selectedType.value ='school';
     }
   }
 
-  showMap.value = true;
+  // final decision
+  const isExactMatch = exactSchoolMatch || exactSuburbMatch;
+
+  if (!isExactMatch) {
+    showNoResultMessage.value = true;
+    showMap.value = false;
+
+    // error prompt timer
+    setTimeout(() => {
+      showNoResultMessage.value = false;
+    },2000);
+  } else {
+    showNoResultMessage.value = false;
+    showMap.value = true;
+  }
+
+  // always hide suggestion box when search is confirmed
+  showSuggestions.value = false;
 };
+
 
 const selectResult = (result, type) => {
   if (type ==='suburb') {
@@ -326,6 +309,7 @@ const selectResult = (result, type) => {
   schoolResults.value = [];
 
   // trigger searching auto
+  showSuggestions.value = false;
   showMap.value = true;
 };
 </script>
