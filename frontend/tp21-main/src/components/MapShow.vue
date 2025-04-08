@@ -72,7 +72,7 @@
           <p class="text-gray-600 mb-3">{{ selectedSchool.type }} school</p>
           
           <div class="grid grid-cols-2 gap-2 mb-4">
-            <div v-for="(language, index) in selectedSchool.languages" :key="index" class="rounded-md p-2 text-center text-sm" style="background-color: #EBF1FA;">
+            <div v-for="(language, index) in selectedSchool.languages" :key="index" class="bg-gray-100 rounded-md p-2 text-center text-sm">
               {{ language }}
             </div>
           </div>
@@ -156,7 +156,7 @@
   const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]')
 
   // Check if the school is already in the compare list
-  const exists = compareList.some(item => item.url === school.School_URL)
+  const exists = compareList.some(item => item.id === school.School_AGE_ID)
 
   // If it already exists, show warning and return
   if (exists) {
@@ -392,6 +392,9 @@
           }
         })
   
+       
+
+
         map.on('click', 'school-points', (e) => {
   if (e.features && e.features.length > 0) {
     const properties = e.features[0].properties;
@@ -405,6 +408,7 @@
 isSchoolLoaded.value = false;
 
 const sid = properties.id;
+// fetch(`${API_BASE}/school/${sid}`)
 fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
   .then(response => response.json())
   .then(fullData => {
