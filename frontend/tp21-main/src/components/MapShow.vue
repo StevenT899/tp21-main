@@ -145,32 +145,42 @@
   const handleAddToCompare = (school) => {
   console.log('Add to compare clicked for:', school)
 
+  // Check if the school object is valid
   if (!school || !school.School_AGE_ID) {
     console.warn('Invalid school object or missing School_AGE_ID')
     showToast('error', 'Invalid school data. Cannot add to compare.')
     return
   }
 
+  // Get the compareList from sessionStorage
   const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]')
-  const exists = compareList.some(item => item.School_AGE_ID === school.School_AGE_ID)
 
+  // Check if the school is already in the compare list
+  const exists = compareList.some(item => item.url === school.School_URL)
+
+  // If it already exists, show warning and return
   if (exists) {
     console.log('School already exists in compareList:', school.School_Name)
     showToast('warning', `"${school.School_Name}" is already in your compare list.`)
     return
   }
 
+  // Check if the compareList has reached the limit of 3 schools
   if (compareList.length >= 3) {
     showToast('warning', 'You can only compare up to 3 schools.')
     return
   }
 
+  // Add the school to the compare list
   compareList.push(school)
   sessionStorage.setItem('compareList', JSON.stringify(compareList))
   console.log('School added to compareList:', school.School_Name)
+
+  // Show success toast
   showToast('success', `"${school.School_Name}" added to compare!`)
 }
 
+  
   // Receive query searching parameters and if a school is identified from HomeView.vue
   const props = defineProps({
     searchQuery: {
@@ -396,7 +406,7 @@ isSchoolLoaded.value = false;
 
 const sid = properties.id;
 // fetch(`${API_BASE}/school/${sid}`)
-fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
+fetch(`http://127.0.0.1:5000/school/${sid}`)
   .then(response => response.json())
   .then(fullData => {
     if (fullData && !fullData.error) {

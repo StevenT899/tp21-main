@@ -7,11 +7,11 @@
     </div>
 
     <!-- School Comparison Cards -->
-    <div class="flex flex-wrap justify-center gap-x-20">
+    <div class="flex flex-wrap justify-center gap-x-6 gap-y-10 sm:gap-x-8 md:gap-x-12 lg:gap-x-16">
       <div
         v-for="i in 3"
         :key="i"
-        class="relative w-full sm:w-1/3 p-4 max-w-md bg-white rounded-lg shadow-lg min-h-[650px]"
+        class="relative w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-4 max-w-md bg-white rounded-lg shadow-lg min-h-[650px]"
       >
         <template v-if="schools[i - 1]">
           <button
@@ -21,23 +21,27 @@
           >
             Remove School
           </button>
-
           <div class="flex flex-col justify-between mb-4 h-28">
             <h2 class="text-3xl font-bold text-center text-600 mt-6">{{ schools[i - 1].name }}</h2>
-            <div v-if="schools[i - 1].url" class="text-right mb-4">
-              <a
+            <div v-if="schools[i - 1].url" class="text-right mt-1">
+                            <a
                 :href="schools[i - 1].url"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="text-blue-500 text-sm hover:underline inline-flex items-center gap-1"
               >
                 Visit school website
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                 <path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                 <polyline points="15 3 21 3 21 9"/>
+                 <line x1="10" y1="14" x2="21" y2="3"/>
+               </svg>
               </a>
             </div>
           </div>
 
           <div class="space-y-6 text-xl text-gray-800 min-h-[460px]">
-            <div class="pb-4 border-b border-gray-300">
+            <div class="pb-4 border-b border-gray-300 sm:mt-20 md:mt-12 lg:mt-40 xl:mt-10">
               <span class="block font-bold">School Type</span>
               <span class="block">{{ schools[i - 1].type }}</span>
             </div>
@@ -49,7 +53,8 @@
 
             <div class="pb-4 border-b border-gray-300">
               <span class="block font-bold mb-2">Language Program</span>
-              <div v-if="schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-2">
+              
+              <!-- <div v-if="schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-2">
                 <span
                   v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)"
                   :key="j"
@@ -57,13 +62,24 @@
                 >
                   {{ lang }}
                 </span>
+              </div> -->
+
+              <div v-if="schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-4">
+                <span
+                  v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)"
+                  :key="j"
+                  class="bg-blue-600 text-white text-xl px-4 py-2 rounded-full w-1/3 text-center"
+                >
+                  {{ lang }}
+                </span>
               </div>
+
               <div v-else class="text-white-500">None</div>
             </div>
 
             <div class="pb-4 border-b border-gray-300">
-              <span class="block font-bold">Teaching Staff Per Student</span>
-              <span class="block">{{ formatNumber(schools[i - 1].staffPerStudent) }}</span>
+              <span class="block font-bold">Student Per Teaching Staff</span>
+              <span class="block">{{ Math.round(formatNumber(1 / schools[i - 1].staffPerStudent) )}}</span>
             </div>
 
             <!-- ICSEA with Tooltip -->
@@ -83,7 +99,7 @@
                     <path d="M12 16h.01" />
                     <path d="M12 12a2 2 0 1 0-2-2" />
                   </svg>
-                  <div class="absolute top-full mt-2 right-0 w-64 bg-gray-800 text-white text-sm p-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50">
+                  <div class="absolute top-full mt-2 right-0 w-64 bg-gray-800 text-white text-lg p-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50">
                     ICSEA reflects the socio-educational background of students. The average is 1000. Higher scores indicate greater advantage.
                   </div>
                 </div>
@@ -110,7 +126,7 @@
         <template v-else>
           <div class="flex flex-col h-full justify-start text-gray-500">
             <div class="mb-4 relative">
-              <h3 class="text-xl font-semibold mb-2">Search To Add A School</h3>
+              <h3 class="text-xl text-black font-semibold mb-2">Search To Add A School</h3>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500">
@@ -119,25 +135,25 @@
                   </svg>
                 </span>
                 <input
-                  v-model="searchQuery"
-                  @input="searchCompareSchools"
+                  v-model="searchQueries[i - 1]"
+                  @input="searchCompareSchools(i)"
                   type="text"
-                  placeholder="Enter school name"
-                  class="text-lg w-full py-2 pl-10 pr-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  :placeholder="'Enter school name '"
+                  class="text-lg text-black w-full py-2 pl-10 pr-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <ul v-if="recommendedSchool.length" class="absolute z-10 w-full border mt-1 rounded shadow bg-white max-h-60 overflow-y-auto">
+                <ul v-if="recommendedSchools[i - 1].length" class="absolute z-10 w-full border mt-1 rounded shadow bg-white max-h-60 overflow-y-auto">
                   <li
-                    v-for="(item, index) in recommendedSchool"
+                    v-for="(item, index) in recommendedSchools[i - 1]"
                     :key="index"
-                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    @click="selectRecommended(item)"
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-lg text-black"
+                    @click="selectRecommended(item, i)"
                   >
                     {{ item.School_Name }} ({{ item.Suburb }})
                   </li>
                 </ul>
               </div>
               <div class="flex justify-end mt-2">
-                <button @click="addToCompare" class="bg-blue-600 text-lg text-white px-4 py-2 rounded shadow hover:bg-blue-700 w-fit">
+                <button @click="addToCompare(i)" class="bg-blue-600 text-lg text-white px-4 py-2 rounded shadow hover:bg-blue-700 w-fit">
                   Add to compare
                 </button>
               </div>
@@ -162,16 +178,12 @@
     <!-- Toast Notification -->
     <div
       v-if="showToast"
-      :class="[
-        'fixed top-6 left-1/2 transform -translate-x-1/2 px-8 py-5 rounded-lg shadow-lg text-white z-50 transition-opacity duration-300',
-        toastType === 'success' ? 'bg-green-500' : 'bg-yellow-500'
-      ]"
+      :class="[ 'fixed top-6 left-1/2 transform -translate-x-1/2 px-8 py-5 rounded-lg shadow-lg text-white z-50 transition-opacity duration-300', toastType === 'success' ? 'bg-green-500' : 'bg-yellow-500']"
     >
       {{ toastMessage }}
     </div>
   </div>
 </template>
-
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -179,17 +191,16 @@ import GenderBarChart from '../components/GenderBarChart.vue'
 import LanguageBarChart from '../components/LanguageBarChart.vue'
 
 const schools = ref([])
-const showConfirm = ref(false)
+const recommendedSchools = ref([[], [], []])  // Recommended schools for each search input
+const searchQueries = ref(['', '', ''])  // Search query for each input box
+const allSchools = ref([])  // All schools data
 const pendingRemoveIndex = ref(null)
-const recommendedSchool = ref([])
-const allSchools = ref([])
-const searchQuery = ref('')
-let selectedSchool = null
-
+const showConfirm = ref(false)
 
 const toastMessage = ref('')
 const toastType = ref('success')
 const showToast = ref(false)
+
 const triggerToast = (message, type = 'success') => {
   toastMessage.value = message
   toastType.value = type
@@ -199,16 +210,21 @@ const triggerToast = (message, type = 'success') => {
   }, 3000)
 }
 
-const searchCompareSchools = async () => {
-  const input = searchQuery.value.trim().toLowerCase()
+const searchCompareSchools = async (index) => {
+  const input = searchQueries.value[index - 1].trim().toLowerCase()
+
   if (!input) {
-    recommendedSchool.value = []
+    recommendedSchools.value[index - 1] = []  // Clear results if input is empty
     return
   }
+
   if (!allSchools.value.length) {
     try {
+
       const res = await fetch(`${import.meta.env.VITE_API_URL}/schools`)
       // const res = await fetch('http://127.0.0.1:5000/schools')
+
+
       const data = await res.json()
       allSchools.value = data
     } catch (err) {
@@ -216,27 +232,31 @@ const searchCompareSchools = async () => {
       return
     }
   }
-  recommendedSchool.value = allSchools.value.filter(s => {
+
+  // Filter recommended schools for this specific search query
+  recommendedSchools.value[index - 1] = allSchools.value.filter(s => {
     const name = (s.School_Name || '').toLowerCase()
-    const suburb = (s.Suburb || '').toLowerCase()
-    return name.includes(input) || suburb.includes(input)
+    return name.includes(input)  // Check for name match
   }).slice(0, 8)
 }
 
-const selectRecommended = (item) => {
-  searchQuery.value = item.School_Name
-  selectedSchool = item
-  recommendedSchool.value = []
+const selectRecommended = (item, index) => {
+  searchQueries.value[index - 1] = item.School_Name  // Set selected school name to the input field
+  recommendedSchools.value[index - 1] = []  // Clear recommendations
 }
 
-const addToCompare = async () => {
-  if (!selectedSchool) {
+const addToCompare = async (index) => {
+  const selectedSchoolName = searchQueries.value[index - 1]
+
+  if (!selectedSchoolName) {
     triggerToast('Please select a school first.', 'error')
     return
   }
 
-  if (schools.value.length >= 3) {
-    triggerToast('You can only compare up to 3 schools.', 'error')
+  const selectedSchool = allSchools.value.find(s => s.School_Name === selectedSchoolName)
+
+  if (!selectedSchool) {
+    triggerToast('This school is not found.', 'error')
     return
   }
 
@@ -247,7 +267,6 @@ const addToCompare = async () => {
 
   try {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/school/${selectedSchool.School_AGE_ID}`)
-    // const res = await fetch(`http://127.0.0.1:5000/school/${selectedSchool.School_AGE_ID}`)
     const detailed = await res.json()
 
     const formatted = {
@@ -257,6 +276,7 @@ const addToCompare = async () => {
       languageProgram: Array.isArray(detailed.languages) ? detailed.languages.join(', ') : detailed.languageProgram || 'None',
       staffPerStudent: detailed.Teaching_staff_per_student || 'N/A',
       totalEnrolment: detailed.Total_Enrolment || 'N/A',
+
       studentLanguageBackground: detailed.Language_Flag || 'N/A',
       icsea: detailed.ICSEA || 'N/A',
       english: Number(detailed.English) || 0,
@@ -272,9 +292,7 @@ const addToCompare = async () => {
     const stored = JSON.parse(sessionStorage.getItem('compareList') || '[]')
     stored.push(formatted)
     sessionStorage.setItem('compareList', JSON.stringify(stored))
-    searchQuery.value = ''
-    selectedSchool = null
-
+    searchQueries.value[index - 1] = ''  // Clear the input field after adding
     triggerToast('School added successfully!', 'success')
   } catch (err) {
     console.error('Failed to fetch detailed school data:', err)
@@ -326,17 +344,18 @@ onMounted(() => {
         type: item.type,
         yearRange: item.yearRange || item.Year_Range,
         languageProgram: item.languageProgram,
-        staffPerStudent: item.staffPerStudent,
+        staffPerStudent: item.staffPerStudent|| item.Teaching_staff_per_student
+        ,
         totalEnrolment: item.totalEnrolment,
         studentLanguageBackground: item.studentLanguageBackground,
-        icsea: item.icsea,
+        icsea: item.icsea || item.ICSEA,
         english: Number(item.english ?? item.English ?? 0),
         notEnglish: Number(item.notEnglish ?? item.not_English ?? 0),
         notStated: Number(item.notStated ?? item.not_stated ?? 0),
         Girls_Enrolment: Number(item.Girls_Enrolment ?? 0),
         Boys_Enrolment: Number(item.Boys_Enrolment ?? 0),
         languageProgramArr: item.languageProgramArr || item.languages || [],
-        url: item.url || item.School_URL || '' 
+        url: item.url || item.School_URL || ''
       }))
     } catch (err) {
       console.error('Failed to parse compareList from sessionStorage:', err)
