@@ -72,7 +72,7 @@
           <p class="text-gray-600 mb-3">{{ selectedSchool.type }} school</p>
           
           <div class="grid grid-cols-2 gap-2 mb-4">
-            <div v-for="(language, index) in selectedSchool.languages" :key="index" class="bg-gray-100 rounded-md p-2 text-center text-sm">
+            <div v-for="(language, index) in selectedSchool.languages" :key="index" class="rounded-md p-2 text-center text-sm" style="background-color: #EBF1FA;">
               {{ language }}
             </div>
           </div>
@@ -171,8 +171,6 @@
   showToast('success', `"${school.School_Name}" added to compare!`)
 }
 
-
-  
   // Receive query searching parameters and if a school is identified from HomeView.vue
   const props = defineProps({
     searchQuery: {
@@ -384,9 +382,6 @@
           }
         })
   
-       
-
-
         map.on('click', 'school-points', (e) => {
   if (e.features && e.features.length > 0) {
     const properties = e.features[0].properties;
@@ -415,11 +410,6 @@ fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
       isSchoolLoaded.value = true;
     }
   });
-
-
-
-
-
           }
 });
   
