@@ -52,30 +52,40 @@
             </div>
 
             <div class="pb-4 border-b border-gray-300">
-              <span class="block font-bold mb-2">Language Program</span>
-              
-              <!-- <div v-if="schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-2">
-                <span
-                  v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)"
-                  :key="j"
-                  class="bg-blue-600 text-white text-xl px-3 py-1 rounded-full"
-                >
-                  {{ lang }}
-                </span>
-              </div> -->
+  <span class="block font-bold mb-2">Language Program</span>
 
-              <div v-if="schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-4">
-                <span
-                  v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)"
-                  :key="j"
-                  class="bg-blue-600 text-white text-xl px-4 py-2 rounded-full w-1/3 text-center"
-                >
-                  {{ lang }}
-                </span>
-              </div>
+  <!-- Language Program Container -->
+  <div v-if="schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-4 min-h-[80px]">
+    <!-- Render language program buttons -->
+    <span
+      v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)"
+      :key="j"
+      class="bg-blue-600 text-white text-xl px-4 py-2 rounded-full w-1/3 text-center"
+      v-show="j < schools[i - 1].languageProgramArr.length"
+    >
+      {{ lang }}
+    </span>
 
-              <div v-else class="text-white-500">None</div>
-            </div>
+    <!-- Empty placeholders to fill the remaining space (but won't be shown) -->
+    <span v-for="n in (4 - schools[i - 1].languageProgramArr.length)" :key="'empty-' + n" class="w-1/3 h-10"></span>
+  </div>
+
+  <!-- Display "None" when no language programs -->
+  <div v-else class="text-white-500 w-full text-start py-2 min-h-[80px]">
+    None
+  </div>
+
+  <!-- Empty row when "None" is displayed, with 2 empty placeholders -->
+  <div v-if="schools[i - 1].languageProgramArr.length === 0" class="flex gap-4 mt-4">
+    <span class="w-1/3 h-10"></span>
+    <span class="w-1/3 h-10"></span>
+  </div>
+</div>
+
+
+
+
+
 
             <div class="pb-4 border-b border-gray-300">
               <span class="block font-bold">Student Per Teaching Staff</span>
