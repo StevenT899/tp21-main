@@ -405,8 +405,7 @@
 isSchoolLoaded.value = false;
 
 const sid = properties.id;
-// fetch(`${API_BASE}/school/${sid}`)
-fetch(`http://127.0.0.1:5000/school/${sid}`)
+fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
   .then(response => response.json())
   .then(fullData => {
     if (fullData && !fullData.error) {
