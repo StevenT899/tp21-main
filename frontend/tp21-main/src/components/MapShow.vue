@@ -156,7 +156,7 @@
   const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]')
 
   // Check if the school is already in the compare list
-  const exists = compareList.some(item => item.id === school.School_AGE_ID)
+  const exists = compareList.some(item => item.id === school.School_AGE_ID ||  item.url === school.School_URL)
 
   // If it already exists, show warning and return
   if (exists) {
