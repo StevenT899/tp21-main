@@ -71,7 +71,7 @@
   </div>
 
   <!-- Display "None" when no language programs -->
-  <div v-else class="text-white-500 w-full text-center py-2 min-h-[80px] mt-5">
+  <div v-else class="text-white-500 w-full text-center py-2 min-h-[80px] mt-6">
     None
   </div>
 
