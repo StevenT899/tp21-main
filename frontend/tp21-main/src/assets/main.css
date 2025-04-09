@@ -58,3 +58,10 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   border-radius: 12px;
 }
+
+/* Mouse */
+.bg-blue-600,
+.bg-gray-200,
+.bg-blue-500 {
+  cursor: pointer;
+}
