@@ -70,7 +70,7 @@
         itemStyle: {
           color: '#c4b5fd' // Light purple
         },
-        barWidth: 40
+        barWidth: 50
       },
       {
         name: 'Boy',
@@ -91,7 +91,7 @@
         itemStyle: {
           color: '#8b5cf6' // Darker purple
         },
-        barWidth: 40
+        barWidth: 50
       }
     ]
   }))
