@@ -11,7 +11,8 @@
             Explore, compare, and understand Victorian schools. We help migrant families make confident school choices.
           </p>
           <p class="text-lg text-gray-700 mb-6">
-            Use our simple map tool to search schools, see what they offer, and find the best fit for your child — academically, culturally, and practically.
+            Use our simple map tool to search schools, see what they offer, and find the best fit for your child —
+            academically, culturally, and practically.
           </p>
           <p class="font-semibold text-lg mb-4">Choose an option to get started!</p>
 
@@ -28,32 +29,32 @@
             <div class="flex">
               <div class="relative flex-grow">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-gray-500">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
                 </span>
                 <!-- searching bar -->
-                <input
-                  v-model="searchQuery"
-                  @input="search"
-                  @keydown.enter = "showMapAndSearch"
-                  type="text"
-                  maxlength="55"
+                <input v-model="searchQuery" @input="search" @keydown.enter="showMapAndSearch"
+                  @focus="showSuggestions = true" ref="searchBar" type="text" maxlength="60"
                   placeholder="Enter suburb/ postcode/ school name"
-                  class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                  class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
-              <button @click="showMapAndSearch" class="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 transition-colors">
+              <button @click="showMapAndSearch"
+                class="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 transition-colors">
                 Search
               </button>
             </div>
             <!-- searching suggetion box -->
-            <div v-if="showSuggestions && searchResults.length > 0" class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-md mt-1 z-10">
+            <div v-if="showSuggestions && searchResults.length > 0" ref="suggestionBox"
+              class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-md mt-1 z-10">
               <div v-if="suburbResults.length > 0">
                 <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">Suburb</p>
                 <ul>
-                  <li v-for="(suburb, index) in suburbResults" :key="index" class="py-2 px-4 hover:bg-gray-100 cursor-pointer" @click="selectResult(suburb,'suburb')">
+                  <li v-for="(suburb, index) in suburbResults" :key="index"
+                    class="py-2 px-4 hover:bg-gray-100 cursor-pointer" @click="selectResult(suburb, 'suburb')">
                     {{ suburb }}
                   </li>
                 </ul>
@@ -61,14 +62,16 @@
               <div v-if="schoolResults.length > 0">
                 <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">School</p>
                 <ul>
-                  <li v-for="(school, index) in schoolResults" :key="index" class="py-2 px-4 hover:bg-gray-100 cursor-pointer" @click="selectResult(school,'school')">
+                  <li v-for="(school, index) in schoolResults" :key="index"
+                    class="py-2 px-4 hover:bg-gray-100 cursor-pointer" @click="selectResult(school, 'school')">
                     {{ school }}
                   </li>
                 </ul>
               </div>
             </div>
             <!-- prompt: no result -->
-            <div v-if="showNoResultMessage" class="absolute top-full left-0 right-0 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md shadow-md mt-1 z-10">
+            <div v-if="showNoResultMessage"
+              class="absolute top-full left-0 right-0 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md shadow-md mt-1 z-10">
               No result found. Please try again!
             </div>
           </div>
@@ -81,38 +84,21 @@
     <section v-if="showMap" class="py-12 px-6 md:px-12 lg:px-24 bg-white border-t border-b border-gray-200">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Find Schools Near You</h2>
-        <MapShow :searchQuery="searchQuery" :isSchool="isSchool" :selectedSuburb="selectedSuburb" :selectedType="selectedType" />
+        <MapShow :searchQuery="searchQuery" :isSchool="isSchool" :selectedSuburb="selectedSuburb"
+          :selectedType="selectedType" />
       </div>
     </section>
 
     <!-- Help Section -->
-    <section class="py-12 px-6 md:px-12 lg:px-24 bg-gray-50">
-      <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-          <img src="@/assets/images/help1.jpg" alt="help photo" class="w-full h-auto">
-        </div>
-
-        <div>
-          <h2 class="text-3xl font-bold text-gray-700 mb-6">WE ARE HERE TO HELP</h2>
-          <p class="text-gray-700 mb-4">
-            Choosing the right primary school is one of the most important decisions for a family — it shapes not only a child's learning, but their sense of belonging, confidence, and future opportunities.
-          </p>
-          <p class="text-gray-700 mb-4">
-            For many migrant families, finding clear, trustworthy, and culturally inclusive school information isn't always easy.
-          </p>
-          <p class="text-gray-700 mb-4">
-            This platform helps you explore and compare local schools with confidence, so your child can start strong — in a place where they feel safe, supported, and seen.
-          </p>
-          <p class="text-right italic font-medium">—NewBee Edu Team</p>
-        </div>
-      </div>
-    </section>
+    <HelpSection />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import MapShow from '@/components/MapShow.vue';
+import HelpSection from '@/components/home/HelpSection.vue';
+import { useClickOutside } from '@/utils/useClickOutside';
 
 // search bar
 const searchQuery = ref('');
@@ -122,7 +108,9 @@ const isSchool = ref(false);
 // search suggestion box
 const selectedType = ref(''); //'suburb' or 'school'
 const selectedSuburb = ref('');
-const showSuggestions = ref(false);
+const suggestionBox = ref(null);
+const searchBar = ref(null);
+const { isOpen: showSuggestions } = useClickOutside(suggestionBox, searchBar);
 
 // store searching results
 const searchResults = ref([]);
@@ -176,35 +164,35 @@ const search = async () => {
   const uniqueSchools = new Set();
 
   schools.value.forEach(school => {
-  const formattedSuburb = `${school.Suburb}, ${school.Postcode}`;
-  const lowerSuburb = school.Suburb?.toLowerCase();
-  const lowerSchool = school.School_Name?.toLowerCase();
-  const postcode = school.Postcode?.toString();
+    const formattedSuburb = `${school.Suburb}, ${school.Postcode}`;
+    const lowerSuburb = school.Suburb?.toLowerCase();
+    const lowerSchool = school.School_Name?.toLowerCase();
+    const postcode = school.Postcode?.toString();
 
-  // exact match suburb
-  if (lowerSuburb === lowerCaseInput) {
-    uniqueSuburbs.add(formattedSuburb);
-  }
+    // exact match suburb
+    if (lowerSuburb === lowerCaseInput) {
+      uniqueSuburbs.add(formattedSuburb);
+    }
 
-  // exact match school
-  if (lowerSchool === lowerCaseInput) {
-    uniqueSchools.add(school.School_Name);
-  }
+    // exact match school
+    if (lowerSchool === lowerCaseInput) {
+      uniqueSchools.add(school.School_Name);
+    }
 
-  // exact match postcode
-  if (postcode === lowerCaseInput) {
-    uniqueSuburbs.add(formattedSuburb);
-  }
+    // exact match postcode
+    if (postcode === lowerCaseInput) {
+      uniqueSuburbs.add(formattedSuburb);
+    }
 
-  // fuzzy suburb match
-  if (lowerSuburb?.includes(lowerCaseInput)) {
-    uniqueSuburbs.add(formattedSuburb);
-  }
+    // fuzzy suburb match
+    if (lowerSuburb?.includes(lowerCaseInput)) {
+      uniqueSuburbs.add(formattedSuburb);
+    }
 
-  // fuzzy school match
-  if (lowerSchool?.includes(lowerCaseInput)) {
-    uniqueSchools.add(school.School_Name);
-  }
+    // fuzzy school match
+    if (lowerSchool?.includes(lowerCaseInput)) {
+      uniqueSchools.add(school.School_Name);
+    }
   });
 
   suburbResults.value = [...uniqueSuburbs];
@@ -278,7 +266,7 @@ const showMapAndSearch = async () => {
     // error prompt timer
     setTimeout(() => {
       showNoResultMessage.value = false;
-    },2000);
+    }, 2000);
   } else {
     showNoResultMessage.value = false;
     showMap.value = true;
@@ -290,18 +278,18 @@ const showMapAndSearch = async () => {
 
 
 const selectResult = (result, type) => {
-  if (type ==='suburb') {
+  if (type === 'suburb') {
     // extract suburb name from formatted string
     const suburbName = result.split(',')[0].trim();
     searchQuery.value = suburbName;
     selectedSuburb.value = suburbName;
     isSchool.value = false;
-    selectedType.value ='suburb';
+    selectedType.value = 'suburb';
   } else {
     searchQuery.value = result;
     isSchool.value = true;
     selectedSuburb.value = '';
-    selectedType.value ='school';
+    selectedType.value = 'school';
   }
 
   searchResults.value = [];
@@ -313,42 +301,3 @@ const selectResult = (result, type) => {
   showMap.value = true;
 };
 </script>
-
-<style scoped>
-@import 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css';
-
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  color: #333;
-  line-height: 1.6;
-}
-
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Custom styles for better visual representation */
-.family-illustration,
-.family-balloon-illustration {
-  transition: transform 0.3s ease;
-}
-
-.family-illustration:hover,
-.family-balloon-illustration:hover {
-  transform: translateY(-5px);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 2.5rem;
-  }
-
- .family-illustration,
- .family-balloon-illustration {
-    transform: scale(0.8);
-  }
-}
-</style>
