@@ -43,43 +43,53 @@
           <div class="space-y-6 text-xl text-gray-800 min-h-[460px]">
             <div class="pb-4 border-b border-gray-300 sm:mt-20 md:mt-12 lg:mt-40 xl:mt-10">
               <span class="block font-bold">School Type</span>
-              <span class="block">{{ schools[i - 1].type }}</span>
+              <span class="block text-center mt-6">{{ schools[i - 1].type }}</span>
             </div>
 
             <div class="pb-4 border-b border-gray-300">
               <span class="block font-bold">Year Range</span>
-              <span class="block">{{ schools[i - 1].yearRange }}</span>
+              <span class="block text-center mt-6">{{ schools[i - 1].yearRange }}</span>
             </div>
 
             <div class="pb-4 border-b border-gray-300">
-              <span class="block font-bold mb-2">Language Program</span>
-              
-              <!-- <div v-if="schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-2">
-                <span
-                  v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)"
-                  :key="j"
-                  class="bg-blue-600 text-white text-xl px-3 py-1 rounded-full"
-                >
-                  {{ lang }}
-                </span>
-              </div> -->
+  <span class="block font-bold mb-2 mt-6">Language Program</span>
 
-              <div v-if="schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-4">
-                <span
-                  v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)"
-                  :key="j"
-                  class="bg-blue-600 text-white text-xl px-4 py-2 rounded-full w-1/3 text-center"
-                >
-                  {{ lang }}
-                </span>
-              </div>
+  <!-- Language Program Container -->
+  <div v-if="schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-4 mt-6 justify-center">
+    <!-- Render language program buttons -->
+    <span
+      v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)"
+      :key="j"
+      class="bg-blue-600 text-white text-xl px-4 py-2 rounded-full w-1/3 text-center"
+      v-show="j < schools[i - 1].languageProgramArr.length"
+    >
+      {{ lang }}
+    </span>
 
-              <div v-else class="text-white-500">None</div>
-            </div>
+    <!-- Empty placeholders to fill the remaining space (but won't be shown) -->
+    <span v-for="n in (4 - schools[i - 1].languageProgramArr.length)" :key="'empty-' + n" class="w-1/3 h-10"></span>
+  </div>
+
+  <!-- Display "None" when no language programs -->
+  <div v-else class="text-white-500 w-full text-center py-2 min-h-[80px] mt-6">
+    None
+  </div>
+
+  <!-- Empty row when "None" is displayed, with 2 empty placeholders -->
+  <div v-if="schools[i - 1].languageProgramArr.length === 0" class="flex justify-center gap-4 mt-4">
+    <span class="w-1/3 h-10"></span>
+    <span class="w-1/3 h-10"></span>
+  </div>
+</div>
+
+
+
+
+
 
             <div class="pb-4 border-b border-gray-300">
               <span class="block font-bold">Student Per Teaching Staff</span>
-              <span class="block">{{ Math.round(formatNumber(1 / schools[i - 1].staffPerStudent) )}}</span>
+              <span class="block text-center mt-6">{{ Math.round(formatNumber(1 / schools[i - 1].staffPerStudent) )}}</span>
             </div>
 
             <!-- ICSEA with Tooltip -->
@@ -104,12 +114,12 @@
                   </div>
                 </div>
               </div>
-              <span class="block mt-2">{{ schools[i - 1].icsea }}</span>
+              <span class="block mt-6 text-center">{{ schools[i - 1].icsea }}</span>
             </div>
 
             <div>
               <span class="block font-bold">Enrolments</span>
-              <span class="block">Total enrolment: {{ schools[i - 1].totalEnrolment }}</span>
+              <span class="block text-center mt-6">Total enrolment: {{ schools[i - 1].totalEnrolment }}</span>
               <div class="flex justify-center items-end mt-6 pb-4">
                 <GenderBarChart :girls="schools[i - 1].Girls_Enrolment" :boys="schools[i - 1].Boys_Enrolment" />
                 <LanguageBarChart
