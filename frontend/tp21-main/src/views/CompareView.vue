@@ -60,7 +60,7 @@
     <span
       v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)"
       :key="j"
-      class="bg-blue-600 text-sm text-white px-4 py-2 rounded-full w-1/3 text-center truncate mb-1"
+      class="bg-blue-700 text-sm text-white px-4 py-2 rounded-full w-1/3 text-center truncate mb-1"
      
       :title="lang" 
     >
