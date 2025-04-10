@@ -9,7 +9,7 @@
                 <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
                 <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
             </svg>
-            <span class="text-xl font-bold">Newbee Edu</span>
+            <span class="text-xl font-bold">SchoolMate</span>
         </div>
         <div class="hidden md:flex space-x-6">
           <router-link to="/" class="hover:underline">Home</router-link>

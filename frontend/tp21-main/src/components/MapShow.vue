@@ -321,7 +321,8 @@ const initializeMap = () => {
     container: mapContainer.value,
     style: 'mapbox://styles/mapbox/streets-v11',
     center: [144.9631, -37.8136], // Near Melbourne
-    zoom: 11
+    zoom: 11,
+    maxZoom: 14
   })
 
   // Add navigation control

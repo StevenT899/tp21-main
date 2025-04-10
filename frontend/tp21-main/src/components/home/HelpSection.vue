@@ -5,16 +5,13 @@
           <img src="@/assets/images/help1.jpg" alt="help photo" class="w-full h-auto" />
         </div>
         <div>
-          <h2 class="text-3xl font-bold text-gray-700 mb-6">WE ARE HERE TO HELP</h2>
-          <p class="text-gray-700 mb-4">
-            Choosing the right primary school is one of the most important decisions for a family...
+          <h2 class="text-2xl font-bold text-gray-700 mb-6">WE ARE HERE TO HELP</h2><br>
+          <p class="text-xl text-gray-700 mb-4">
+            School is more than academics—it’s where children grow and belong. Every child deserves to feel safe, seen, and supported at school.
           </p>
-          <p class="text-gray-700 mb-4">
-            For many migrant families, finding clear, trustworthy, and culturally inclusive school information isn't easy.
-          </p>
-          <p class="text-gray-700 mb-4">
-            This platform helps you explore and compare local schools with confidence...
-          </p>
+          <p class="text-xl text-gray-700 mb-4">
+            We hope this tool makes it just a little easier—for you, and for them.
+          </p><br>
           <p class="text-right italic font-medium">—NewBee Edu Team</p>
         </div>
       </div>

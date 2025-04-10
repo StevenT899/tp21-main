@@ -4,7 +4,7 @@
     <section class="py-12 px-6 md:px-12 lg:px-24 bg-white relative overflow-visable">
       <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
         <div>
-          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-[1.2]">
             Find the Right Primary School for Your Child
           </h1>
           <p class="text-lg text-gray-700 mb-4">
@@ -16,12 +16,16 @@
           </p>
           <p class="font-semibold text-lg mb-4">Choose an option to get started!</p>
 
-          <div class="flex flex-col sm:flex-row gap-4 mb-8">
-            <button class="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition-colors">
+          <div class="flex flex-col sm:flex-row w-5/7 mb-8">
+            <button class="w-2/3 bg-blue-600 text-white py-2 px-6 rounded-r-none rounded-md hover:bg-blue-700 transition-colors"
+              @click="isChecked = false" :disabled="isChecked">
               Explore schools
             </button>
-            <button class="bg-gray-200 text-gray-700 py-2 px-6 rounded-md hover:bg-gray-300 transition-colors">
-              Check your school zone
+            <button class="w-2/3" :class="{
+              'bg-gray-200 text-gray-700 py-2 px-6 rounded-l-none rounded-md hover:bg-gray-300 transition-colors': !isChecked,
+              'bg-blue-600 text-white py-2 px-6 rounded-l-none rounded-md hover:bg-blue-700 transition-colors': isChecked
+            }" @click="isChecked = true" :disabled="!isChecked">
+              Check your <span class="underline underline-offset-2">school zone</span>
             </button>
           </div>
 
@@ -81,7 +85,8 @@
     </section>
 
     <!-- Map Section -->
-    <section v-if="showMap" class="py-12 px-6 md:px-12 lg:px-24 bg-white border-t border-b border-gray-200">
+    <section v-if="showMap" class="py-12 px-6 md:px-12 lg:px-24 border-t border-b border-gray-200"
+      style="background: linear-gradient(to bottom, #ecf2fb 1%, transparent 15%);">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Find Schools Near You</h2>
         <MapShow :searchQuery="searchQuery" :isSchool="isSchool" :selectedSuburb="selectedSuburb"
