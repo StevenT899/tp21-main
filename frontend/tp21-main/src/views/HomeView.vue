@@ -15,20 +15,14 @@
             academically, culturally, and practically.
           </p>
           <p class="font-semibold text-lg mb-4">Choose an option to get started!</p>
-
-          <div class="flex flex-col sm:flex-row w-5/7 mb-8">
-            <button class="w-2/3 bg-blue-600 text-white py-2 px-6 rounded-r-none rounded-md hover:bg-blue-700 transition-colors"
-              @click="isChecked = false" :disabled="isChecked">
+          <div class="flex flex-col sm:flex-row gap-4 mb-8">
+            <button class="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition-colors">
               Explore schools
             </button>
-            <button class="w-2/3" :class="{
-              'bg-gray-200 text-gray-700 py-2 px-6 rounded-l-none rounded-md hover:bg-gray-300 transition-colors': !isChecked,
-              'bg-blue-600 text-white py-2 px-6 rounded-l-none rounded-md hover:bg-blue-700 transition-colors': isChecked
-            }" @click="isChecked = true" :disabled="!isChecked">
+            <button class="bg-gray-200 text-gray-700 py-2 px-6 rounded-md hover:bg-gray-300 transition-colors">
               Check your <span class="underline underline-offset-2">school zone</span>
             </button>
           </div>
-
           <div class="relative">
             <div class="flex">
               <div class="relative flex-grow">
