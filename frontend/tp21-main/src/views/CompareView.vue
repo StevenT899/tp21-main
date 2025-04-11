@@ -330,9 +330,8 @@ onMounted(() => {
         name: item.name,
         type: item.type,
         yearRange: item.yearRange || item.Year_Range,
-        languageProgram: item.languageProgram,
-        staffPerStudent: item.staffPerStudent || item.Teaching_staff_per_student
-        ,
+        languageProgram: item.languageProgram || item.languageProgram || item.languageProgramArr,
+        staffPerStudent: item.staffPerStudent || item.Teaching_staff_per_student,
         totalEnrolment: item.totalEnrolment || item.Total_Enrolment,
         studentLanguageBackground: item.studentLanguageBackground,
         icsea: item.icsea || item.ICSEA,
