@@ -333,7 +333,7 @@ onMounted(() => {
         languageProgram: item.languageProgram,
         staffPerStudent: item.staffPerStudent || item.Teaching_staff_per_student
         ,
-        totalEnrolment: item.totalEnrolment,
+        totalEnrolment: item.totalEnrolment || item.Total_Enrolment,
         studentLanguageBackground: item.studentLanguageBackground,
         icsea: item.icsea || item.ICSEA,
         english: Number(item.english ?? item.English ?? 0),
