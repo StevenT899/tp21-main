@@ -1,3 +1,4 @@
+# app/dao.py
 import mysql.connector
 from .config import DB
 

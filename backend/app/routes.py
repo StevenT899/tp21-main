@@ -1,3 +1,4 @@
+# app/routes.py
 from flask import Blueprint, jsonify, request
 from .dao import fetch_all_schools, fetch_school_by_id
 from .config import VALID_USERNAME, VALID_PASSWORD
