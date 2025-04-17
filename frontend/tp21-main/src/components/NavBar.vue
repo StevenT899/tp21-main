@@ -12,7 +12,7 @@
             <span class="text-xl font-bold">SchoolMate</span>
         </div>
         <div class="hidden md:flex space-x-6">
-          <router-link to="/" class="hover:underline">Home</router-link>
+          <router-link to="/home" class="hover:underline">Home</router-link>
           <router-link to="/compare" class="hover:underline">Compare</router-link>
             <a href="#" class="hover:underline relative group">
                 Resource
