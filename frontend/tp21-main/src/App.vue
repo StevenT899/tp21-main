@@ -1,32 +1,32 @@
 <script setup>
+import { watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import NavBar from './components/NavBar.vue';
 import Footer from './components/FooterTeam.vue';
-import { useRouter } from 'vue-router';
-import { ref, onMounted } from 'vue';
+import { isLoggedIn } from './auth';
 
 const router = useRouter();
-const isLoggedIn = ref(localStorage.getItem('isLoggedIn') === 'true');
+const route  = useRoute();
 
-onMounted(() => {
-  if (!isLoggedIn.value) {
+if (!isLoggedIn.value && route.path !== '/login') {
+  router.push('/login');
+}
+
+watch(isLoggedIn, (val) => {
+  if (!val && router.currentRoute.value.path !== '/login') {
     router.push('/login');
   }
 });
 </script>
 
 <template>
-  <div v-if="isLoggedIn">
-    <NavBar />
-    <main>
-      <router-view />
-    </main>
-    <Footer />
-  </div>
-  <div v-else>
+  <NavBar v-if="isLoggedIn" />
+  <main>
     <router-view />
-  </div>
+  </main>
+  <Footer v-if="isLoggedIn" />
 </template>
 
 <style scoped>
-
-</style>    
+/* ... */
+</style>
