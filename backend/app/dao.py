@@ -1,29 +1,13 @@
-from flask import Flask, jsonify, request
 import mysql.connector
-from flask_cors import CORS
-import configparser
+from .config import DB
 
-app = Flask(__name__)
-CORS(app)
+def get_conn():
+    return mysql.connector.connect(**DB)
 
-config = configparser.ConfigParser()
-config.read('config.ini')
-VALID_USERNAME = config.get('login', 'username')
-VALID_PASSWORD = config.get('login', 'password')
-
-def get_schools_from_db():
-    try:
-        # connect to mariadb
-        conn = mysql.connector.connect(
-            host='3.107.27.249',
-            user='newbee',
-            password='newbee21',
-            database='newbee_db'
-        )
-        cursor = conn.cursor()
-
-        # perform SQL query: join 3 tables
-        query = """
+def fetch_all_schools():
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("""
             SELECT 
                 s.School_AGE_ID, 
                 s.School_Name, 
@@ -52,14 +36,15 @@ def get_schools_from_db():
                 `Language` l ON lp.Language_ID = l.Language_id
             GROUP BY 
                 s.School_AGE_ID;
-        """
-        cursor.execute(query)
-        rows = cursor.fetchall()
+        """)
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
 
-        schools = []
-        for row in rows:
-            school = {
-                'School_AGE_ID': row[0],
+    result = []
+    for row in rows:
+        result.append({
+            'School_AGE_ID': row[0],
                 'School_Name': row[1],
                 'Suburb': row[2],
                 'Postcode': row[3],
@@ -78,36 +63,13 @@ def get_schools_from_db():
                 'SA2_ID': row[16],
                 'Language_Flag': row[17],
                 'languages': row[18].split(',') if row[18] else []
-            }
-            schools.append(school)
+        })
+    return result
 
-        # close db connection
-        conn.close()
-        return schools
-    except Exception as e:
-        print(f"Error fetching schools from database: {e}")
-        return []
-
-
-@app.route('/schools', methods=['GET'])
-def get_schools():
-    schools = get_schools_from_db()
-    return jsonify(schools)
-
-
-
-@app.route('/school/<int:school_id>', methods=['GET'])
-def get_school_by_id(school_id):
-    try:
-        conn = mysql.connector.connect(
-            host='3.107.27.249',
-            user='newbee',
-            password='newbee21',
-            database='newbee_db'
-        )
-        cursor = conn.cursor()
-
-        query = """
+def fetch_school_by_id(sid):
+    conn = get_conn()
+    cur  = conn.cursor()
+    cur.execute("""
             SELECT 
                 s.School_AGE_ID, 
                 s.School_Name, 
@@ -141,13 +103,13 @@ def get_school_by_id(school_id):
                 s.School_AGE_ID = %s
             GROUP BY 
                 s.School_AGE_ID;
-        """
-
-        cursor.execute(query, (school_id,))
-        row = cursor.fetchone()
-
-        if row:
-            school = {
+        """, (sid,))
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    if not row:
+        return None
+    return {
                 'School_AGE_ID': row[0],
                 'School_Name': row[1],
                 'Suburb': row[2],
@@ -171,25 +133,3 @@ def get_school_by_id(school_id):
                 'not_stated': row[20],
                 'languages': row[21].split(',') if row[21] else []
             }
-            return jsonify(school)
-        else:
-            return jsonify({'error': 'School not found'}), 404
-
-    except Exception as e:
-        print(f'Error fetching school by ID: {e}')
-        return jsonify({'error': 'Internal server error'}), 500
-
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-    print(f"Received username: {username}, password: {password}")
-    print(f"Valid username: {VALID_USERNAME}, valid password: {VALID_PASSWORD}")
-    if username == VALID_USERNAME and password == VALID_PASSWORD:
-        return jsonify({"success": True, "message": "Login successful"})
-    else:
-        return jsonify({"success": False, "message": "Invalid username or password"}), 401
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
