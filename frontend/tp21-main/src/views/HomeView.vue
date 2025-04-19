@@ -78,7 +78,7 @@
       </section>
 
       <!-- Map Section -->
-      <section v-if="showMap" class="py-12 px-6 md:px-12 lg:px-24 border-t border-b border-gray-200"
+      <section v-if="showMap" id="map-section" class="py-12 px-6 md:px-12 lg:px-24 border-t border-b border-gray-200"
           style="background: linear-gradient(to bottom, #ecf2fb 1%, transparent 15%);">
           <div class="max-w-7xl mx-auto">
               <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref , nextTick} from 'vue';
 import MapShow from '@/components/MapShow.vue';
 import HelpSection from '@/components/home/HelpSection.vue';
 import { useClickOutside } from '@/utils/useClickOutside';
@@ -274,6 +274,14 @@ const showMapAndSearch = async () => {
 
   // always hide suggestion box when search is confirmed
   showSuggestions.value = false;
+
+  // scroll to map
+  nextTick(() => {
+    const mapSection = document.getElementById('map-section');
+    if (mapSection) {
+      mapSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
 };
 
 
@@ -299,5 +307,13 @@ const selectResult = (result, type) => {
   // trigger searching auto
   showSuggestions.value = false;
   showMap.value = true;
+
+  // scroll to map
+  nextTick(() => {
+    const mapSection = document.getElementById('map-section');
+    if (mapSection) {
+      mapSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
 };
 </script>
