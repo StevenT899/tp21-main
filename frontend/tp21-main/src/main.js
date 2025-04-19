@@ -13,6 +13,7 @@ import {
 } from 'echarts/components'
 
 import VueECharts from 'vue-echarts'
+import i18n from './utils/i18n';
 
 use([
   CanvasRenderer,
@@ -25,4 +26,5 @@ use([
 const app = createApp(App)
 app.component('v-chart', VueECharts)
 app.use(router)
+app.use(i18n);
 app.mount('#app')
