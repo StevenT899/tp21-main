@@ -16,8 +16,14 @@
             title="{{ $t('compareView.schoolCard.removeButton') }}">
             {{ $t('compareView.schoolCard.removeButton') }}
           </button>
+          
           <div class="flex flex-col justify-between mb-4 h-28">
             <h2 class="text-3xl font-bold text-center text-600 mt-6">{{ schools[i - 1].name }}</h2>
+
+            <p class="text-center text-gray-500 mt-1 text-sm">
+              {{ schools[i - 1].suburb }}, {{ schools[i - 1].postcode }}
+            </p>
+
             <div v-if="schools[i - 1].url" class="text-right mt-1">
               <a :href="schools[i - 1].url" target="_blank" rel="noopener noreferrer"
                 class="text-blue-500 text-sm hover:underline inline-flex items-center gap-1">
@@ -155,6 +161,8 @@
       <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
         <h2 class="text-2xl font-semibold mb-4">{{ $t('compareView.confirmationModal.title') }}</h2>
         <p class="text-gray-600 text-xl mb-6">{{ $t('compareView.confirmationModal.message') }}</p>
+
+  
         <div class="flex justify-center gap-4">
           <button @click="confirmRemove" class="px-4 py-2 bg-red-600 text-white text-lg rounded-md hover:bg-red-700">
             {{ $t('compareView.confirmationModal.remove') }}
@@ -272,7 +280,9 @@ const addToCompare = async (index) => {
       Girls_Enrolment: Number(detailed.Girls_Enrolment) || 0,
       Boys_Enrolment: Number(detailed.Boys_Enrolment) || 0,
       languageProgramArr: Array.isArray(detailed.languages) ? detailed.languages : (detailed.languageProgram ? [detailed.languageProgram] : []),
-      url: detailed.School_URL || ''
+      url: detailed.School_URL || '',
+      suburb: detailed.Suburb || 'N/A',
+      postcode: detailed.Postcode || 'N/A'
     }
 
     schools.value.push(formatted)
@@ -341,7 +351,9 @@ onMounted(() => {
         Girls_Enrolment: Number(item.Girls_Enrolment ?? 0),
         Boys_Enrolment: Number(item.Boys_Enrolment ?? 0),
         languageProgramArr: item.languageProgramArr || item.languages || [],
-        url: item.url || item.School_URL || ''
+        url: item.url || item.School_URL || '',
+        suburb: item.suburb || item.Suburb || '',
+        postcode: item.postcode || item.Postcode || '',
       }))
     } catch (err) {
       console.error('Failed to parse compareList from sessionStorage:', err)
