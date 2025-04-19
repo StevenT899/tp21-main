@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build:iter1": "vite build --mode iter1",
+    "build:iter2": "vite build --mode iter2",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix"
