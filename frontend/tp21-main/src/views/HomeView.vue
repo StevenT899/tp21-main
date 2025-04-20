@@ -9,14 +9,15 @@
           <p class="text-lg text-gray-700 mb-4">{{ $t('homeView.heroDesc1') }}</p>
           <p class="text-lg text-gray-700 mb-6">{{ $t('homeView.heroDesc2') }}</p>
           <p class="font-semibold text-lg mb-4">{{ $t('homeView.heroStart') }}</p>
-          
+
           <!-- schools / school zone -->
           <div class="flex flex-col sm:flex-row gap-4 mb-8">
             <button class="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition-colors">
               {{ $t('homeView.exploreSchools') }}
             </button>
             <button class="bg-gray-200 text-gray-700 py-2 px-6 rounded-md hover:bg-gray-300 transition-colors">
-              <span v-html="$t('homeView.checkZone')"></span>
+              {{ $t('homeView.checkPrefix') }}
+              <span class="underline underline-offset-2">{{ $t('homeView.schoolZone') }}</span>
             </button>
           </div>
 
