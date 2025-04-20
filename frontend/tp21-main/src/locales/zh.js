@@ -51,7 +51,9 @@ export default {
         },
         confirmationModal: {
             title: '移除学校',
-            message: '你确定要从比较中移除这所学校吗？'
+            message: '你确定要从比较中移除这所学校吗？',
+            remove: '移除',
+            cancel: '取消'
         },
         toast: {
             success: '成功消息（你可以自定义此内容）',

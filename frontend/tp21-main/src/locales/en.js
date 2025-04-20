@@ -51,7 +51,9 @@ export default {
         },
         confirmationModal: {
             title: 'Remove School',
-            message: 'Are you sure you want to remove this school from the comparison?'
+            message: 'Are you sure you want to remove this school from the comparison?',
+            remove: 'Remove',
+            cancel: 'Cancel'
         },
         toast: {
             success: 'Success message (you can customize this)',

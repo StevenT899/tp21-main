@@ -1,101 +1,99 @@
 <template>
   <div class="app">
-      <!-- Hero Section -->
-      <section class="py-12 px-6 md:px-12 lg:px-24 bg-white relative overflow-visable">
-          <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
-              <div>
-                  <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-[1.2]">
-                      {{ $t('homeView.heroTitle') }}
-                  </h1>
-                  <p class="text-lg text-gray-700 mb-4">
-                      {{ $t('homeView.heroDesc1') }}
-                  </p>
-                  <p class="text-lg text-gray-700 mb-6">
-                      {{ $t('homeView.heroDesc2') }}
-                  </p>
-                  <p class="font-semibold text-lg mb-4">{{ $t('homeView.heroStart') }}</p>
-                  <div class="flex flex-col sm:flex-row gap-4 mb-8">
-                      <button class="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition-colors">
-                          {{ $t('homeView.exploreSchools') }}
-                      </button>
-                      <button class="bg-gray-200 text-gray-700 py-2 px-6 rounded-md hover:bg-gray-300 transition-colors">
-                          <span v-html="$t('homeView.checkZone')"></span>
-                      </button>
-                  </div>
-                  <div class="relative">
-                      <div class="flex">
-                          <div class="relative flex-grow">
-                              <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                      class="text-gray-500">
-                                      <circle cx="11" cy="11" r="8"></circle>
-                                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                  </svg>
-                              </span>
-                              <!-- searching bar -->
-                              <input v-model="searchQuery" @input="search" @keydown.enter="showMapAndSearch"
-                                  @focus="showSuggestions = true" ref="searchBar" type="text" maxlength="60"
-                                  :placeholder="$t('homeView.searchPlaceholder')"
-                                  class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                          </div>
-                          <button @click="showMapAndSearch"
-                              class="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 transition-colors">
-                              {{ $t('homeView.searchButton') }}
-                          </button>
-                      </div>
-                      <!-- searching suggetion box -->
-                      <div v-if="showSuggestions && searchResults.length > 0" ref="suggestionBox"
-                          class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-md mt-1 z-10">
-                          <div v-if="suburbResults.length > 0">
-                              <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">Suburb</p>
-                              <ul>
-                                  <li v-for="(suburb, index) in suburbResults" :key="index"
-                                      class="py-2 px-4 hover:bg-gray-100 cursor-pointer" @click="selectResult(suburb, 'suburb')">
-                                      {{ suburb }}
-                                  </li>
-                              </ul>
-                          </div>
-                          <div v-if="schoolResults.length > 0">
-                              <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">School</p>
-                              <ul>
-                                  <li v-for="(school, index) in schoolResults" :key="index"
-                                      class="py-2 px-4 hover:bg-gray-100 cursor-pointer" @click="selectResult(school, 'school')">
-                                      {{ school }}
-                                  </li>
-                              </ul>
-                          </div>
-                      </div>
-                      <!-- prompt: no result -->
-                      <div v-if="showNoResultMessage"
-                          class="absolute top-full left-0 right-0 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md shadow-md mt-1 z-10">
-                          {{ $t('homeView.noResult') }}
-                      </div>
-                  </div>
+    <!-- Hero Section -->
+    <section class="py-12 px-6 md:px-12 lg:px-24 bg-white relative overflow-visable">
+      <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+        <div>
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-[1.2]">{{ $t('homeView.heroTitle') }}
+          </h1>
+          <p class="text-lg text-gray-700 mb-4">{{ $t('homeView.heroDesc1') }}</p>
+          <p class="text-lg text-gray-700 mb-6">{{ $t('homeView.heroDesc2') }}</p>
+          <p class="font-semibold text-lg mb-4">{{ $t('homeView.heroStart') }}</p>
+          
+          <!-- schools / school zone -->
+          <div class="flex flex-col sm:flex-row gap-4 mb-8">
+            <button class="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition-colors">
+              {{ $t('homeView.exploreSchools') }}
+            </button>
+            <button class="bg-gray-200 text-gray-700 py-2 px-6 rounded-md hover:bg-gray-300 transition-colors">
+              <span v-html="$t('homeView.checkZone')"></span>
+            </button>
+          </div>
+
+          <div class="relative">
+            <div class="flex">
+              <div class="relative flex-grow">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-gray-500">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
+                <!-- searching bar -->
+                <input v-model="searchQuery" @input="search" @keydown.enter="showMapAndSearch"
+                  @focus="showSuggestions = true" ref="searchBar" type="text" maxlength="60"
+                  :placeholder="$t('homeView.searchPlaceholder')"
+                  class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
-              <img src="@/assets/images/home1.png" alt="homepage photo" class="w-full h-auto">
+              <button @click="showMapAndSearch"
+                class="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 transition-colors">
+                {{ $t('homeView.searchButton') }}
+              </button>
+            </div>
+            <!-- searching suggetion box -->
+            <div v-if="showSuggestions && searchResults.length > 0" ref="suggestionBox"
+              class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-md mt-1 z-10">
+              <div v-if="suburbResults.length > 0">
+                <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">Suburb</p>
+                <ul>
+                  <li v-for="(suburb, index) in suburbResults" :key="index"
+                    class="py-2 px-4 hover:bg-gray-100 cursor-pointer" @click="selectResult(suburb, 'suburb')">
+                    {{ suburb }}
+                  </li>
+                </ul>
+              </div>
+              <div v-if="schoolResults.length > 0">
+                <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">School</p>
+                <ul>
+                  <li v-for="(school, index) in schoolResults" :key="index"
+                    class="py-2 px-4 hover:bg-gray-100 cursor-pointer" @click="selectResult(school, 'school')">
+                    {{ school }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- prompt: no result -->
+            <div v-if="showNoResultMessage"
+              class="absolute top-full left-0 right-0 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md shadow-md mt-1 z-10">
+              {{ $t('homeView.noResult') }}
+            </div>
           </div>
-      </section>
+        </div>
+        <img src="@/assets/images/home1.png" alt="homepage photo" class="w-full h-auto">
+      </div>
+    </section>
 
-      <!-- Map Section -->
-      <section v-if="showMap" id="map-section" class="py-12 px-6 md:px-12 lg:px-24 border-t border-b border-gray-200"
-          style="background: linear-gradient(to bottom, #ecf2fb 1%, transparent 15%);">
-          <div class="max-w-7xl mx-auto">
-              <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
-                  {{ $t('homeView.mapTitle') }}
-              </h2>
-              <MapShow :searchQuery="searchQuery" :isSchool="isSchool" :selectedSuburb="selectedSuburb"
-                  :selectedType="selectedType" />
-          </div>
-      </section>
+    <!-- Map Section -->
+    <section v-if="showMap" id="map-section" class="py-12 px-6 md:px-12 lg:px-24 border-t border-b border-gray-200"
+      style="background: linear-gradient(to bottom, #ecf2fb 1%, transparent 15%);">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+          {{ $t('homeView.mapTitle') }}
+        </h2>
+        <MapShow :searchQuery="searchQuery" :isSchool="isSchool" :selectedSuburb="selectedSuburb"
+          :selectedType="selectedType" />
+      </div>
+    </section>
 
-      <!-- Help Section -->
-      <HelpSection />
+    <!-- Help Section -->
+    <HelpSection />
   </div>
 </template>
 
 <script setup>
-import { ref , nextTick} from 'vue';
+import { ref, nextTick } from 'vue';
 import MapShow from '@/components/MapShow.vue';
 import HelpSection from '@/components/home/HelpSection.vue';
 import { useClickOutside } from '@/utils/useClickOutside';
