@@ -19,9 +19,9 @@ export default {
         checkPrefix: 'Check your {schoolZone}',
         schoolZone: 'school zone',
         searchPlaceholder: 'Enter suburb/ postcode/ school name',
+        searchPlaceholder2: 'Enter name',
         searchButton: 'Search',
-        noResult: 'No result found. Please try again!',
-        mapTitle: 'Find Schools Near You'
+        noResult: 'No result found. Please try again!'
     },
     helpSection: {
         title: 'WE ARE HERE TO HELP',

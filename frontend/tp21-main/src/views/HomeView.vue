@@ -12,10 +12,15 @@
 
           <!-- schools / school zone -->
           <div class="flex flex-col sm:flex-row gap-4 mb-8">
-            <button class="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition-colors">
+            <button @click="onExploreSchools" :class="activeView === 'school'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-200 text-gray-700'" class="py-2 px-6 rounded-md hover:bg-blue-700 transition-colors">
               {{ $t('homeView.exploreSchools') }}
             </button>
-            <button class="bg-gray-200 text-gray-700 py-2 px-6 rounded-md hover:bg-gray-300 transition-colors">
+
+            <button @click="onShowMapZone" :class="activeView === 'zone'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-200 text-gray-700'" class="py-2 px-6 rounded-md hover:bg-gray-300 transition-colors">
               {{ $t('homeView.checkPrefix') }}
               <span class="underline underline-offset-2">{{ $t('homeView.schoolZone') }}</span>
             </button>
@@ -35,7 +40,7 @@
                 <!-- searching bar -->
                 <input v-model="searchQuery" @input="search" @keydown.enter="showMapAndSearch"
                   @focus="showSuggestions = true" ref="searchBar" type="text" maxlength="60"
-                  :placeholder="$t('homeView.searchPlaceholder')"
+                  :placeholder="getSearchPlaceholder()"
                   class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
               <button @click="showMapAndSearch"
@@ -77,14 +82,20 @@
     </section>
 
     <!-- Map Section -->
-    <section v-if="showMap" id="map-section" class="py-12 px-6 md:px-12 lg:px-24 border-t border-b border-gray-200"
+    <section v-if="activeView === VIEW_SCHOOL && showMap" id="map-section"
+      class="py-12 px-6 md:px-12 lg:px-24 border-t border-b border-gray-200"
       style="background: linear-gradient(to bottom, #ecf2fb 1%, transparent 15%);">
       <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
-          {{ $t('homeView.mapTitle') }}
-        </h2>
         <MapShow :searchQuery="searchQuery" :isSchool="isSchool" :selectedSuburb="selectedSuburb"
           :selectedType="selectedType" />
+      </div>
+    </section>
+
+    <!-- MapZone Section -->
+    <section v-if="activeView === VIEW_ZONE && showMap" id="map-zone-section"
+      class="py-12 px-6 md:px-12 lg:px-24 border-t border-b border-gray-200">
+      <div class="max-w-7xl mx-auto">
+        <MapZoneShow :schoolName="selectedSchool" />
       </div>
     </section>
 
@@ -98,6 +109,8 @@ import { ref, nextTick } from 'vue';
 import MapShow from '@/components/MapShow.vue';
 import HelpSection from '@/components/home/HelpSection.vue';
 import { useClickOutside } from '@/utils/useClickOutside';
+import MapZoneShow from '@/components/MapZoneShow.vue'
+import { useI18n } from 'vue-i18n';
 
 // search bar
 const searchQuery = ref('');
@@ -117,6 +130,13 @@ const suburbResults = ref([]);
 const schoolResults = ref([]);
 const schools = ref([]);
 const suburbPostcodeMap = ref({}); // map: suburb -> postcode
+
+// —— NEW STATUS OF BUTTONS —— //
+const VIEW_SCHOOL = 1
+const VIEW_ZONE = 2
+const activeView = ref(VIEW_SCHOOL)
+const showMapZone = ref(false)
+const selectedSchool = ref('');
 
 // fetch schools from database
 const fetchSchools = async () => {
@@ -162,113 +182,140 @@ const search = async () => {
   const uniqueSuburbs = new Set();
   const uniqueSchools = new Set();
 
-  schools.value.forEach(school => {
-    const formattedSuburb = `${school.Suburb}, ${school.Postcode}`;
-    const lowerSuburb = school.Suburb?.toLowerCase();
-    const lowerSchool = school.School_Name?.toLowerCase();
-    const postcode = school.Postcode?.toString();
+  if (activeView.value === VIEW_ZONE) {
+    schools.value.forEach(school => {
+      const lowerSchool = school.School_Name?.toLowerCase();
+      if (lowerSchool === lowerCaseInput) {
+        uniqueSchools.add(school.School_Name);
+      }
+      if (lowerSchool?.includes(lowerCaseInput)) {
+        uniqueSchools.add(school.School_Name);
+      }
+    });
+    schoolResults.value = [...uniqueSchools];
+    searchResults.value = [...uniqueSchools];
+  } else {
+    schools.value.forEach(school => {
+      const formattedSuburb = `${school.Suburb}, ${school.Postcode}`;
+      const lowerSuburb = school.Suburb?.toLowerCase();
+      const lowerSchool = school.School_Name?.toLowerCase();
+      const postcode = school.Postcode?.toString();
 
-    // exact match suburb
-    if (lowerSuburb === lowerCaseInput) {
-      uniqueSuburbs.add(formattedSuburb);
-    }
+      // exact match suburb
+      if (lowerSuburb === lowerCaseInput) {
+        uniqueSuburbs.add(formattedSuburb);
+      }
 
-    // exact match school
-    if (lowerSchool === lowerCaseInput) {
-      uniqueSchools.add(school.School_Name);
-    }
+      // exact match school
+      if (lowerSchool === lowerCaseInput) {
+        uniqueSchools.add(school.School_Name);
+      }
 
-    // exact match postcode
-    if (postcode === lowerCaseInput) {
-      uniqueSuburbs.add(formattedSuburb);
-    }
+      // exact match postcode
+      if (postcode === lowerCaseInput) {
+        uniqueSuburbs.add(formattedSuburb);
+      }
 
-    // fuzzy suburb match
-    if (lowerSuburb?.includes(lowerCaseInput)) {
-      uniqueSuburbs.add(formattedSuburb);
-    }
+      // fuzzy suburb match
+      if (lowerSuburb?.includes(lowerCaseInput)) {
+        uniqueSuburbs.add(formattedSuburb);
+      }
 
-    // fuzzy school match
-    if (lowerSchool?.includes(lowerCaseInput)) {
-      uniqueSchools.add(school.School_Name);
-    }
-  });
+      // fuzzy school match
+      if (lowerSchool?.includes(lowerCaseInput)) {
+        uniqueSchools.add(school.School_Name);
+      }
+    });
+  }
 
   suburbResults.value = [...uniqueSuburbs];
   schoolResults.value = [...uniqueSchools];
   searchResults.value = [...uniqueSuburbs, ...uniqueSchools];
+
   // show suggetion box
   showSuggestions.value = true;
 };
 
 const showMapAndSearch = async () => {
-  if (searchQuery.value.trim().length === 0) {
-    return; // if nothing in search bar, do nothing
-  }
+  // if nothing in search bar, do nothing
+  if (searchQuery.value.trim().length === 0) return;
 
   await search(); // run search to update suggestion results
 
-  const input = searchQuery.value.toLowerCase().trim();
-
-  // reset state
-  isSchool.value = false;
-  selectedSuburb.value = '';
-  selectedType.value = '';
-
-  let exactSchoolMatch = false;
-  let exactSuburbMatch = false;
-
-  // check exact school match
-  for (const school of schools.value) {
-    if (school.School_Name.toLowerCase() === input) {
-      exactSchoolMatch = true;
-      isSchool.value = true;
-      selectedType.value = 'school';
-      break;
+  //SCHOOL ZONE
+  if (activeView.value === VIEW_ZONE) {
+    const match = schools.value.find(s => s.School_Name.toLowerCase() === searchQuery.value.trim().toLowerCase());
+    if (!match) {
+      showNoResultMessage.value = true;
+      showMap.value = false;
+      setTimeout(() => showNoResultMessage.value = false, 2000);
+    } else {
+      selectedSchool.value = match.School_Name;
+      showMap.value = true;
     }
-  }
+  } else {
+    const input = searchQuery.value.toLowerCase().trim();
 
-  // check exact suburb match (if not a school)
-  if (!exactSchoolMatch) {
+    // reset state
+    isSchool.value = false;
+    selectedSuburb.value = '';
+    selectedType.value = '';
+
+    let exactSchoolMatch = false;
+    let exactSuburbMatch = false;
+
+    // check exact school match
     for (const school of schools.value) {
-      if (school.Suburb && school.Suburb.toLowerCase() === input) {
-        exactSuburbMatch = true;
-        selectedSuburb.value = school.Suburb;
-        selectedType.value = 'suburb';
+      if (school.School_Name.toLowerCase() === input) {
+        exactSchoolMatch = true;
+        isSchool.value = true;
+        selectedType.value = 'school';
         break;
       }
     }
-  }
 
-  // check if input is an exact postcode match (only digits)
-  if (!exactSchoolMatch && !exactSuburbMatch) {
-    const isPostcode = /^\d+$/.test(input);
-    if (isPostcode) {
-      const suburbExists = schools.value.some(
-        school => school.Postcode?.toString() === input
-      );
-      if (suburbExists) {
-        exactSuburbMatch = true;
-        selectedSuburb.value = input;
-        selectedType.value = 'suburb';
+    // check exact suburb match (if not a school)
+    if (!exactSchoolMatch) {
+      for (const school of schools.value) {
+        if (school.Suburb && school.Suburb.toLowerCase() === input) {
+          exactSuburbMatch = true;
+          selectedSuburb.value = school.Suburb;
+          selectedType.value = 'suburb';
+          break;
+        }
       }
     }
-  }
 
-  // final decision
-  const isExactMatch = exactSchoolMatch || exactSuburbMatch;
+    // check if input is an exact postcode match (only digits)
+    if (!exactSchoolMatch && !exactSuburbMatch) {
+      const isPostcode = /^\d+$/.test(input);
+      if (isPostcode) {
+        const suburbExists = schools.value.some(
+          school => school.Postcode?.toString() === input
+        );
+        if (suburbExists) {
+          exactSuburbMatch = true;
+          selectedSuburb.value = input;
+          selectedType.value = 'suburb';
+        }
+      }
+    }
 
-  if (!isExactMatch) {
-    showNoResultMessage.value = true;
-    showMap.value = false;
+    // final decision
+    const isExactMatch = exactSchoolMatch || exactSuburbMatch;
 
-    // error prompt timer
-    setTimeout(() => {
+    if (!isExactMatch) {
+      showNoResultMessage.value = true;
+      showMap.value = false;
+
+      // error prompt timer
+      setTimeout(() => {
+        showNoResultMessage.value = false;
+      }, 2000);
+    } else {
       showNoResultMessage.value = false;
-    }, 2000);
-  } else {
-    showNoResultMessage.value = false;
-    showMap.value = true;
+      showMap.value = true;
+    }
   }
 
   // always hide suggestion box when search is confirmed
@@ -281,6 +328,7 @@ const showMapAndSearch = async () => {
       mapSection.scrollIntoView({ behavior: 'smooth' });
     }
   });
+
 };
 
 
@@ -315,4 +363,30 @@ const selectResult = (result, type) => {
     }
   });
 };
+
+// BUTTONS: SCHOOLS / SCHOOL ZONE 
+const onExploreSchools = async () => {
+  activeView.value = VIEW_SCHOOL
+  showMapZone.value = false
+  await showMapAndSearch()
+}
+const onShowMapZone = () => {
+  activeView.value = VIEW_ZONE
+  showMap.value = false
+  showNoResultMessage.value = false
+  showMapZone.value = true
+
+  nextTick(() => {
+    const el = document.getElementById('map-zone-section')
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
+  })
+}
+
+const { t } = useI18n();
+const getSearchPlaceholder = () => {
+  if (activeView.value === VIEW_ZONE) {
+    return t('homeView.searchPlaceholder2');
+  }
+  return t('homeView.searchPlaceholder');
+}
 </script>

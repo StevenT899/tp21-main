@@ -1,6 +1,6 @@
 # app/routes.py
 from flask import Blueprint, jsonify, request
-from .dao import fetch_all_schools, fetch_school_by_id
+from .dao import fetch_all_schools, fetch_all_zone_schools, fetch_zone_schools_by_name, fetch_school_by_id
 from .config import VALID_USERNAME, VALID_PASSWORD
 
 bp = Blueprint('api', __name__)
@@ -8,6 +8,17 @@ bp = Blueprint('api', __name__)
 @bp.route('/schools')
 def get_schools():
     return jsonify(fetch_all_schools())
+
+@bp.route('/zoneSchools')
+def get_zone_schools():
+    return jsonify(fetch_all_zone_schools())
+
+@bp.route('/school/zone')
+def get_zone_schools_by_name():
+    name = request.args.get('name')
+    if not name:
+        return jsonify({"error": "Missing 'name' parameter"}), 400
+    return jsonify(fetch_zone_schools_by_name(name))
 
 @bp.route('/school/<int:sid>')
 def get_school(sid):
