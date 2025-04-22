@@ -1,5 +1,11 @@
 <template>
     <div class="max-w-5xl mx-auto px-6 py-12 space-y-8">
+        <button
+      @click="goBack"
+      class="flex items-center gap-2 bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm"
+    >
+      Back
+    </button>
       <!-- Header -->
       <div>
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
@@ -117,10 +123,15 @@
   
   <script setup>
   import { onMounted, ref } from 'vue'
-  import { useRoute } from 'vue-router'
+  import { useRoute, useRouter } from 'vue-router'
   
   const route = useRoute()
+  const router = useRouter()
   const school = ref(null)
+
+  const goBack = () => {
+  router.go(-1)  // This will go back to the previous page in the history
+}
   
   onMounted(() => {
     const id = route.params.id
