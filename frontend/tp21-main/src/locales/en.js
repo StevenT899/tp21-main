@@ -19,7 +19,7 @@ export default {
         checkPrefix: 'Check your {schoolZone}',
         schoolZone: 'school zone',
         searchPlaceholder: 'Enter suburb/ postcode/ school name',
-        searchPlaceholder2: 'Enter name',
+        searchPlaceholder2: 'Enter a location',
         searchButton: 'Search',
         noResult: 'No result found. Please try again!'
     },

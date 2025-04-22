@@ -19,7 +19,7 @@ export default {
         checkPrefix: '查看你的 {schoolZone}',
         schoolZone: '学区',
         searchPlaceholder: '输入郊区/邮编/学校名称',
-        searchPlaceholder2: '输入学校名称',
+        searchPlaceholder2: '输入地理位置',
         searchButton: '搜索',
         noResult: '未找到结果，请重试！'
     },
