@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import CompareView from '../views/CompareView.vue';
 import LoginView from '../views/LoginView.vue';
+import SchoolDetailView from '@/views/SchoolDetailView.vue';
 
 const routes = [
   {
@@ -24,7 +25,13 @@ const routes = [
     name: 'Compare',
     component: CompareView,
     meta: { requiresAuth: true }
-  }
+  },
+  {
+    path: '/detail/:id',
+    name: 'SchoolDetail',
+    component: () => import('../views/SchoolDetailView.vue'),
+    meta: { requiresAuth: true }
+  },
 ];
 
 const router = createRouter({

@@ -75,7 +75,9 @@
         </div>
 
         <div class="flex justify-between">
-          <button class="text-blue-500 hover:underline">View details</button>
+          <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" class="hover:underline">
+            <button class="text-blue-500 hover:underline">View details</button>
+          </router-link>
           <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
             class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
