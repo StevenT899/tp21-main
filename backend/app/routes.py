@@ -1,5 +1,6 @@
 # app/routes.py
 from flask import Blueprint, jsonify, request
+import requests
 from .dao import fetch_all_schools, fetch_all_zone_schools, fetch_zone_schools_by_name, fetch_school_by_id
 from .config import VALID_USERNAME, VALID_PASSWORD
 
@@ -19,6 +20,22 @@ def get_zone_schools_by_name():
     if not name:
         return jsonify({"error": "Missing 'name' parameter"}), 400
     return jsonify(fetch_zone_schools_by_name(name))
+
+@bp.route('/api/proxy/place-autocomplete', methods=['GET'])
+def place_autocomplete():
+    input_data = request.args.get('input')
+    google_api_key = 'AIzaSyAptCwXW0pUgbqzN4s-e66aQYH7k5qKjkY'
+    url = f'https://maps.googleapis.com/maps/api/place/autocomplete/json?input={input_data}&key={google_api_key}&types=geocode'
+    response = requests.get(url)
+    return jsonify(response.json())
+
+@bp.route('/api/proxy/geocode', methods=['GET'])
+def geocode():
+    address = request.args.get('address')
+    google_api_key = 'AIzaSyAptCwXW0pUgbqzN4s-e66aQYH7k5qKjkY'
+    url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={google_api_key}'
+    response = requests.get(url)
+    return jsonify(response.json())
 
 @bp.route('/school/<int:sid>')
 def get_school(sid):
