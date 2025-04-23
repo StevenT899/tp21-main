@@ -51,7 +51,10 @@
       <span>Click on any school icon on the map to preview key info and add to compare.</span>
     </div>
 
-    <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300" style="height: 500px;">
+     <!-- Use flex to layout the map and sidebar side by side -->
+  <div class="flex">
+    <!-- Map section -->
+    <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300 flex-1" style="height: 500px;">
       <div id="map" ref="mapContainer" class="w-full h-full"></div>
 
       <!-- School Popup -->
@@ -91,19 +94,23 @@
       </div>
     </div>
 
-    <!-- Toast Notification -->
-    <transition name="fade">
-      <div v-if="toast.show" :class="[
-        'fixed top-6 left-1/2 transform -translate-x-1/2',
-        'px-6 py-4 rounded-xl shadow-lg text-white z-50 text-lg max-w-xl w-full text-center',
-        toast.type === 'success' ? 'bg-green-600' :
-          toast.type === 'warning' ? 'bg-yellow-500' :
-            'bg-red-600'
-      ]">
-        {{ toast.message }}
-      </div>
-    </transition>
+    <!-- Sidebar section on the right -->
+    <div class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4" style="height: 500px;">
+      <CompareSideBar />
+    </div>
+  </div>
 
+  <!-- Toast Notification -->
+  <transition name="fade">
+    <div v-if="toast.show" :class="[ 
+      'fixed top-6 left-1/2 transform -translate-x-1/2', 
+      'px-6 py-4 rounded-xl shadow-lg text-white z-50 text-lg max-w-xl w-full text-center',
+      toast.type === 'success' ? 'bg-green-600' :
+        toast.type === 'warning' ? 'bg-yellow-500' :
+          'bg-red-600' ]">
+      {{ toast.message }}
+    </div>
+  </transition>
   </div>
 </template>
 
@@ -112,7 +119,7 @@ import { ref, onMounted, reactive, defineProps, watch, computed } from 'vue'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import schoolIcon from '@/assets/images/school.png';
-
+import CompareSideBar from '@/components/CompareSideBar.vue';
 
 const toast = ref({ show: false, type: '', message: '' })
 let toastTimeout = null

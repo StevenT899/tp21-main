@@ -1,11 +1,11 @@
 <template>
     <div class="max-w-5xl mx-auto px-6 py-12 space-y-8">
-        <button
+        <!-- <button
       @click="goBack"
       class="flex items-center gap-2 bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm"
     >
       Back
-    </button>
+    </button> -->
       <!-- Header -->
       <div>
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
@@ -74,16 +74,13 @@
       <div class="bg-white p-6 rounded-xl border space-y-4">
         <h2 class="text-xl font-semibold">Student Cultural Background</h2>
         <p class="text-gray-700">67% of students at the school are from language backgrounds other than English</p>
-        <div class="w-full bg-gray-200 h-6 rounded overflow-hidden flex">
-          <div class="bg-gray-600" style="width: 3%"></div>
-          <div class="bg-green-300" style="width: 28%"></div>
-          <div class="bg-green-700" style="width: 67%"></div>
-        </div>
-        <div class="flex justify-between text-sm text-gray-600 mt-2">
-          <span class="text-gray-600">Not Stated</span>
-          <span class="text-green-600">From English Background</span>
-          <span class="text-green-800">From Other Languages Background</span>
-        </div>
+
+        <LanguageChartInDetailPage
+      :notStated="school?.not_stated"
+      :englishBackground="school?.English"
+      :otherLanguagesBackground="school?.not_English"
+    />
+        
       </div>
   
       <!-- Staff and Enrolment (Vertical layout) -->
@@ -101,10 +98,16 @@
               <strong>{{ Math.round(1 / (school?.Teaching_staff_per_student || 1)) }}</strong>
             </span>
           </div>
-          <div class="w-full bg-purple-100 h-6 rounded overflow-hidden flex">
-            <div class="bg-purple-600 text-center text-xs text-white" style="width: 54%">54%</div>
-            <div class="bg-purple-400 text-center text-xs text-white" style="width: 46%">46%</div>
-          </div>
+         
+          <!-- <div class="w-full bg-purple-100 h-6 rounded overflow-hidden flex"> -->
+            
+            <GenderChartInDetailPage 
+            v-if="school?.Girls_Enrolment && school?.Boys_Enrolment"
+            :girls="school?.Girls_Enrolment" 
+            :boys="school?.Boys_Enrolment" 
+            />
+            <p v-else>Loading...</p> <!-- Show loading or error message -->
+             
   
           <h2 class="text-xl font-semibold flex items-center gap-1">Index Of Community Socio-Educational Advantage (ICSEA)</h2>
           <p class="text-gray-700">{{ school?.ICSEA }} (Higher than {{ school?.ICSEA_percentile }}% of primary schools in Victoria)</p>
@@ -124,6 +127,8 @@
   <script setup>
   import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
+  import GenderChartInDetailPage from '@/components/GenderChartInDetailPage.vue'
+  import LanguageChartInDetailPage from '@/components/LanguageChartInDetailPage.vue'
   
   const route = useRoute()
   const router = useRouter()
