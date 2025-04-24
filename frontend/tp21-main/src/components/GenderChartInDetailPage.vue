@@ -34,10 +34,10 @@
       itemGap: 20
     },
     grid: {
-      top: 10,
-      bottom: 50, // Adjust bottom for legend
-      left: 0,
-      right: 0
+      top: 0,
+      bottom: 10, // Adjust bottom for legend
+      left: 80,
+      right: 80
     },
     xAxis: {
       type: 'value', // Change to value for horizontal bars
@@ -96,4 +96,3 @@
     ]
   }))
   </script>
-  

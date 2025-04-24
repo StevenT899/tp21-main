@@ -95,7 +95,7 @@
     </div>
 
     <!-- Sidebar section on the right -->
-    <div class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4" style="height: 500px;">
+    <div v-if="compareList && compareList.length > 0" class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4" style="height: 500px;">
       <CompareSideBar />
     </div>
   </div>

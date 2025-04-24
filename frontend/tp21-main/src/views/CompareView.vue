@@ -106,7 +106,7 @@
 
             <div>
               <span class="block font-bold">{{ $t('compareView.schoolCard.enrolments') }}</span>
-              <span class="block text-center mt-6">{{ $t('compareView.schoolCard.totalEnrolment') }}: {{ schools[i -
+              <span class="block text-center mt-6">{{ $t('compareView.schoolCard.totalEnrolment') }} {{ schools[i -
                 1].totalEnrolment }}</span>
               <div class="flex justify-center items-end mt-6 pb-4">
                 <GenderBarChart :girls="schools[i - 1].Girls_Enrolment" :boys="schools[i - 1].Boys_Enrolment" />
@@ -337,8 +337,8 @@ onMounted(() => {
     try {
       const parsed = JSON.parse(stored)
       schools.value = parsed.slice(0, 3).map(item => ({
-        name: item.name,
-        type: item.type,
+        name: item.name || item.School_Name,
+        type: item.type || item.School_Sector,
         yearRange: item.yearRange || item.Year_Range,
         languageProgram: item.languageProgram || item.languageProgram || item.languageProgramArr,
         staffPerStudent: item.staffPerStudent || item.Teaching_staff_per_student,

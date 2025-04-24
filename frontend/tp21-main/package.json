@@ -19,6 +19,7 @@
     "echarts": "^5.6.0",
     "lodash.debounce": "^4.0.8",
     "mapbox-gl": "^3.11.0",
+    "pinia": "^3.0.2",
     "tailwindcss": "^4.1.2",
     "vue": "^3.5.13",
     "vue-echarts": "^7.0.3",
