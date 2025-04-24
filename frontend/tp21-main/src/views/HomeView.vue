@@ -1,9 +1,6 @@
 <template>
   <div class="app">
-    <!-- Hero Section -->
     <HeroSection />
-    
-    <!-- Help Section -->
     <HelpSection />
   </div>
 </template>

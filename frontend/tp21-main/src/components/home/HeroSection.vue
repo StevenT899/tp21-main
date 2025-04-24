@@ -2,26 +2,23 @@
     <section class="py-12 px-6 md:px-12 lg:px-24 bg-white relative overflow-visable">
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
             <div>
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-[1.2]">{{ $t('homeView.heroTitle')
-                }}
-                </h1>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-[1.2]">{{
+                    $t('homeView.heroTitle') }}</h1>
                 <p class="text-lg text-gray-700 mb-4">{{ $t('homeView.heroDesc1') }}</p>
                 <p class="text-lg text-gray-700 mb-6">{{ $t('homeView.heroDesc2') }}</p>
                 <p class="font-semibold text-lg mb-4">{{ $t('homeView.heroStart') }}</p>
 
                 <!-- schools / school zone -->
                 <div class="flex flex-col sm:flex-row gap-4 mb-8">
-                    <button @click="onExploreSchools" :class="activeView === 'school'
+                    <button @click="onExploreSchools" :class="activeView === 1
                         ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 text-gray-700'"
-                        class="py-2 px-6 rounded-md hover:bg-blue-700 transition-colors">
+                        : 'bg-gray-200 text-gray-700'" class="py-2 px-6 rounded-md transition-colors">
                         {{ $t('homeView.exploreSchools') }}
                     </button>
 
-                    <button @click="onShowMapZone" :class="activeView === 'zone'
+                    <button @click="onShowMapZone" :class="activeView === 2
                         ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 text-gray-700'"
-                        class="py-2 px-6 rounded-md hover:bg-gray-300 transition-colors">
+                        : 'bg-gray-200 text-gray-700'" class="py-2 px-6 rounded-md transition-colors">
                         {{ $t('homeView.checkPrefix') }}
                         <span class="underline underline-offset-2">{{ $t('homeView.schoolZone') }}</span>
                     </button>
@@ -43,10 +40,12 @@
                             <input v-if="activeView === VIEW_SCHOOL" v-model="searchQuery" @input="search"
                                 @keydown.enter="showMapAndSearch" @focus="showSuggestions = true" ref="searchBar"
                                 type="text" maxlength="60" :placeholder="getSearchPlaceholder()"
+                                :class="{ 'highlight-border': highlightSchoolSearch }"
                                 class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
                             <input v-if="activeView === VIEW_ZONE" v-model="searchQuery2" @input="handleInput"
                                 @keydown.enter="performSearch" @focus="showSuggestions = true" ref="searchBar"
                                 type="text" maxlength="60" :placeholder="getSearchPlaceholder()"
+                                :class="{ 'highlight-border': highlightZoneSearch }"
                                 class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         </div>
                         <button v-if="activeView === VIEW_SCHOOL" @click="showMapAndSearch"
@@ -88,7 +87,8 @@
                     </div>
 
                     <!-- ZONE -->
-                    <div v-if=" showSuggestions && searchLocationResults.length > 0 && activeView === VIEW_ZONE" ref="suggestionBox"
+                    <div v-if="showSuggestions && searchLocationResults.length > 0 && activeView === VIEW_ZONE"
+                        ref="suggestionBox"
                         class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-md mt-1 z-10">
                         <ul>
                             <li v-for="location in searchLocationResults" :key="location"
@@ -138,8 +138,8 @@
 <script setup>
 import { ref, nextTick } from 'vue';
 import MapShow from '@/components/MapShow.vue';
-import { useClickOutside } from '@/utils/useClickOutside';
 import MapZShow from './MapZShow.vue';
+import { useClickOutside } from '@/utils/useClickOutside';
 import { useI18n } from 'vue-i18n';
 import axios from 'axios';
 import debounce from 'lodash.debounce';
@@ -169,7 +169,8 @@ const VIEW_SCHOOL = 1
 const VIEW_ZONE = 2
 const activeView = ref(VIEW_SCHOOL)
 const showMapZone = ref(false)
-const selectedSchool = ref('');
+const highlightSchoolSearch = ref(false);
+const highlightZoneSearch = ref(false);
 
 // fetch schools from database
 const fetchSchools = async () => {
@@ -375,14 +376,24 @@ const selectResult = (result, type) => {
 // BUTTONS: SCHOOLS / SCHOOL ZONE 
 const onExploreSchools = async () => {
     activeView.value = VIEW_SCHOOL
+    searchQuery.value = '';
     showMapZone.value = false
+    highlightSchoolSearch.value = true;
+    setTimeout(() => {
+        highlightSchoolSearch.value = false;
+    }, 1000);
     await showMapAndSearch()
 }
 const onShowMapZone = () => {
     activeView.value = VIEW_ZONE
+    searchQuery2.value = '';
     showMap.value = false
     showNoResultMessage.value = false
     showMapZone.value = true
+    highlightZoneSearch.value = true;
+    setTimeout(() => {
+        highlightZoneSearch.value = false;
+    }, 1000);
 
     nextTick(() => {
         const el = document.getElementById('map-zone-section')
@@ -408,31 +419,24 @@ const getSearchPlaceholder = () => {
 
 
 //ZONE
-// Define component emits
-const emits = defineEmits(['searchPerformed']);
-
-// Search query
 const searchQuery2 = ref('');
-// Search results
 const searchLocationResults = ref([]);
 const selectedLocations = ref([]);
-// Suggestions
 const suggestions = ref([]);
-// Coordinates
 const coordinates = ref([]);
-// Flag to check if the point is in the polygon
 const isInPolygon = ref(false);
-// 存储所有学校的多边形和学校信息
 const zoneSchoolsData = ref([]);
-// 存储符合条件的学校名字
-const SearchSchoolNames = ref([]);
-// 存储符合条件的学校数据，用于 MapShow 组件
 const SearchSchoolsForMapShow = ref([]);
-// 多边形值
 const polygonValue = ref([]);
+const isSearching = ref(false); 
 
 // Get search suggestions
-// 使用 debounce 来限制 API 请求频率
+const handleInput = () => {
+    if (!isSearching.value) {
+        fetchSuggestions();
+    }
+};
+// Use debounce to restrict Api frequency
 const fetchSuggestions = debounce(async () => {
     if (searchQuery2.value.trim().length >= 5) {
         try {
@@ -443,14 +447,14 @@ const fetchSuggestions = debounce(async () => {
             });
             if (response.data.status === 'OK') {
                 suggestions.value = response.data.predictions;
-                console.log(suggestions.value);
+                console.log("Searching Suggestions:", suggestions.value);
                 searchLocationResults.value = suggestions.value.map(suggestion => suggestion.description);
                 showSuggestions.value = true;
             } else {
                 suggestions.value = [];
             }
         } catch (error) {
-            console.error('获取搜索建议时出错:', error);
+            console.error('Error during fetching suggestions:', error);
             suggestions.value = [];
         }
     } else {
@@ -458,24 +462,19 @@ const fetchSuggestions = debounce(async () => {
     }
 }, 800);
 
-// 在输入时调用
-const handleInput = () => {
-    fetchSuggestions();
-};
-
 // Handle suggestion selection
 const handleSuggestionSelected = (location) => {
     searchQuery2.value = location;
     suggestions.value = [];
     searchLocationResults.value = [];
     showSuggestions.value = false;
-    showMap.value = true;
     performSearch();
 };
 
-
 // Perform search
 const performSearch = async () => {
+    searchLocationResults.value = [];
+    isSearching.value = true;
     try {
         console.log('发起请求的地址参数:', searchQuery2.value);
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/proxy/geocode`, {
@@ -489,42 +488,44 @@ const performSearch = async () => {
             selectedLocations.value = [`地理位置: ${searchQuery2.value}, 纬度: ${lat}, 经度: ${lng}`];
             coordinates.value = [lng, lat];
 
-            // 判断点是否在多边形内
             checkPointInPolygons();
-
-            emits('searchPerformed', selectedLocations.value);
+        } else if (response.data.status === 'ZERO_RESULTS') {
+            showNoResultMessage.value = true;
+            setTimeout(() => {
+                showNoResultMessage.value = false;
+            }, 2000);
+            selectedLocations.value = ['未找到相关地理位置信息'];
+            coordinates.value = [];
+            isInPolygon.value = false;
         } else {
             selectedLocations.value = ['未找到相关地理位置信息'];
             coordinates.value = [];
             isInPolygon.value = false;
-            emits('searchPerformed', selectedLocations.value);
         }
     } catch (error) {
         console.error('搜索地理位置时出错:', error);
         selectedLocations.value = ['搜索地理位置时出错，请稍后重试'];
         coordinates.value = [];
         isInPolygon.value = false;
-        emits('searchPerformed', selectedLocations.value);
+    } finally {
+        isSearching.value = false;
     }
 };
 
 
 
-
-// 获取所有zone的学校信息
 const fetchZoneSchools = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/zoneSchools');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/zoneSchools`);
         zoneSchoolsData.value = response.data;
     } catch (error) {
         console.error('获取学校信息时出错:', error);
     }
 };
 
-// 根据学校名字获取符合条件的学校数据
 const fetchZoneSchoolsByName = async (name) => {
     try {
-        const response = await axios.get(`http://localhost:5000/school/zone?name=${name}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/school/zone?name=${name}`);
         return response.data;
     } catch (error) {
         console.error('获取符合条件的学校数据时出错:', error);
@@ -533,62 +534,79 @@ const fetchZoneSchoolsByName = async (name) => {
 };
 
 const checkPointInPolygons = async () => {
-  // 如果还没选点，就不执行
-  if (!coordinates.value.length) return;
+    if (!coordinates.value.length) return;
 
-  // 构造 turf 点
-  const pt = point(coordinates.value);
-  const insideNames = [];
+    const pt = point(coordinates.value);
+    const insideNames = [];
 
-  // 先根据所有 zoneSchoolsData 找出哪些学校名字在多边形内
-  zoneSchoolsData.value.forEach(school => {
-    try {
-      const coords = JSON.parse(school.coordinates);
-      if (booleanPointInPolygon(pt, polygon(coords))) {
-        insideNames.push(school.School_Name);
-      }
-    } catch (e) {
-      console.error(`解析学校 ${school.School_Name} 的 coordinates 时出错:`, e);
-    }
-  });
-
-  if (insideNames.length) {
-    // 标记为在多边形内
-    isInPolygon.value = true;
-
-    // 把所有符合条件的学校完整数据拉下来
-    const details = await Promise.all(
-      insideNames.map(async name => {
-        const arr = await fetchZoneSchoolsByName(name);
-        return arr[0] || null;
-      })
-    );
-    SearchSchoolsForMapShow.value = details.filter(Boolean);
-    console.log(SearchSchoolsForMapShow.value)
-
-    // 从这些完整对象里提取 coordinates 更新 polygonValue
-    const newPolys = SearchSchoolsForMapShow.value.map(school => {
-      try {
-        return JSON.parse(school.coordinates);
-      } catch (e) {
-        console.error(`解析学校 ${school.School_Name} 的 coordinates 时出错:`, e);
-        return [];
-      }
+    zoneSchoolsData.value.forEach(school => {
+        try {
+            const coords = JSON.parse(school.coordinates);
+            if (booleanPointInPolygon(pt, polygon(coords))) {
+                insideNames.push(school.School_Name);
+            }
+        } catch (e) {
+            console.error(`解析学校 ${school.School_Name} 的 coordinates 时出错:`, e);
+        }
     });
 
-    // flatted 一层，保持之前格式
-    polygonValue.value = newPolys.length
-      ? newPolys.flat(1)
-      : [[[]]];
-    console.log('polygonValue-------:', polygonValue.value)
-  } else {
-    // 没找到就重置
-    isInPolygon.value = false;
-    SearchSchoolsForMapShow.value = [];
-    polygonValue.value = [[[]]];
-  }
+    if (insideNames.length) {
+        isInPolygon.value = true;
+
+        const details = await Promise.all(
+            insideNames.map(async name => {
+                const arr = await fetchZoneSchoolsByName(name);
+                return arr[0] || null;
+            })
+        );
+        SearchSchoolsForMapShow.value = details.filter(Boolean);
+        console.log(SearchSchoolsForMapShow.value)
+
+        const newPolys = SearchSchoolsForMapShow.value.map(school => {
+            try {
+                return JSON.parse(school.coordinates);
+            } catch (e) {
+                console.error(`解析学校 ${school.School_Name} 的 coordinates 时出错:`, e);
+                return [];
+            }
+        });
+
+        polygonValue.value = newPolys.length
+            ? newPolys.flat(1)
+            : [[[]]];
+        showMap.value = true;
+        console.log('polygonValue-------:', polygonValue.value)
+    } else {
+        showNoResultMessage.value = true;
+        setTimeout(() => {
+            showNoResultMessage.value = false;
+        }, 2000);
+        isInPolygon.value = false;
+        SearchSchoolsForMapShow.value = [];
+        polygonValue.value = [[[]]];
+    }
 };
 
 // 在组件加载时获取所有学校信息
 fetchZoneSchools();
 </script>
+
+<style scoped>
+@keyframes highlight {
+    0% {
+        border-color: gray;
+    }
+
+    50% {
+        border-color: #155dfc;
+    }
+
+    100% {
+        border-color: gray;
+    }
+}
+
+.highlight-border {
+    animation: highlight 0.3s ease-in-out;
+}
+</style>

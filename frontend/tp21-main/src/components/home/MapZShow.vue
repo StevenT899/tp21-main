@@ -68,7 +68,7 @@ onMounted(() => {
     initializeZonePolygon();
     initializeSchools();
     initializeSearchPoint();
-
+    fitMapToSchools()
   });
 });
 
@@ -76,16 +76,13 @@ function handleAddToCompare() {
 
 }
 
-// 学校图层
+// initialize data
 function initializeSchools() {
   map.value.loadImage(schoolIcon, (err, img) => {
     if (err) throw err;
-    map.value.addImage('school-icon', img);
 
-    map.value.addSource('schools', {
-      type: 'geojson',
-      data: buildSchoolsGeoJSON(props.schools)
-    });
+    map.value.addImage('school-icon', img);
+    map.value.addSource('schools', { type: 'geojson', data: buildSchoolsGeoJSON(props.schools) });
     map.value.addLayer({
       id: 'school-points',
       type: 'symbol',
@@ -114,6 +111,21 @@ function initializeSchools() {
   });
 }
 
+function initializeZonePolygon() {
+  map.value.addSource('zone-polygons', {
+    type: 'geojson',
+    data: { type: 'Feature', geometry: { type: 'Polygon', coordinates: props.polygonValue } }
+  });
+  map.value.addLayer({ id: 'zone-fill', type: 'fill', source: 'zone-polygons', paint: { 'fill-color': '#088', 'fill-opacity': 0.2 } });
+  map.value.addLayer({ id: 'zone-line', type: 'line', source: 'zone-polygons', paint: { 'line-color': '#088', 'line-width': 2 } });
+}
+
+function initializeSearchPoint() {
+  map.value.addSource('search-point', { type: 'geojson', data: buildSearchPointGeoJSON(props.coordinates) });
+  map.value.addLayer({ id: 'search-point-layer', type: 'circle', source: 'search-point', paint: { 'circle-radius': 8, 'circle-color': '#f30' } });
+}
+
+
 function buildSchoolsGeoJSON(schools) {
   return {
     type: 'FeatureCollection',
@@ -130,38 +142,34 @@ function buildSchoolsGeoJSON(schools) {
   };
 }
 
-watch(() => props.schools, newArr => {
-  if (map.value.isStyleLoaded() && map.value.getSource('schools')) {
-    map.value.getSource('schools').setData(buildSchoolsGeoJSON(newArr));
-  }
-});
 
-// 区域多边形
-function initializeZonePolygon() {
-  map.value.addSource('zone-polygons', {
-    type: 'geojson',
-    data: { type: 'Feature', geometry: { type: 'Polygon', coordinates: props.polygonValue } }
-  });
-  map.value.addLayer({ id: 'zone-fill', type: 'fill', source: 'zone-polygons', paint: { 'fill-color': '#088', 'fill-opacity': 0.2 } });
-  map.value.addLayer({ id: 'zone-line', type: 'line', source: 'zone-polygons', paint: { 'line-color': '#088', 'line-width': 2 } });
-}
-watch(() => props.polygonValue, poly => {
-  map.value.getSource('zone-polygons').setData({ type: 'Feature', geometry: { type: 'Polygon', coordinates: poly } });
-});
 
-// 搜索位置点
-function initializeSearchPoint() {
-  map.value.addSource('search-point', { type: 'geojson', data: buildSearchPointGeoJSON(props.coordinates) });
-  map.value.addLayer({ id: 'search-point-layer', type: 'circle', source: 'search-point', paint: { 'circle-radius': 8, 'circle-color': '#f30' } });
-}
-watch(() => props.coordinates, coords => {
-  if (map.value.isStyleLoaded() && map.value.getSource('search-point')) {
-    map.value.getSource('search-point').setData(buildSearchPointGeoJSON(coords));
-  }
-});
+
 function buildSearchPointGeoJSON(coords) {
   return { type: 'FeatureCollection', features: coords.length === 2 ? [{ type: 'Feature', geometry: { type: 'Point', coordinates: coords } }] : [] };
 }
+
+function fitMapToSchools() {
+  if (props.schools.length > 0) {
+    const bounds = new mapboxgl.LngLatBounds();
+    props.schools.forEach(school => {
+      bounds.extend([school.Longitude, school.Latitude]);
+    });
+    map.value.fitBounds(bounds, { padding: 100 });
+  }
+}
+
+// watch data
+watch(() => props.schools, newArr => {
+  map.value.getSource('schools').setData(buildSchoolsGeoJSON(newArr));
+  fitMapToSchools()
+});
+watch(() => props.polygonValue, poly => {
+  map.value.getSource('zone-polygons').setData({ type: 'Feature', geometry: { type: 'Polygon', coordinates: poly } });
+});
+watch(() => props.coordinates, coords => {
+  map.value.getSource('search-point').setData(buildSearchPointGeoJSON(coords));
+});
 </script>
 
 <style scoped>
