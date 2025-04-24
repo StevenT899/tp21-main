@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch, computed } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import schoolIcon from '@/assets/images/school.png';
@@ -63,6 +63,9 @@ onMounted(() => {
     zoom: 11,
     maxZoom: 14
   });
+
+  // Add navigation control
+  map.value.addControl(new mapboxgl.NavigationControl(), 'top-right')
 
   map.value.on('load', () => {
     initializeZonePolygon();
@@ -141,9 +144,6 @@ function buildSchoolsGeoJSON(schools) {
     }))
   };
 }
-
-
-
 
 function buildSearchPointGeoJSON(coords) {
   return { type: 'FeatureCollection', features: coords.length === 2 ? [{ type: 'Feature', geometry: { type: 'Point', coordinates: coords } }] : [] };

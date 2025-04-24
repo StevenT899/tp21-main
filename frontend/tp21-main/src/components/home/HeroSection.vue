@@ -428,7 +428,7 @@ const isInPolygon = ref(false);
 const zoneSchoolsData = ref([]);
 const SearchSchoolsForMapShow = ref([]);
 const polygonValue = ref([]);
-const isSearching = ref(false); 
+const isSearching = ref(false);
 
 // Get search suggestions
 const handleInput = () => {
@@ -476,16 +476,16 @@ const performSearch = async () => {
     searchLocationResults.value = [];
     isSearching.value = true;
     try {
-        console.log('发起请求的地址参数:', searchQuery2.value);
+        console.log('Address parameter for the initiated request:', searchQuery2.value);
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/proxy/geocode`, {
             params: {
                 address: searchQuery2.value,
             }
         });
-        console.log('请求响应数据:', response.data);
+        console.log('Request response data:', response.data);
         if (response.data.status === 'OK' && response.data.results.length > 0) {
             const { lat, lng } = response.data.results[0].geometry.location;
-            selectedLocations.value = [`地理位置: ${searchQuery2.value}, 纬度: ${lat}, 经度: ${lng}`];
+            selectedLocations.value = [`Geographical location: ${searchQuery2.value}, Latitude: ${lat}, Longitude: ${lng}`];
             coordinates.value = [lng, lat];
 
             checkPointInPolygons();
@@ -494,17 +494,17 @@ const performSearch = async () => {
             setTimeout(() => {
                 showNoResultMessage.value = false;
             }, 2000);
-            selectedLocations.value = ['未找到相关地理位置信息'];
+            selectedLocations.value = ['No relevant geographical location information found'];
             coordinates.value = [];
             isInPolygon.value = false;
         } else {
-            selectedLocations.value = ['未找到相关地理位置信息'];
+            selectedLocations.value = ['No relevant geographical location information found'];
             coordinates.value = [];
             isInPolygon.value = false;
         }
     } catch (error) {
-        console.error('搜索地理位置时出错:', error);
-        selectedLocations.value = ['搜索地理位置时出错，请稍后重试'];
+        console.error('An error occurred while searching for the geographical location:', error);
+        selectedLocations.value = ['An error occurred while searching for the geographical location. Please try again later'];
         coordinates.value = [];
         isInPolygon.value = false;
     } finally {
@@ -519,7 +519,7 @@ const fetchZoneSchools = async () => {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/zoneSchools`);
         zoneSchoolsData.value = response.data;
     } catch (error) {
-        console.error('获取学校信息时出错:', error);
+        console.error('An error occurred while fetching the school information:', error);
     }
 };
 
@@ -528,7 +528,7 @@ const fetchZoneSchoolsByName = async (name) => {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/school/zone?name=${name}`);
         return response.data;
     } catch (error) {
-        console.error('获取符合条件的学校数据时出错:', error);
+        console.error('An error occurred while fetching the eligible school data:', error);
         return [];
     }
 };
@@ -546,7 +546,7 @@ const checkPointInPolygons = async () => {
                 insideNames.push(school.School_Name);
             }
         } catch (e) {
-            console.error(`解析学校 ${school.School_Name} 的 coordinates 时出错:`, e);
+            console.error(`Error: parsing ${school.School_Name} coordinates:`, e);
         }
     });
 
@@ -566,7 +566,7 @@ const checkPointInPolygons = async () => {
             try {
                 return JSON.parse(school.coordinates);
             } catch (e) {
-                console.error(`解析学校 ${school.School_Name} 的 coordinates 时出错:`, e);
+                console.error(`Error: parsing ${school.School_Name} coordinates:`, e);
                 return [];
             }
         });
@@ -576,6 +576,13 @@ const checkPointInPolygons = async () => {
             : [[[]]];
         showMap.value = true;
         console.log('polygonValue-------:', polygonValue.value)
+        // scroll to map
+        nextTick(() => {
+            const mapSection = document.getElementById('map-zone-section');
+            if (mapSection) {
+                mapSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
     } else {
         showNoResultMessage.value = true;
         setTimeout(() => {
@@ -587,7 +594,6 @@ const checkPointInPolygons = async () => {
     }
 };
 
-// 在组件加载时获取所有学校信息
 fetchZoneSchools();
 </script>
 

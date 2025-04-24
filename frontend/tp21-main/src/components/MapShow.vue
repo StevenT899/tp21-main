@@ -51,66 +51,66 @@
       <span>Click on any school icon on the map to preview key info and add to compare.</span>
     </div>
 
-     <!-- Use flex to layout the map and sidebar side by side -->
-  <div class="flex">
-    <!-- Map section -->
-    <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300 flex-1" style="height: 500px;">
-      <div id="map" ref="mapContainer" class="w-full h-full"></div>
+    <!-- Use flex to layout the map and sidebar side by side -->
+    <div class="flex">
+      <!-- Map section -->
+      <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300 flex-1" style="height: 500px;">
+        <div id="map" ref="mapContainer" class="w-full h-full"></div>
 
-      <!-- School Popup -->
-      <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg"
-        style="top: 50%; right: 20px; transform: translateY(-50%); width: 300px; z-index: 10;">
-        <div class="flex justify-between items-start">
-          <h3 class="text-lg font-bold">{{ selectedSchool.name }}</h3>
-          <svg v-if="isInCompareList" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="text-green-500">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </div>
-        <p class="text-gray-600 mb-3">{{ selectedSchool.type }} school</p>
+        <!-- School Popup -->
+        <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg"
+          style="top: 50%; right: 20px; transform: translateY(-50%); width: 300px; z-index: 10;">
+          <div class="flex justify-between items-start">
+            <h3 class="text-lg font-bold">{{ selectedSchool.name }}</h3>
+            <svg v-if="isInCompareList" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="text-green-500">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <p class="text-gray-600 mb-3">{{ selectedSchool.type }} school</p>
 
-        <div class="grid grid-cols-2 gap-2 mb-4">
-          <div v-for="(language, index) in selectedSchool.languages" :key="index"
-            class="rounded-md p-2 text-center text-sm" style="background-color: #EBF1FA;">
-            {{ language }}
+          <div class="grid grid-cols-2 gap-2 mb-4">
+            <div v-for="(language, index) in selectedSchool.languages" :key="index"
+              class="rounded-md p-2 text-center text-sm" style="background-color: #EBF1FA;">
+              {{ language }}
+            </div>
+          </div>
+
+          <div class="flex justify-between">
+            <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" class="hover:underline">
+              <button class="text-blue-500 hover:underline">View details</button>
+            </router-link>
+            <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
+              class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add to compare
+            </button>
           </div>
         </div>
+      </div>
 
-        <div class="flex justify-between">
-          <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" class="hover:underline">
-            <button class="text-blue-500 hover:underline">View details</button>
-          </router-link>
-          <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
-            class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Add to compare
-          </button>
-        </div>
+      <!-- Sidebar section on the right -->
+      <div class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4" style="height: 500px;">
+        <CompareSideBar />
       </div>
     </div>
 
-    <!-- Sidebar section on the right -->
-    <div class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4" style="height: 500px;">
-      <CompareSideBar />
-    </div>
-  </div>
-
-  <!-- Toast Notification -->
-  <transition name="fade">
-    <div v-if="toast.show" :class="[ 
-      'fixed top-6 left-1/2 transform -translate-x-1/2', 
-      'px-6 py-4 rounded-xl shadow-lg text-white z-50 text-lg max-w-xl w-full text-center',
-      toast.type === 'success' ? 'bg-green-600' :
-        toast.type === 'warning' ? 'bg-yellow-500' :
-          'bg-red-600' ]">
-      {{ toast.message }}
-    </div>
-  </transition>
+    <!-- Toast Notification -->
+    <transition name="fade">
+      <div v-if="toast.show" :class="[
+        'fixed top-6 left-1/2 transform -translate-x-1/2',
+        'px-6 py-4 rounded-xl shadow-lg text-white z-50 text-lg max-w-xl w-full text-center',
+        toast.type === 'success' ? 'bg-green-600' :
+          toast.type === 'warning' ? 'bg-yellow-500' :
+            'bg-red-600']">
+        {{ toast.message }}
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -181,22 +181,10 @@ const handleAddToCompare = (school) => {
 
 // Receive query searching parameters and if a school is identified from HomeView.vue
 const props = defineProps({
-  searchQuery: {
-    type: String,
-    default: ''
-  },
-  isSchool: {
-    type: Boolean,
-    default: false
-  },
-  selectedSuburb: {
-    type: String,
-    default: ''
-  },
-  selectedType: {
-    type: String,
-    default: ''
-  }
+  searchQuery: { type: String, default: '' },
+  isSchool: { type: Boolean, default: false },
+  selectedSuburb: { type: String, default: '' },
+  selectedType: { type: String, default: '' }
 })
 
 // Reference the map container
@@ -485,36 +473,10 @@ const applyFilters = () => {
 
 // Reset filter conditions
 const resetFilters = () => {
-  filters.schoolType = 'ALL';
-  filters.languageProgram = 'ALL';
-
-  // Reset map data
-  if (mapLoaded.value && map.getSource('schools')) {
-    try {
-      map.getSource('schools').setData({
-        type: 'FeatureCollection',
-        features: schools.value.map(school => ({
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [school.Longitude, school.Latitude]
-          },
-          properties: {
-            id: school.School_AGE_ID,
-            name: school.School_Name,
-            type: school.School_Sector,
-            languages: Array.isArray(school.languages) ? school.languages.join(',') : '',
-            suburb: school.Suburb
-          }
-        }))
-      });
-    } catch (error) {
-      console.error('Error resetting map data:', error);
-    }
-  }
-
-  // Clear the selected school
-  selectedSchool.value = null;
+  filters.schoolType = 'ALL'
+  filters.languageProgram = 'ALL'
+  applyFilters()
+  selectedSchool.value = null
 }
 
 // Initialize the map and fetch backend data after the component is mounted
