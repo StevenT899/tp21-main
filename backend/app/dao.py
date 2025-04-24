@@ -244,7 +244,10 @@ def fetch_school_by_id(sid):
                 s.English,
                 s.not_English,
                 s.not_stated,
-                GROUP_CONCAT(TRIM(REPLACE(l.Language, '\r', '')) SEPARATOR ',') AS languages
+                GROUP_CONCAT(TRIM(REPLACE(l.Language, '\r', '')) SEPARATOR ',') AS languages,
+                s.Latitude, 
+                s.Longitude,
+                s.coordinates
             FROM 
                 schools s
             LEFT JOIN 
@@ -286,5 +289,8 @@ def fetch_school_by_id(sid):
                 'English': row[19],
                 'not_English': row[20],
                 'not_stated': row[21],
-                'languages': row[22].split(',') if row[22] else []
+                'languages': row[22].split(',') if row[22] else [],
+                'Latitude' : row[23],
+                'Longitude': row[24],
+                'coordinates': row[25]
     }

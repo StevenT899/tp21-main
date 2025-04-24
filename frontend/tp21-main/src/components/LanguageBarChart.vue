@@ -3,7 +3,7 @@
     <v-chart
       :option="chartOptions"
       autoresize
-      style="height: 380px; width: 200px; margin: auto;"
+      style="height: 380px; width: 180px; margin: auto;"
     />
   </template>
   
@@ -123,7 +123,8 @@
       },
       yAxis: {
         type: 'value',
-        show: false              // Hide vertical axis
+        show: false,
+                 // Hide vertical axis
       },
       series
     }

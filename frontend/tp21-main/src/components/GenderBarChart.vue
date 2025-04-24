@@ -48,7 +48,8 @@
     },
     yAxis: {
       type: 'value',
-      show: false // Hide Y-axis
+      show: false, // Hide Y-axis
+   
     },
     series: [
       {
