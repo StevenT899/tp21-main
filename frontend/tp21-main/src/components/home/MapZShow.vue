@@ -34,14 +34,20 @@
         </button>
       </div>
     </div>
+    <button class="absolute top-4 right-11 bg-white text-gray-700 hover:bg-gray-100 px-2 py-1 rounded-md"
+      @click="getCurrentLocation">
+      Get Current Location
+    </button>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, defineEmits } from 'vue';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import schoolIcon from '@/assets/images/school.png';
+
+const emit = defineEmits(['locationObtained']);
 
 const props = defineProps({
   schools: { type: Array, default: () => [] },
@@ -170,6 +176,23 @@ watch(() => props.polygonValue, poly => {
 watch(() => props.coordinates, coords => {
   map.value.getSource('search-point').setData(buildSearchPointGeoJSON(coords));
 });
+
+function getCurrentLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        emit('locationObtained', [longitude, latitude]);
+      },
+      (error) => {
+        console.error('Error during fetching location:', error.message);
+      }
+    );
+  } else {
+    console.error('browser not support this function.');
+  }
+}
 </script>
 
 <style scoped>

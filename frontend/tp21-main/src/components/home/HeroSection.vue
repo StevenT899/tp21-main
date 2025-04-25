@@ -125,7 +125,7 @@
         class="py-12 px-6 md:px-12 lg:px-24 border-t border-b border-gray-200">
         <div class="max-w-7xl mx-auto">
             <MapZShow v-if="coordinates.length > 0 && isInPolygon" :coordinates="coordinates"
-                :polygonValue="polygonValue" :schools="SearchSchoolsForMapShow" />
+                :polygonValue="polygonValue" :schools="SearchSchoolsForMapShow" @locationObtained="handleLocationObtained"/>
             <div v-if="!isInPolygon && searchResults.length > 0 && props.searchType === 'location'"
                 class="text-red-500">
                 no result
@@ -378,6 +378,7 @@ const onExploreSchools = async () => {
     activeView.value = VIEW_SCHOOL
     searchQuery.value = '';
     showMapZone.value = false
+    showMap.value = false
     highlightSchoolSearch.value = true;
     setTimeout(() => {
         highlightSchoolSearch.value = false;
@@ -399,7 +400,27 @@ const onShowMapZone = () => {
         const el = document.getElementById('map-zone-section')
         if (el) el.scrollIntoView({ behavior: 'smooth' })
     })
+    getLocation();
 }
+
+const getLocation = () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                console.log('lat:', latitude, 'long:', longitude);
+                coordinates.value = [longitude, latitude];
+                checkPointInPolygons();
+            },
+            (error) => {
+                console.error('Error during fetching location:', error.message);
+            }
+        );
+    } else {
+        console.error('browser not support this function.');
+    }
+};
 
 const { t } = useI18n();
 const getSearchPlaceholder = () => {
@@ -460,7 +481,7 @@ const fetchSuggestions = debounce(async () => {
     } else {
         suggestions.value = [];
     }
-}, 800);
+}, 600);
 
 // Handle suggestion selection
 const handleSuggestionSelected = (location) => {
@@ -592,6 +613,11 @@ const checkPointInPolygons = async () => {
         SearchSchoolsForMapShow.value = [];
         polygonValue.value = [[[]]];
     }
+};
+
+const handleLocationObtained = (coords) => {
+  coordinates.value = coords;
+  checkPointInPolygons();
 };
 
 fetchZoneSchools();
