@@ -1,12 +1,12 @@
 <template>
-    <div class="w-full max-w-3xl mx-auto space-y-4">  <!-- Use max-width to make it responsive -->
+    <div v-if="compareList.length > 0" class="w-full max-w-xl mx-auto space-y-3">  <!-- Use max-width to make it responsive -->
       <!-- Header -->
       <div class="text-xl font-semibold">
         Schools Added for Comparison ({{ compareList.length }}/3)
       </div>
   
       <!-- School List -->
-      <div class="space-y-2">
+      <div class="space-y-1">
         <div v-for="(school, index) in compareList" :key="school.id" class="bg-white p-4 rounded-lg shadow w-full">
           <div class="flex justify-between items-center">
             <div>
@@ -19,7 +19,7 @@
         </div>
       </div>
   
-      <div class="flex gap-2">
+      <div class="flex gap-10">
         <!-- Remove All Button -->
         <button v-if="compareList.length > 0" @click="removeAll"
                 class="px-6 py-3 text-sm text-white bg-gray-500 rounded-md hover:bg-gray-600 transition-colors w-full">
@@ -27,25 +27,29 @@
         </button>
   
         <!-- Compare Now Button -->
-        <router-link to="/compare">
-          <button 
-                  class="px-6 py-3 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 transition-colors w-full">
-            Compare Now
+        <router-link to="/compare" @click.native="scrollToTop">
+          <button class="px-6 py-3 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 transition-colors w-full">
+            Compare
           </button>
         </router-link>
       </div>
-  
-      <!-- Toast Notification -->
-      <transition name="fade">
+    </div>
+
+    <transition name="fade">
         <div v-if="toast.show" :class="['toast', toast.type]">
           {{ toast.message }}
         </div>
-      </transition>
-    </div>
+    </transition>
+    
   </template>
   
   <script setup>
-  import { ref, computed } from 'vue'
+  import { ref} from 'vue'
+  
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo(0, 0)
+  }
   
   // Reference for Toast
   const toast = ref({ show: false, type: '', message: '' })
@@ -59,28 +63,36 @@
     }, duration)
   }
   
-  // Retrieve the comparison list from sessionStorage
-  const compareList = computed(() => {
+  // Manage compareList using reactive ref instead of sessionStorage directly
+  const compareList = ref([])
+  
+  // Watch sessionStorage and update compareList when the page reloads
+  const loadCompareList = () => {
     const list = sessionStorage.getItem('compareList')
-    return list ? JSON.parse(list) : []
-  })
+    compareList.value = list ? JSON.parse(list) : []
+  }
+  
+  // Update sessionStorage whenever compareList changes
+  const saveCompareList = () => {
+    sessionStorage.setItem('compareList', JSON.stringify(compareList.value))
+  }
+  
+  // Initialize compareList
+  loadCompareList()
   
   // Remove a school from the compare list
   const removeFromCompare = (index) => {
-    const updatedList = [...compareList.value]
-    const removedSchool = updatedList.splice(index, 1)
-    sessionStorage.setItem('compareList', JSON.stringify(updatedList))
-  
-    // Show toast for single school removal
-    showToast('success', `Remove from your compare list successfully.`)
+    compareList.value.splice(index, 1)
+    saveCompareList()  // Update sessionStorage
+    showToast('success', `Removed from your compare list successfully.`)
   }
   
   // Remove all schools from the compare list
   const removeAll = () => {
-    sessionStorage.setItem('compareList', JSON.stringify([]))
-  
-    // Show toast for clearing the compare list
+    compareList.value = []
+    saveCompareList()  // Update sessionStorage
     showToast('success', 'All schools have been removed from your compare list.')
+
   }
   </script>
   

@@ -94,6 +94,7 @@
         </div>
       </div>
 
+
       <!-- Sidebar section on the right -->
       <div class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4" style="height: 500px;">
         <CompareSideBar />
@@ -121,6 +122,17 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import schoolIcon from '@/assets/images/school.png';
 import CompareSideBar from '@/components/CompareSideBar.vue';
 
+
+const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+
+const checkList = ref(JSON.parse(sessionStorage.getItem('compareList') || '[]'));
+
+
+
+
+const scrollToTop = () => {
+    window.scrollTo(0, 0)
+  }
 const toast = ref({ show: false, type: '', message: '' })
 let toastTimeout = null
 
@@ -134,7 +146,6 @@ const showToast = (type, message, duration = 3000) => {
 
 const isInCompareList = computed(() => {
   if (!selectedSchool.value) return false
-  const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]')
   return compareList.some(item => item.School_AGE_ID === selectedSchool.value.id)
 })
 
@@ -172,7 +183,9 @@ const handleAddToCompare = (school) => {
   // Add the school to the compare list
   compareList.push(school)
   sessionStorage.setItem('compareList', JSON.stringify(compareList))
+
   console.log('School added to compareList:', school.School_Name)
+
 
   // Show success toast
   showToast('success', `"${school.School_Name}" added to compare!`)
@@ -492,3 +505,5 @@ onMounted(() => {
     });
 });
 </script>
+
+

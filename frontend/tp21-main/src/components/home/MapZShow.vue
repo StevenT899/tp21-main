@@ -22,7 +22,9 @@
       </div>
 
       <div class="flex justify-between">
-        <button class="text-blue-500 hover:underline">View details</button>
+        <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" class="hover:underline">
+            <button class="text-blue-500 hover:underline">View details</button>
+          </router-link>
         <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
           class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -43,6 +45,7 @@
 
 <script setup>
 import { onMounted, ref, watch, defineEmits } from 'vue';
+
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import schoolIcon from '@/assets/images/school.png';
@@ -112,6 +115,22 @@ function initializeSchools() {
         languages: p.languages ? p.languages.split(',') : []
       };
       isSchoolLoaded.value = false;
+      
+      const sid = selectedSchool.value.id;
+  fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
+    .then(response => response.json())
+    .then(fullData => {
+      if (fullData && !fullData.error) {
+        selectedSchool.value = {
+          ...fullData,
+          id: fullData.School_AGE_ID,
+          name: fullData.School_Name,
+          type: fullData.School_Sector,
+          languages: fullData.languages || []
+        };
+        isSchoolLoaded.value = true;
+      }
+    });
     });
 
     // hover
