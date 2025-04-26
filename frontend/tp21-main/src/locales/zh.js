@@ -29,6 +29,51 @@ export default {
         paragraph2: '我们希望这个工具能让您和孩子们的事情变得稍微轻松一些。',
         signature: '—NewBee Edu 团队'
     },
+    MapShow: {
+        filterSection: {
+            schoolType: "学校类型",
+            languageProgram: "语言课程",
+            filter: "筛选",
+            reset: "重置",
+            all: "全部"
+        },
+        mapInstruction: "点击地图上的任何学校图标以预览关键信息并添加到比较列表中。",
+        schoolPopup: {
+            viewDetails: "查看详情",
+            addToCompare: "添加到比较",
+            schoolTypeLabel: "学校",
+            isInCompareList: "已在比较列表中"
+        },
+        toast: {
+            success: "成功消息",
+            error: "错误消息"
+        }
+    },
+    MapZShow: {
+        filterSection: {
+            schoolType: "学校类型",
+            languageProgram: "语言课程",
+            filter: "筛选",
+            reset: "重置",
+            all: "全部"
+        },
+        mapInstruction: "点击地图上的学校图标预览信息并添加到比较列表",
+        schoolPopup: {
+            viewDetails: "查看详情",
+            addToCompare: "添加到比较",
+            schoolTypeLabel: "学校",
+            isInCompareList: "已在比较列表中"
+        },
+        toast: {
+            success: "成功",
+            error: "错误",
+            locationSuccess: "位置更新成功",
+            locationError: "获取位置失败"
+        },
+        mapControls: {
+            getLocation: "获取当前位置"
+        }
+    },
     compareView: {
         pageHeader: {
             title: '比较你选择的学校',
@@ -59,6 +104,79 @@ export default {
         toast: {
             success: '成功消息（你可以自定义此内容）',
             warning: '警告消息（你可以自定义此内容）'
+        },
+        languageProgram: {
+            title: '什么是语言课程？',
+            description: '政府小学的语言课程为学生提供了学习英语以外语言的机会。这些课程有助于学生发展语言技能，支持文化多样性。',
+            readMore: '了解更多'
+        },
+        icseaModal: {
+            title: '什么是 ICSEA？',
+            description: 'ICSEA 是一个反映学校学生家庭平均教育和收入背景的数值。它有助于提供背景信息，但并不是衡量学校“好坏”的分数。',
+            readMore: '了解更多'
+        },
+    },
+    CompareSideBar: {
+        header: '已添加用于比较的学校 ({count}/3)',
+        schoolInfo: {
+            type: '类型: {type}',
+            suburb: '郊区: {suburb}'
+        },
+        removeButton: '移除',
+        removeAllButton: '全部移除',
+        compareButton: '比较'
+    },
+    ModalBox:{
+        languageProgram: {
+            title: '什么是语言课程？',
+            description: '政府小学的语言课程为学生提供了学习英语以外语言的机会。这些课程有助于学生发展语言技能，支持文化多样性。',
+            readMore: '了解更多'
+        },
+        icseaModal: {
+            title: '什么是 ICSEA？',
+            description: 'ICSEA 是一个反映学校学生家庭平均教育和收入背景的数值。它有助于提供背景信息，但并不是衡量学校“好坏”的分数。',
+            readMore: '了解更多'
+        },
+        schoolZone:{
+            title: '什么是学区？',
+            description: '学区是政府设置的区域，根据你的地址决定你的孩子可以上哪所当地的学校。',
+            readMore: '了解更多'
         }
+    },
+    SchoolDetail: {
+        loading: '加载中...',
+        visitSchoolWebsite: '访问学校网站',
+        addToCompare: '添加到比较',
+        schoolType: '学校类型',
+        yearRange: '年级范围',
+        schoolZoneCheck: '学区检查',
+        useLocation: '📍 使用位置',
+        inSchoolZone: '这所学校在你的学区内',
+        notInSchoolZone: '这所学校不在你的学区内',
+        languageProgram: {
+            title: '语言课程',
+            modal: {
+                title: '什么是语言课程？',
+                description: '政府小学的语言课程为学生提供了学习英语以外语言的机会。这些课程有助于学生发展语言技能，支持文化多样性。',
+                readMore: '了解更多'
+            },
+            noLanguages: '无',
+            studentCulturalBackground: '学生文化背景',
+            studentCulturalBackgroundDesc: '的学生来自非英语语言背景'
+        },
+        staffAndEnrolment: {
+            schoolStaff: '学校教职工',
+            teachingStaff: '教学人员',
+            nonTeachingStaff: '非教学人员',
+            studentEnrolment: '学生注册情况',
+            totalEnrolment: '总注册人数',
+            studentPerTeachingStaff: '每名教学人员对应的学生数'
+        },
+        icseaModal: {
+            title: '什么是 ICSEA？',
+            description: 'ICSEA 是一个反映学校学生家庭平均教育和收入背景的数值。它有助于提供背景信息，但并不是衡量学校“好坏”的分数。',
+            readMore: '了解更多'
+        },
+        icseaInfo: '高于维多利亚州 {percentile}% 的小学',
     }
 };

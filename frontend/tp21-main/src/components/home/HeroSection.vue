@@ -12,16 +12,20 @@
                 <div class="flex flex-col sm:flex-row gap-4 mb-8">
                     <button @click="onExploreSchools" :class="activeView === 1
                         ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 text-gray-700'" class="py-2 px-6 rounded-md transition-colors">
+                        : 'bg-gray-200 text-gray-700'" :disabled="isExploreSchoolsButtonDisabled"
+                        class="py-2 px-6 rounded-md transition-colors">
                         {{ $t('homeView.exploreSchools') }}
                     </button>
 
                     <button @click="onShowMapZone" :class="activeView === 2
                         ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 text-gray-700'" class="py-2 px-6 rounded-md transition-colors">
+                        : 'bg-gray-200 text-gray-700'" :disabled="isShowMapZoneButtonDisabled"
+                        class="py-2 px-6 rounded-md transition-colors">
                         {{ $t('homeView.checkPrefix') }}
-                        <span class="underline underline-offset-2">{{ $t('homeView.schoolZone') }}</span>
+                        <span class="underline underline-offset-2"
+                            @click.stop="openModal('ss')">{{ $t('homeView.schoolZone') }}</span>
                     </button>
+                    <ModalBox ref="ModalBoxRef" />
                 </div>
 
                 <div class="relative">
@@ -125,7 +129,8 @@
         class="py-12 px-6 md:px-12 lg:px-24 border-t border-b border-gray-200">
         <div class="max-w-7xl mx-auto">
             <MapZShow v-if="coordinates.length > 0 && isInPolygon" :coordinates="coordinates"
-                :polygonValue="polygonValue" :schools="SearchSchoolsForMapShow" @locationObtained="handleLocationObtained"/>
+                :polygonValue="polygonValue" :schools="SearchSchoolsForMapShow"
+                @locationObtained="handleLocationObtained" />
             <div v-if="!isInPolygon && searchResults.length > 0 && props.searchType === 'location'"
                 class="text-red-500">
                 no result
@@ -144,6 +149,12 @@ import { useI18n } from 'vue-i18n';
 import axios from 'axios';
 import debounce from 'lodash.debounce';
 import { point, polygon, booleanPointInPolygon } from '@turf/turf';
+import ModalBox from '../ModalBox.vue';
+
+const ModalBoxRef = ref(null);
+const openModal = (modalType) => {
+    ModalBoxRef.value.toggleModal(modalType);
+};
 
 // search bar
 const searchQuery = ref('');
@@ -171,6 +182,8 @@ const activeView = ref(VIEW_SCHOOL)
 const showMapZone = ref(false)
 const highlightSchoolSearch = ref(false);
 const highlightZoneSearch = ref(false);
+const isExploreSchoolsButtonDisabled = ref(false);
+const isShowMapZoneButtonDisabled = ref(false);
 
 // fetch schools from database
 const fetchSchools = async () => {
@@ -380,6 +393,8 @@ const onExploreSchools = async () => {
     showMapZone.value = false
     showMap.value = false
     highlightSchoolSearch.value = true;
+    isExploreSchoolsButtonDisabled.value = true;
+    isShowMapZoneButtonDisabled.value = false;
     setTimeout(() => {
         highlightSchoolSearch.value = false;
     }, 1000);
@@ -392,6 +407,8 @@ const onShowMapZone = () => {
     showNoResultMessage.value = false
     showMapZone.value = true
     highlightZoneSearch.value = true;
+    isExploreSchoolsButtonDisabled.value = false;
+    isShowMapZoneButtonDisabled.value = true;
     setTimeout(() => {
         highlightZoneSearch.value = false;
     }, 1000);
@@ -616,8 +633,8 @@ const checkPointInPolygons = async () => {
 };
 
 const handleLocationObtained = (coords) => {
-  coordinates.value = coords;
-  checkPointInPolygons();
+    coordinates.value = coords;
+    checkPointInPolygons();
 };
 
 fetchZoneSchools();
@@ -640,5 +657,9 @@ fetchZoneSchools();
 
 .highlight-border {
     animation: highlight 0.3s ease-in-out;
+}
+
+.underline.hover:text-red-600 {
+    cursor: pointer;
 }
 </style>

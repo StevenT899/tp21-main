@@ -24,7 +24,7 @@
 
         <div class="flex justify-between">
           <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop" class="hover:underline">
-            <button class="text-blue-500 hover:underline">View details</button>
+            <button class="text-blue-500 hover:underline">{{ $t('MapZShow.schoolPopup.viewDetails') }}</button>
           </router-link>
           <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
             class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
@@ -33,13 +33,13 @@
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            Add to compare
+            {{ $t('MapZShow.schoolPopup.addToCompare') }}
           </button>
         </div>
       </div>
       <button class="absolute top-4 right-11 bg-white text-gray-700 hover:bg-gray-100 px-2 py-1 rounded-md"
         @click="getCurrentLocation">
-        Get Current Location
+        {{ $t('MapZShow.mapControls.getLocation') }}
       </button>
     </div>
 

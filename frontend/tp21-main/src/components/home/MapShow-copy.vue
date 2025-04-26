@@ -2,7 +2,7 @@
   <div class="map-container flex">
     <div class="filter-section flex flex-col md:flex-row gap-4 mb-4">
       <div class="filter-group">
-        <label for="school-type" class="block text-sm font-medium text-gray-700 mb-1">School Type</label>
+        <label for="school-type" class="block text-sm font-medium text-gray-700 mb-1">{{ $t('MapShow.filterSection.schoolType') }}</label>
         <select id="school-type" v-model="filters.schoolType"
           class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="ALL">ALL</option>
@@ -11,7 +11,7 @@
       </div>
 
       <div class="filter-group">
-        <label for="language-program" class="block text-sm font-medium text-gray-700 mb-1">Language Program</label>
+        <label for="language-program" class="block text-sm font-medium text-gray-700 mb-1">{{ $t('MapShow.filterSection.languageProgram') }}</label>
         <select id="language-program" v-model="filters.languageProgram"
           class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="ALL">ALL</option>
@@ -26,7 +26,7 @@
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
           </svg>
-          Filter
+          {{ $t('MapShow.filterSection.filter') }}
         </button>
 
         <button @click="resetFilters"
@@ -36,7 +36,7 @@
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
-          Reset
+          {{ $t('MapShow.filterSection.reset') }}
         </button>
       </div>
     </div>
@@ -48,7 +48,7 @@
         <line x1="12" y1="16" x2="12" y2="12"></line>
         <line x1="12" y1="8" x2="12.01" y2="8"></line>
       </svg>
-      <span>Click on any school icon on the map to preview key info and add to compare.</span>
+      <span>{{ $t('MapShow.mapInstruction') }}</span>
     </div>
 
     <!-- Map and Sidebar Container -->

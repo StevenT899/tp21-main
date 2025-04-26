@@ -71,13 +71,12 @@
       &times;
     </button>
 
-    <h2 class="text-xl font-semibold mb-4">What is a Language Program?</h2>
+    <h2 class="text-xl font-semibold mb-4">{{ $t('compareView.languageProgram.title')}}</h2>
     <p class="text-lg text-gray-700 mb-6">
-      A language program in government primary schools offers students the opportunity to learn a language 
-      other than English. These programs help students develop language skills, support cultural diversity.
+      {{ $t('compareView.languageProgram.description')}}
     </p>
     <button @click="toggleModal('languageProgram')" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-      Read More
+      {{ $t('compareView.languageProgram.readMore')}}
     </button>
   </div>
 </div>
@@ -130,13 +129,12 @@
           &times;
         </button>
         
-        <h2 class="text-xl font-semibold mb-4">What is an ICSEA?</h2>
+        <h2 class="text-xl font-semibold mb-4">{{ $t('compareView.icseaModal.title')}}</h2>
         <p class="text-lg text-gray-700 mb-6">
-          ICSEA is a number that shows the average education and income background of families at a school. 
-          It helps give context, but it’s not a score of how “good” a school is.
+          {{ $t('compareView.icseaModal.description')}}
         </p>
         <button @click="toggleModal('icsea')" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-          Read More
+          {{ $t('compareView.icseaModal.readMore')}}
         </button>
       </div>
     </div>
