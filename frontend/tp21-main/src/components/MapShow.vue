@@ -96,10 +96,11 @@
 
 
       <!-- Sidebar section on the right -->
-      <div class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4" style="height: 500px;">
+      <div v-if="checkCompareListLength" class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4" style="height: 500px;">
         <CompareSideBar />
       </div>
     </div>
+
 
     <!-- Toast Notification -->
     <transition name="fade">
@@ -112,6 +113,7 @@
         {{ toast.message }}
       </div>
     </transition>
+
   </div>
 </template>
 
@@ -129,6 +131,10 @@ const checkList = ref(JSON.parse(sessionStorage.getItem('compareList') || '[]'))
 
 
 
+const checkCompareListLength = () => {
+  const List = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+  return List.length === 0  
+}
 
 const scrollToTop = () => {
     window.scrollTo(0, 0)
@@ -189,6 +195,7 @@ const handleAddToCompare = (school) => {
 
   // Show success toast
   showToast('success', `"${school.School_Name}" added to compare!`)
+  checkCompareListLength()
 }
 
 
@@ -507,3 +514,4 @@ onMounted(() => {
 </script>
 
 
+<!-- mapboxgl.accessToken = 'pk.eyJ1IjoicmV2aXZlZGVzaXJlIiwiYSI6ImNtOG50dzNmbDA0cGQyam9od2QzMjRnOHMifQ.1TH3sOapBo7eXNQ-2hBu6A' -->
