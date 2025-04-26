@@ -1,5 +1,6 @@
 <template>
   <div class="map-container flex">
+<<<<<<< HEAD:frontend/tp21-main/src/components/home/MapShow-copy.vue
     <div class="filter-section flex flex-col md:flex-row gap-4 mb-4">
       <div class="filter-group">
         <label for="school-type" class="block text-sm font-medium text-gray-700 mb-1">{{ $t('MapShow.filterSection.schoolType') }}</label>
@@ -57,8 +58,8 @@
       <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300 transition-all duration-300" 
            :class="{'w-full': !checkCompareListLength, 'w-3/4': checkCompareListLength}" 
            style="height: 500px;">
-        <div id="map" ref="mapContainer" class="w-full h-full"></div>
 
+        <div id="map" ref="mapContainer" class="w-full h-full"></div>
         <!-- School Popup -->
         <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg"
           style="top: 50%; right: 20px; transform: translateY(-50%); width: 300px; z-index: 10;">
@@ -71,14 +72,12 @@
             </svg>
           </div>
           <p class="text-gray-600 mb-3">{{ selectedSchool.type }} school</p>
-
           <div class="grid grid-cols-2 gap-2 mb-4">
             <div v-for="(language, index) in selectedSchool.languages" :key="index"
               class="rounded-md p-2 text-center text-sm" style="background-color: #EBF1FA;">
               {{ language }}
             </div>
           </div>
-
           <div class="flex justify-between">
             <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop" class="hover:underline">
               <button class="text-blue-500 hover:underline">View details</button>
@@ -94,15 +93,23 @@
             </button>
           </div>
         </div>
+        <button class="absolute top-4 right-11 bg-white text-gray-700 hover:bg-gray-100 px-2 py-1 rounded-md"
+          @click="getCurrentLocation">
+          Get Location
+        </button>
       </div>
+    </transition>
 
-      <!-- Sidebar section -->
-      <div v-if="checkCompareListLength" 
-           class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4 transition-all duration-300" 
-           style="height: 500px;">
+    <!-- 侧边栏部分，淡入淡出动画 -->
+    <transition name="sidebar-fade">
+      <div
+        v-if="checkCompareListLength"
+        class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4"
+        style="height: 500px;"
+      >
         <CompareSideBar @remove-all="handleRemoveAll" @remove-school="handleRemoveSchool" />
       </div>
-    </div>
+    </transition>
 
     <!-- Toast Notification -->
     <transition name="fade">
@@ -113,433 +120,164 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted, watch, computed, onUnmounted, nextTick } from 'vue';
-import { useSchoolStore } from '../../stores/school';
-import { useCompareStore } from '../../stores/compare';
-import { useToastStore } from '../../stores/toast';
-import { useMapStore } from '../../stores/map';
-import { useFilterStore } from '../../stores/filter';
-import { useSchoolService } from '../../services/school';
-import { useCompareService } from '../../services/compare';
-import { useMapService } from '../../services/map';
-import { useFilterService } from '../../services/filter';
-import { useRouter } from 'vue-router';
-import { useScroll } from 'vue-scrollto';
-import CompareSideBar from './CompareSideBar.vue';
+import CompareSideBar from '@/components/CompareSideBar.vue';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import schoolIcon from '@/assets/images/school.png';
 
-export default {
-  name: 'MapShow',
-  components: {
-    CompareSideBar
-  },
-  setup() {
-    const schoolStore = useSchoolStore();
-    const compareStore = useCompareStore();
-    const toastStore = useToastStore();
-    const mapStore = useMapStore();
-    const filterStore = useFilterStore();
-    const schoolService = useSchoolService();
-    const compareService = useCompareService();
-    const mapService = useMapService();
-    const filterService = useFilterService();
-    const router = useRouter();
-    const scroll = useScroll();
+const mapContainer = ref(null);
+const selectedSchool = ref(null);
+const isSchoolLoaded = ref(false);
+const map = ref(null);
+const mapLoaded = ref(false);
+const schools = ref([]);
 
-    const mapContainer = ref(null);
-    const selectedSchool = ref(null);
-    const isSchoolLoaded = ref(false);
-    const map = ref(null);
-    const mapLoaded = ref(false);
-    const schools = ref([]);
-    
-    // 添加地图重置函数
-    const resizeMap = () => {
-      if (map.value) {
-        setTimeout(() => {
-          map.value.resize();
-          console.log('Map manually resized');
-        }, 300);
-      }
-    };
-    
-    const compareList = ref(JSON.parse(sessionStorage.getItem('compareList') || '[]'));
+const compareList = ref(JSON.parse(sessionStorage.getItem('compareList') || '[]'));
 
-    // Watch compareList changes
-    watch(compareList, (newVal) => {
-      console.log('MapShow: compareList changed:', newVal)
-      sessionStorage.setItem('compareList', JSON.stringify(newVal));
-      window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: newVal }))
-    }, { deep: true });
+const checkCompareListLength = computed(() => {
+  return compareList.value && compareList.value.length > 0;
+});
 
-    // Watch compareList length changes
-    watch(() => compareList.value.length, (newLength, oldLength) => {
-      console.log('CompareList length changed:', newLength, oldLength);
-      if (newLength === 0) {
-        resizeMap();
-      }
-    }, { immediate: true });
+const isInCompareList = computed(() => {
+  if (!selectedSchool.value) return false
+  return compareList.value.some(item => item.School_AGE_ID === selectedSchool.value.id)
+});
 
-    const checkCompareListLength = computed(() => {
-      return compareList.value && compareList.value.length > 0;
-    });
+const toast = ref({
+  show: false,
+  message: '',
+  type: 'success'
+});
+let toastTimeout = null;
 
-    const isInCompareList = computed(() => {
-      if (!selectedSchool.value) return false
-      return compareList.value.some(item => item.School_AGE_ID === selectedSchool.value.id)
-    });
+const showToast = (type, message, duration = 3000) => {
+  toast.value = { show: true, type, message }
+  if (toastTimeout) clearTimeout(toastTimeout)
+  toastTimeout = setTimeout(() => {
+    toast.value.show = false
+  }, duration)
+}
 
-    const filters = ref({
-      schoolType: 'ALL',
-      languageProgram: 'ALL'
-    });
+const scrollToTop = () => {
+  window.scrollTo(0, 0);
+};
 
-    const availableSchoolTypes = ref(['ALL', 'Primary', 'Secondary', 'Tertiary']);
-    const availableLanguages = ref(['ALL', 'English', 'Spanish', 'French', 'German']);
+const handleAddToCompare = (school) => {
+  if (!school || !school.School_AGE_ID) {
+    showToast('error', 'Invalid school data. Cannot add to compare.')
+    return
+  }
+  const exists = compareList.value.some(item => item.id === school.School_AGE_ID || item.url === school.School_URL)
+  if (exists) {
+    showToast('warning', `"${school.School_Name}" is already in your compare list.`)
+    return
+  }
+  if (compareList.value.length >= 3) {
+    showToast('warning', 'You can only compare up to 3 schools.')
+    return
+  }
+  compareList.value.push(school)
+  showToast('success', `"${school.School_Name}" added to compare!`)
+  sessionStorage.setItem('compareList', JSON.stringify(compareList.value))
+  window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }))
+};
 
-    const toast = ref({
-      show: false,
-      message: '',
-      type: 'success'
-    });
+const handleRemoveAll = () => {
+  compareList.value = [];
+  sessionStorage.setItem('compareList', '[]');
+  window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: [] }));
+};
 
-    let toastTimeout = null;
+const handleRemoveSchool = (schoolId) => {
+  compareList.value = compareList.value.filter(school => school.School_AGE_ID !== schoolId);
+  sessionStorage.setItem('compareList', JSON.stringify(compareList.value));
+  window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }));
+};
 
-    const showToast = (type, message, duration = 3000) => {
-      toast.value = { show: true, type, message }
-      if (toastTimeout) clearTimeout(toastTimeout)
-      toastTimeout = setTimeout(() => {
-        toast.value.show = false
-      }, duration)
-    }
-
-    const scrollToTop = () => {
-      window.scrollTo(0, 0);
-    };
-
-    const handleRemoveAll = () => {
-      console.log('MapShow: Removing all schools');
-      compareList.value = [];
-      sessionStorage.setItem('compareList', '[]');
-      window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: [] }));
-      resizeMap();
-    };
-
-    const handleRemoveSchool = (schoolId) => {
-      console.log('MapShow: Removing school:', schoolId);
-      compareList.value = compareList.value.filter(school => school.School_AGE_ID !== schoolId);
-      sessionStorage.setItem('compareList', JSON.stringify(compareList.value));
-      window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }));
-      
-      if (compareList.value.length === 0) {
-        resizeMap();
-      }
-    };
-
-    const handleAddToCompare = (school) => {
-      console.log('MapShow: Add to compare clicked for:', school)
-
-      if (!school || !school.School_AGE_ID) {
-        console.warn('Invalid school object or missing School_AGE_ID')
-        showToast('error', 'Invalid school data. Cannot add to compare.')
-        return
-      }
-
-      const exists = compareList.value.some(item => item.id === school.School_AGE_ID || item.url === school.School_URL)
-
-      if (exists) {
-        console.log('School already exists in compareList:', school.School_Name)
-        showToast('warning', `"${school.School_Name}" is already in your compare list.`)
-        return
-      }
-
-      if (compareList.value.length >= 3) {
-        showToast('warning', 'You can only compare up to 3 schools.')
-        return
-      }
-
-      compareList.value.push(school)
-      console.log('MapShow: School added to compareList:', school.School_Name)
-      showToast('success', `"${school.School_Name}" added to compare!`)
-      
-      sessionStorage.setItem('compareList', JSON.stringify(compareList.value))
-      window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }))
-    };
-
-
-
-     const filteredSchools = computed(() => {
-      let result = [...schools.value];
-
-      if (filters.value.schoolType !== 'ALL') {
-        result = result.filter(school => school.School_Sector === filters.value.schoolType);
-      }
-
-      if (filters.value.languageProgram !== 'ALL') {
-        result = result.filter(school =>
-          Array.isArray(school.languages) && school.languages.some(lang => lang === filters.value.languageProgram)
-        );
-      }
-
-      return result;
-    });
-
-    const applyFilters = () => {
-      if (!mapLoaded.value) {
-        console.log('Map not ready yet');
-        return;
-      }
-
-      if (!map.value.getSource('schools')) {
-        console.log('Schools source not ready yet');
-        return;
-      }
-
-      try {
-        map.value.getSource('schools').setData({
-          type: 'FeatureCollection',
-          features: filteredSchools.value.map(school => ({
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [school.Longitude, school.Latitude]
-            },
-            properties: {
-              id: school.School_AGE_ID,
-              name: school.School_Name,
-              type: school.School_Sector,
-              languages: Array.isArray(school.languages) ? school.languages.join(',') : '',
-              suburb: school.Suburb
-            }
-          }))
-        });
-
-        if (filteredSchools.value.length > 0) {
-          const bounds = new mapboxgl.LngLatBounds();
-          filteredSchools.value.forEach(school => {
-            bounds.extend([school.Longitude, school.Latitude]);
-          });
-          map.value.fitBounds(bounds, { padding: 50 });
-        }
-
-        // 确保地图正确显示
-        resizeMap();
-      } catch (error) {
-        console.error('Error updating map data:', error);
-      }
-    };
-
-    const resetFilters = () => {
-      filters.value = {
-        schoolType: 'ALL',
-        languageProgram: 'ALL'
-      };
-      applyFilters();
-      selectedSchool.value = null;
-    };
-
-    const initializeMap = () => {
-      mapboxgl.accessToken = 'pk.eyJ1IjoicmV2aXZlZGVzaXJlIiwiYSI6ImNtOG50dzNmbDA0cGQyam9od2QzMjRnOHMifQ.1TH3sOapBo7eXNQ-2hBu6A'
-
-      map.value = new mapboxgl.Map({
-        container: mapContainer.value,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [144.9631, -37.8136],
-        zoom: 11,
-        maxZoom: 14
-      })
-
-      map.value.addControl(new mapboxgl.NavigationControl(), 'top-right')
-
-      map.value.on('load', () => {
-        console.log('Map fully loaded');
-        mapLoaded.value = true;
-        initializeSchools();
-
-        map.value.on('click', (e) => {
-          const features = map.value.queryRenderedFeatures(e.point, { layers: ['school-points'] });
-          if (features.length === 0) {
-            selectedSchool.value = null;
-          }
-        });
-      })
-    }
-
-    const initializeSchools = () => {
-      map.value.loadImage(
-        schoolIcon,
-        (error, image) => {
-          if (error) throw error
-
-          map.value.addImage('school-icon', image)
-
-          map.value.addSource('schools', {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: schools.value.map(school => ({
-                type: 'Feature',
-                geometry: {
-                  type: 'Point',
-                  coordinates: [school.Longitude, school.Latitude]
-                },
-                properties: {
-                  id: school.School_AGE_ID,
-                  name: school.School_Name,
-                  type: school.School_Sector,
-                  languages: Array.isArray(school.languages) ? school.languages.join(',') : '',
-                  suburb: school.Suburb
-                }
-              }))
-            }
-          })
-
-          map.value.addLayer({
-            id: 'school-points',
-            type: 'symbol',
-            source: 'schools',
-            layout: {
-              'icon-image': 'school-icon',
-              'icon-size': 0.9,
-              'icon-allow-overlap': true
-            }
-          })
-
-          map.value.on('click', 'school-points', (e) => {
-            if (e.features && e.features.length > 0) {
-              const properties = e.features[0].properties;
-              selectedSchool.value = {
-                id: properties.id,
-                name: properties.name,
-                type: properties.type,
-                languages: properties.languages ? properties.languages.split(',') : []
-              };
-
-              isSchoolLoaded.value = false;
-
-              const sid = properties.id;
-              fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
-                .then(response => response.json())
-                .then(fullData => {
-                  if (fullData && !fullData.error) {
-                    selectedSchool.value = {
-                      ...fullData,
-                      id: fullData.School_AGE_ID,
-                      name: fullData.School_Name,
-                      type: fullData.School_Sector,
-                      languages: fullData.languages || []
-                    };
-                    isSchoolLoaded.value = true;
-                  }
-                });
-            }
-          });
-
-          map.value.on('mouseenter', 'school-points', () => {
-            map.value.getCanvas().style.cursor = 'pointer'
-          })
-
-          map.value.on('mouseleave', 'school-points', () => {
-            map.value.getCanvas().style.cursor = ''
-          })
-
-          setTimeout(() => {
-            applyFilters();
-          }, 100);
-        }
-      )
-    }
-
-    onMounted(() => {
-      fetch(`${import.meta.env.VITE_API_URL}/schools`)
-        .then(response => response.json())
-        .then(data => {
-          schools.value = data;
-          initializeMap();
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-        });
-
-      const handleStorageChange = (event) => {
-        console.log('MapShow: Storage event received:', event)
-        if (event.key === 'compareList') {
-          const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
-          compareList.value = newCompareList;
-        }
-      };
-
-      const handleCompareListUpdate = (event) => {
-        console.log('MapShow: CompareListUpdated event received:', event)
-        if (event.detail !== undefined) {
-          compareList.value = event.detail;
-          sessionStorage.setItem('compareList', JSON.stringify(event.detail));
-        } else {
-          const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
-          compareList.value = newCompareList;
-        }
-      };
-
-      // 添加页面可见性变化监听
-      const handleVisibilityChange = () => {
-        if (document.visibilityState === 'visible') {
-          console.log('Page became visible, resizing map');
-          resizeMap();
-        }
-      };
-
-      // 添加路由变化监听
-      router.afterEach(() => {
-        nextTick(() => {
-          console.log('Route changed, resizing map');
-          resizeMap();
-        });
-      });
-
-      window.addEventListener('storage', handleStorageChange);
-      window.addEventListener('compareListUpdated', handleCompareListUpdate);
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-
-      onUnmounted(() => {
-        window.removeEventListener('storage', handleStorageChange);
-        window.removeEventListener('compareListUpdated', handleCompareListUpdate);
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-      });
-    });
-
-    return {
-      mapContainer,
-      selectedSchool,
-      isInCompareList,
-      isSchoolLoaded,
-      checkCompareListLength,
-      filters,
-      availableSchoolTypes,
-      availableLanguages,
-      toast,
-      applyFilters,
-      resetFilters,
-      handleAddToCompare,
-      handleRemoveAll,
-      handleRemoveSchool,
-      scrollToTop
-    };
+const resizeMap = () => {
+  if (map.value) {
+    setTimeout(() => {
+      map.value.resize();
+    }, 400); // 等待动画完成
   }
 };
+
+// 监听 compareList 长度变化，sidebar 显隐时 resize 地图
+watch(checkCompareListLength, () => {
+  resizeMap();
+});
+
+onMounted(() => {
+  mapboxgl.accessToken = 'pk.eyJ1IjoicmV2aXZlZGVzaXJlIiwiYSI6ImNtOG50dzNmbDA0cGQyam9od2QzMjRnOHMifQ.1TH3sOapBo7eXNQ-2hBu6A';
+  map.value = new mapboxgl.Map({
+    container: mapContainer.value,
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [144.9631, -37.8136],
+    zoom: 11,
+    maxZoom: 14
+  });
+
+  map.value.addControl(new mapboxgl.NavigationControl(), 'top-right')
+
+  map.value.on('load', () => {
+    mapLoaded.value = true;
+    // ...初始化学校、polygon等
+  });
+
+  // 监听 compareList 的 storage 事件
+  const handleStorageChange = (event) => {
+    if (event.key === 'compareList') {
+      const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+      compareList.value = newCompareList;
+    }
+  };
+  const handleCompareListUpdate = (event) => {
+    if (event.detail !== undefined) {
+      compareList.value = event.detail;
+      sessionStorage.setItem('compareList', JSON.stringify(event.detail));
+    } else {
+      const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+      compareList.value = newCompareList;
+    }
+  };
+  window.addEventListener('storage', handleStorageChange);
+  window.addEventListener('compareListUpdated', handleCompareListUpdate);
+
+  onUnmounted(() => {
+    window.removeEventListener('storage', handleStorageChange);
+    window.removeEventListener('compareListUpdated', handleCompareListUpdate);
+  });
+});
+
+function getCurrentLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        // emit('locationObtained', [longitude, latitude]);
+      },
+      (error) => {
+        console.error('Error during fetching location:', error.message);
+      }
+    );
+  } else {
+    console.error('browser not support this function.');
+  }
+}
 </script>
 
 <style scoped>
 .map-container {
   display: flex;
-  flex-direction: column;
 }
 
 .map-wrapper {
-  transition: all 0.3s ease;
+  transition: width 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.3s, border 0.3s;
   flex-grow: 1;
+  /* transition: width 0.3s ease; */
 }
 
 .map-wrapper.w-full {
@@ -548,34 +286,28 @@ export default {
 
 .map-wrapper.w-3/4 {
   width: 75% !important;
+ 
 }
 
 .compare-sidebar {
-  transition: all 0.3s ease;
-  width: 25%;
+  transition: opacity 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
   opacity: 1;
+  transform: translateX(0);
 }
 
-#map {
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  height: 100%;
+.sidebar-fade-enter-from,
+.sidebar-fade-leave-to {
+  opacity: 0;
+  transform: translateX(40px);
+}
+.sidebar-fade-enter-active,
+.sidebar-fade-leave-active {
+  transition: opacity 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
 }
 
-/* Filter styles */
-.filter-section {
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.filter-group {
-  flex: 1;
-  min-width: 200px;
+.map-width-fade-enter-active,
+.map-width-fade-leave-active {
+  transition: width 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.3s, border 0.3s;
 }
 
 /* Toast Notification */

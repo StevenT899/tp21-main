@@ -352,11 +352,14 @@ function getCurrentLocation() {
 }
 
 .map-wrapper {
-  transition: width 0.3s ease;
+  transition: width 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.3s, border 0.3s;
+  flex-grow: 1;
 }
 
 .compare-sidebar {
-  transition: all 0.3s ease;
+  transition: opacity 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* Toast Notification */
