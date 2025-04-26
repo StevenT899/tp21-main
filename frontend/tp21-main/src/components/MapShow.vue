@@ -78,7 +78,7 @@
           </div>
 
           <div class="flex justify-between">
-            <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" class="hover:underline">
+            <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop" class="hover:underline">
               <button class="text-blue-500 hover:underline">View details</button>
             </router-link>
             <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
@@ -94,51 +94,47 @@
         </div>
       </div>
 
-
       <!-- Sidebar section on the right -->
       <div v-if="checkCompareListLength" class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4" style="height: 500px;">
         <CompareSideBar />
       </div>
     </div>
 
-
     <!-- Toast Notification -->
     <transition name="fade">
-      <div v-if="toast.show" :class="[
-        'fixed top-6 left-1/2 transform -translate-x-1/2',
-        'px-6 py-4 rounded-xl shadow-lg text-white z-50 text-lg max-w-xl w-full text-center',
-        toast.type === 'success' ? 'bg-green-600' :
-          toast.type === 'warning' ? 'bg-yellow-500' :
-            'bg-red-600']">
+      <div v-if="toast.show" :class="['toast', toast.type]">
         {{ toast.message }}
       </div>
     </transition>
-
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, defineProps, watch, computed } from 'vue'
+import { ref, onMounted, reactive, defineProps, watch, computed, onUnmounted } from 'vue'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import schoolIcon from '@/assets/images/school.png';
 import CompareSideBar from '@/components/CompareSideBar.vue';
 
+// Use ref to manage compareList for reactivity
+const compareList = ref(JSON.parse(sessionStorage.getItem('compareList') || '[]'));
 
-const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+// Watch compareList changes
+watch(compareList, (newVal) => {
+  console.log('MapShow: compareList changed:', newVal)
+  sessionStorage.setItem('compareList', JSON.stringify(newVal));
+  window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: newVal }))
+}, { deep: true });
 
-const checkList = ref(JSON.parse(sessionStorage.getItem('compareList') || '[]'));
-
-
-
-const checkCompareListLength = () => {
-  const List = JSON.parse(sessionStorage.getItem('compareList') || '[]');
-  return List.length === 0  
-}
+// Computed property to check compare list length and control sidebar visibility
+const checkCompareListLength = computed(() => {
+  return compareList.value && compareList.value.length > 0;
+});
 
 const scrollToTop = () => {
-    window.scrollTo(0, 0)
-  }
+  window.scrollTo(0, 0)
+}
+
 const toast = ref({ show: false, type: '', message: '' })
 let toastTimeout = null
 
@@ -152,13 +148,13 @@ const showToast = (type, message, duration = 3000) => {
 
 const isInCompareList = computed(() => {
   if (!selectedSchool.value) return false
-  return compareList.some(item => item.School_AGE_ID === selectedSchool.value.id)
+  return compareList.value.some(item => item.School_AGE_ID === selectedSchool.value.id)
 })
 
 const isSchoolLoaded = ref(false);
 
 const handleAddToCompare = (school) => {
-  console.log('Add to compare clicked for:', school)
+  console.log('MapShow: Add to compare clicked for:', school)
 
   // Check if the school object is valid
   if (!school || !school.School_AGE_ID) {
@@ -167,11 +163,8 @@ const handleAddToCompare = (school) => {
     return
   }
 
-  // Get the compareList from sessionStorage
-  const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]')
-
   // Check if the school is already in the compare list
-  const exists = compareList.some(item => item.id === school.School_AGE_ID || item.url === school.School_URL)
+  const exists = compareList.value.some(item => item.id === school.School_AGE_ID || item.url === school.School_URL)
 
   // If it already exists, show warning and return
   if (exists) {
@@ -181,23 +174,22 @@ const handleAddToCompare = (school) => {
   }
 
   // Check if the compareList has reached the limit of 3 schools
-  if (compareList.length >= 3) {
+  if (compareList.value.length >= 3) {
     showToast('warning', 'You can only compare up to 3 schools.')
     return
   }
 
   // Add the school to the compare list
-  compareList.push(school)
-  sessionStorage.setItem('compareList', JSON.stringify(compareList))
-
-  console.log('School added to compareList:', school.School_Name)
-
+  compareList.value.push(school)
+  console.log('MapShow: School added to compareList:', school.School_Name)
 
   // Show success toast
   showToast('success', `"${school.School_Name}" added to compare!`)
-  checkCompareListLength()
+  
+  // Update sessionStorage and trigger event
+  sessionStorage.setItem('compareList', JSON.stringify(compareList.value))
+  window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }))
 }
-
 
 // Receive query searching parameters and if a school is identified from HomeView.vue
 const props = defineProps({
@@ -510,8 +502,77 @@ onMounted(() => {
     .catch(error => {
       console.error('Error fetching data:', error);
     });
+
+  // Listen for storage events and custom events
+  const handleStorageChange = (event) => {
+    console.log('MapShow: Storage event received:', event)
+    if (event.key === 'compareList') {
+      const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+      compareList.value = newCompareList;
+    }
+  };
+
+  const handleCompareListUpdate = (event) => {
+    console.log('MapShow: CompareListUpdated event received:', event)
+    if (event.detail) {
+      compareList.value = event.detail;
+    } else {
+      const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+      compareList.value = newCompareList;
+    }
+  };
+
+  window.addEventListener('storage', handleStorageChange);
+  window.addEventListener('compareListUpdated', handleCompareListUpdate);
+
+  // Clean up event listeners
+  onUnmounted(() => {
+    window.removeEventListener('storage', handleStorageChange);
+    window.removeEventListener('compareListUpdated', handleCompareListUpdate);
+  });
 });
 </script>
 
 
-<!-- mapboxgl.accessToken = 'pk.eyJ1IjoicmV2aXZlZGVzaXJlIiwiYSI6ImNtOG50dzNmbDA0cGQyam9od2QzMjRnOHMifQ.1TH3sOapBo7eXNQ-2hBu6A' -->
+
+<style scoped>
+  /* Toast Notification */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    z-index: 1000;
+  }
+  
+  .toast.success {
+    background-color: #4CAF50;
+  }
+  
+  .toast.error {
+    background-color: #f44336;
+  }
+  
+  .toast.info {
+    background-color: #2196F3;
+  }
+  
+  .toast.warning {
+    background-color: #ff9800;
+  }
+  
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.3s ease;
+  }
+  
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+  </style>

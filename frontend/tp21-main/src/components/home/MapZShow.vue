@@ -1,51 +1,65 @@
 <template>
-  <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300" style="height: 500px;">
-    <div id="map" class="w-full h-full"></div>
-    <!-- School Popup -->
-    <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg"
-      style="top: 50%; right: 20px; transform: translateY(-50%); width: 300px; z-index: 10;">
-      <div class="flex justify-between items-start">
-        <h3 class="text-lg font-bold">{{ selectedSchool.name }}</h3>
-        <svg v-if="isInCompareList" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="text-green-500">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      </div>
-      <p class="text-gray-600 mb-3">{{ selectedSchool.type }} school</p>
-
-      <div class="grid grid-cols-2 gap-2 mb-4">
-        <div v-for="(language, index) in selectedSchool.languages" :key="index"
-          class="rounded-md p-2 text-center text-sm" style="background-color: #EBF1FA;">
-          {{ language }}
+  <div class="map-container flex">
+    <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300 transition-all duration-300" :class="{'w-full': !checkCompareListLength, 'w-3/4': checkCompareListLength}" style="height: 500px;">
+      <div id="map" class="w-full h-full"></div>
+      <!-- School Popup -->
+      <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg"
+        style="top: 50%; right: 20px; transform: translateY(-50%); width: 300px; z-index: 10;">
+        <div class="flex justify-between items-start">
+          <h3 class="text-lg font-bold">{{ selectedSchool.name }}</h3>
+          <svg v-if="isInCompareList" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="text-green-500">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
         </div>
-      </div>
+        <p class="text-gray-600 mb-3">{{ selectedSchool.type }} school</p>
 
-      <div class="flex justify-between">
-        <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" class="hover:underline">
+        <div class="grid grid-cols-2 gap-2 mb-4">
+          <div v-for="(language, index) in selectedSchool.languages" :key="index"
+            class="rounded-md p-2 text-center text-sm" style="background-color: #EBF1FA;">
+            {{ language }}
+          </div>
+        </div>
+
+        <div class="flex justify-between">
+          <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop" class="hover:underline">
             <button class="text-blue-500 hover:underline">View details</button>
           </router-link>
-        <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
-          class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          Add to compare
-        </button>
+          <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
+            class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add to compare
+          </button>
+        </div>
       </div>
+      <button class="absolute top-4 right-11 bg-white text-gray-700 hover:bg-gray-100 px-2 py-1 rounded-md"
+        @click="getCurrentLocation">
+        Get Current Location
+      </button>
     </div>
-    <button class="absolute top-4 right-11 bg-white text-gray-700 hover:bg-gray-100 px-2 py-1 rounded-md"
-      @click="getCurrentLocation">
-      Get Current Location
-    </button>
+
+    <!-- Sidebar section on the right -->
+    <div v-if="checkCompareListLength" class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4 transition-all duration-300" style="height: 500px;">
+      <CompareSideBar @remove-all="handleRemoveAll" @remove-school="handleRemoveSchool" />
+    </div>
+
+    <!-- Toast Notification -->
+    <transition name="fade">
+      <div v-if="toast.show" :class="['toast', toast.type]">
+        {{ toast.message }}
+      </div>
+    </transition>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, watch, defineEmits } from 'vue';
-
+import { onMounted, ref, watch, defineEmits, computed, onUnmounted } from 'vue';
+import CompareSideBar from '@/components/CompareSideBar.vue';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import schoolIcon from '@/assets/images/school.png';
@@ -60,8 +74,101 @@ const props = defineProps({
 
 const selectedSchool = ref(null);
 const isSchoolLoaded = ref(false);
-
 const map = ref(null);
+
+// Use ref to manage compareList for reactivity
+const compareList = ref(JSON.parse(sessionStorage.getItem('compareList') || '[]'));
+
+// Watch compareList changes
+watch(compareList, (newVal) => {
+  console.log('MapZShow: compareList changed:', newVal)
+  sessionStorage.setItem('compareList', JSON.stringify(newVal));
+  window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: newVal }))
+}, { deep: true });
+
+// Computed property to check compare list length and control sidebar visibility
+const checkCompareListLength = computed(() => {
+  return compareList.value && compareList.value.length > 0;
+});
+
+const isInCompareList = computed(() => {
+  if (!selectedSchool.value) return false
+  return compareList.value.some(item => item.School_AGE_ID === selectedSchool.value.id)
+});
+
+// Toast notification
+const toast = ref({
+  show: false,
+  message: '',
+  type: 'success'
+});
+
+let toastTimeout = null;
+
+const showToast = (type, message, duration = 3000) => {
+  toast.value = { show: true, type, message }
+  if (toastTimeout) clearTimeout(toastTimeout)
+  toastTimeout = setTimeout(() => {
+    toast.value.show = false
+  }, duration)
+}
+
+const scrollToTop = () => {
+  window.scrollTo(0, 0);
+};
+
+const handleAddToCompare = (school) => {
+  console.log('MapZShow: Add to compare clicked for:', school)
+
+  // Check if the school object is valid
+  if (!school || !school.School_AGE_ID) {
+    console.warn('Invalid school object or missing School_AGE_ID')
+    showToast('error', 'Invalid school data. Cannot add to compare.')
+    return
+  }
+
+  // Check if the school is already in the compare list
+  const exists = compareList.value.some(item => item.id === school.School_AGE_ID || item.url === school.School_URL)
+
+  // If it already exists, show warning and return
+  if (exists) {
+    console.log('School already exists in compareList:', school.School_Name)
+    showToast('warning', `"${school.School_Name}" is already in your compare list.`)
+    return
+  }
+
+  // Check if the compareList has reached the limit of 3 schools
+  if (compareList.value.length >= 3) {
+    showToast('warning', 'You can only compare up to 3 schools.')
+    return
+  }
+
+  // Add the school to the compare list
+  compareList.value.push(school)
+  console.log('MapZShow: School added to compareList:', school.School_Name)
+
+  // Show success toast
+  showToast('success', `"${school.School_Name}" added to compare!`)
+  
+  // Update sessionStorage and trigger event
+  sessionStorage.setItem('compareList', JSON.stringify(compareList.value))
+  window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }))
+};
+
+// 添加处理函数
+const handleRemoveAll = () => {
+  console.log('MapZShow: Removing all schools');
+  compareList.value = [];
+  sessionStorage.setItem('compareList', '[]');
+  window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: [] }));
+};
+
+const handleRemoveSchool = (schoolId) => {
+  console.log('MapZShow: Removing school:', schoolId);
+  compareList.value = compareList.value.filter(school => school.School_AGE_ID !== schoolId);
+  sessionStorage.setItem('compareList', JSON.stringify(compareList.value));
+  window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }));
+};
 
 onMounted(() => {
   mapboxgl.accessToken = 'pk.eyJ1IjoicmV2aXZlZGVzaXJlIiwiYSI6ImNtOG50dzNmbDA0cGQyam9od2QzMjRnOHMifQ.1TH3sOapBo7eXNQ-2hBu6A';
@@ -82,11 +189,36 @@ onMounted(() => {
     initializeSearchPoint();
     fitMapToSchools()
   });
+
+  // Listen for storage events and custom events
+  const handleStorageChange = (event) => {
+    console.log('MapZShow: Storage event received:', event)
+    if (event.key === 'compareList') {
+      const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+      compareList.value = newCompareList;
+    }
+  };
+
+  const handleCompareListUpdate = (event) => {
+    console.log('MapZShow: CompareListUpdated event received:', event)
+    if (event.detail !== undefined) {
+      compareList.value = event.detail;
+      sessionStorage.setItem('compareList', JSON.stringify(event.detail));
+    } else {
+      const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+      compareList.value = newCompareList;
+    }
+  };
+
+  window.addEventListener('storage', handleStorageChange);
+  window.addEventListener('compareListUpdated', handleCompareListUpdate);
+
+  // Clean up event listeners
+  onUnmounted(() => {
+    window.removeEventListener('storage', handleStorageChange);
+    window.removeEventListener('compareListUpdated', handleCompareListUpdate);
+  });
 });
-
-function handleAddToCompare() {
-
-}
 
 // initialize data
 function initializeSchools() {
@@ -117,20 +249,20 @@ function initializeSchools() {
       isSchoolLoaded.value = false;
       
       const sid = selectedSchool.value.id;
-  fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
-    .then(response => response.json())
-    .then(fullData => {
-      if (fullData && !fullData.error) {
-        selectedSchool.value = {
-          ...fullData,
-          id: fullData.School_AGE_ID,
-          name: fullData.School_Name,
-          type: fullData.School_Sector,
-          languages: fullData.languages || []
-        };
-        isSchoolLoaded.value = true;
-      }
-    });
+      fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
+        .then(response => response.json())
+        .then(fullData => {
+          if (fullData && !fullData.error) {
+            selectedSchool.value = {
+              ...fullData,
+              id: fullData.School_AGE_ID,
+              name: fullData.School_Name,
+              type: fullData.School_Sector,
+              languages: fullData.languages || []
+            };
+            isSchoolLoaded.value = true;
+          }
+        });
     });
 
     // hover
@@ -152,7 +284,6 @@ function initializeSearchPoint() {
   map.value.addSource('search-point', { type: 'geojson', data: buildSearchPointGeoJSON(props.coordinates) });
   map.value.addLayer({ id: 'search-point-layer', type: 'circle', source: 'search-point', paint: { 'circle-radius': 8, 'circle-color': '#f30' } });
 }
-
 
 function buildSchoolsGeoJSON(schools) {
   return {
@@ -218,5 +349,53 @@ function getCurrentLocation() {
 #map {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.map-wrapper {
+  transition: width 0.3s ease;
+}
+
+.compare-sidebar {
+  transition: all 0.3s ease;
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  z-index: 1000;
+}
+
+.toast.success {
+  background-color: #4CAF50;
+}
+
+.toast.error {
+  background-color: #f44336;
+}
+
+.toast.info {
+  background-color: #2196F3;
+}
+
+.toast.warning {
+  background-color: #ff9800;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
