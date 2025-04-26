@@ -1,6 +1,6 @@
 import { createI18n } from 'vue-i18n';
-import en from '../locales/en'
-import zh from '../locales/zh'
+import en from '@/locales/en.js'
+import zh from '@/locales/zh.js'
 
 const messages = {
     en,
@@ -8,6 +8,7 @@ const messages = {
 };
 
 const i18n = createI18n({
+    legacy: false,
     locale: 'en', 
     fallbackLocale: 'zh', 
     messages
