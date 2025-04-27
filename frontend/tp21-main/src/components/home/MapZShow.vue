@@ -1,7 +1,7 @@
 <template>
-  <div class="map-container flex pr-40">
-    <!-- Map section -->
-    <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300 transition-all duration-300" style="height: 500px;">
+  <div class="flex pr-40">
+    <!-- Left section: Map -->
+    <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300 flex-1" style="height: 500px;">
       <div id="map" class="w-full h-full"></div>
 
       <!-- School Popup -->
@@ -23,9 +23,9 @@
           </div>
         </div>
         <div class="flex justify-between">
-          <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop" class="hover:underline">
-            <button class="text-blue-500 hover:underline">{{ $t('MapZShow.schoolPopup.viewDetails') }}</button>
-          </router-link>
+          <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop" class="text-blue-500 hover:underline">
+  <button class="text-blue-500 underline cursor-pointer">{{ $t('MapShow.schoolPopup.viewDetails') }}</button>
+</router-link>
           <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
             class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -42,23 +42,27 @@
         @click="getCurrentLocation">
         {{ $t('MapZShow.mapControls.getLocation') }}
       </button>
-
-      <!-- Sidebar section -->
-      <div v-if="checkCompareListLength" class="absolute top-0 right-0 h-full flex flex-col p-4 bg-white shadow-lg border-l border-gray-200">
-        <CompareSideBar @remove-all="handleRemoveAll" @remove-school="handleRemoveSchool" />
-      </div>
     </div>
 
+     <!-- Right section: Compare Sidebar -->
+     <div v-if="checkCompareListLength"
+      class="compare-sidebar-container absolute top-0 right-0 w-80 h-1/2 flex flex-col p-4 bg-white shadow-lg border-l border-gray-200">
+      <CompareSideBar @remove-all="handleRemoveAll" @remove-school="handleRemoveSchool" />
+    </div>
+    
 
-
-    <!-- Toast Notification -->
-    <transition name="fade">
-      <div v-if="toast.show" :class="['toast', toast.type]">
-        {{ toast.message }}
-      </div>
-    </transition>
   </div>
+
+  <!-- Toast Notification -->
+  <transition name="fade">
+    <div v-if="toast.show" :class="['toast', toast.type]">
+      {{ toast.message }}
+    </div>
+  </transition>
+  
 </template>
+
+
 
 <script setup>
 import { onMounted, ref, watch, defineEmits, computed, onUnmounted } from 'vue';
@@ -348,20 +352,28 @@ function getCurrentLocation() {
 </script>
 
 <style scoped>
-#map {
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
 .map-wrapper {
-  transition: width 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.3s, border 0.3s;
-  flex-grow: 1;
+  display: flex;
+  width: calc(100% - 200px);    
+  height: 100%;  
 }
 
-.compare-sidebar {
-  transition: opacity 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
-  opacity: 1;
-  transform: translateX(0);
+#map { 
+  display: flex;
+  width: 100%; 
+}
+
+.compare-sidebar-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 150px; /* Sidebar width */
+  height: 100%;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* Ensures the sidebar is above the map */
+  overflow-y: auto; /* Allows the sidebar content to scroll if necessary */
 }
 
 /* Toast Notification */
@@ -403,4 +415,6 @@ function getCurrentLocation() {
 .fade-leave-to {
   opacity: 0;
 }
+
+
 </style>

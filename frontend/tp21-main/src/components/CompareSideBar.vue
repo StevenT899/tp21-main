@@ -11,7 +11,7 @@
           <div v-for="(school, index) in compareList" :key="school.id" class="school-card mt-2 mb-2">
             <div>
               <h3 class="school-name">{{ school.name || school.School_Name }}</h3>
-              <p class="school-suburb text-grey-400">{{ school.type || school.sector || school.School_Sector }}</p>
+              <p class="school-sector">{{ school.type || school.sector || school.School_Sector }}</p>
               <p class="school-suburb">{{ school.suburb || school.Suburb }}</p>
               <button @click="removeFromCompare(index)" class="remove-button">
                 Remove
@@ -218,14 +218,14 @@
 .school-list {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem; /* 列表卡片更紧凑 */
+  gap: 0.2rem;
   width: 100%;
 }
 
 /* School Card */
 .school-card {
   background-color: white;
-  padding: 0.2rem 0.4rem; /* 卡片内边距缩小 */
+  padding: 0.2rem 0.4rem; 
   border-radius: 0.25rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   width: 100%;
@@ -247,7 +247,13 @@
   line-height: 1.15;
 }
 
-/* Remove Button */
+.school-sector {
+  font-size: 0.75rem;
+  color: #333333;
+  margin-bottom: 0.1rem;
+  line-height: 1.15;
+}
+
 .remove-button {
   color: #ef4444;
   font-size: 0.7rem;
@@ -261,6 +267,7 @@
   display: inline-block;
   text-align: left;
   font-weight: 500;
+  margin-left: auto; /* Pushes the button to the right */
 }
 
 .remove-button:hover {
@@ -330,13 +337,35 @@
     flex-direction: row;
   }
 
-  .remove-all-button,
-  .compare-button {
-    font-size: 0.75rem;
-    padding: 0.22rem 0.7rem;
-    min-width: 60px;
-    max-width: 90px;
-  }
+  /* Remove All Button & Compare Button */
+.remove-all-button,
+.compare-button {
+  padding: 0.25rem 0.8rem; /* Same padding for both */
+  font-size: 0.8rem; /* Same font size */
+  border-radius: 0.25rem; /* Rounded corners */
+  transition: all 0.18s;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  width: 100%; /* Make both buttons take full width inside their container */
+  min-width: 70px;
+  max-width: 100px;
+  font-weight: 500;
+}
+
+
+.remove-all-button:hover,
+.compare-button:hover {
+  background-color: #2563eb; /* Same hover color */
+}
+
+/* Focus state */
+.remove-all-button:focus,
+.compare-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* Optional for focus state */
+}
+
 
   .school-card {
     padding: 0.2rem 0.3rem;

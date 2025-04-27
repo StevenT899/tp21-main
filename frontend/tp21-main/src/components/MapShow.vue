@@ -1,8 +1,8 @@
 <template>
   <div class="map-container relative">
-    <!-- 上面 Filter + Reset + Sidebar -->
+    <!--Filter + Reset + Sidebar -->
     <div class="filter-section flex flex-wrap items-start gap-4 mb-4 pr-40">
-      <!-- 筛选栏 -->
+   
       <div class="filter-group">
         <label for="school-type" class="block text-sm font-medium text-gray-700 mb-1">
           {{ $t('MapShow.filterSection.schoolType') }}
@@ -34,7 +34,7 @@
         </select>
       </div>
 
-      <!-- 按钮区域 -->
+    
       <div class="filter-actions flex items-end gap-2" style="margin-top: 1.375rem;">
         <button @click="applyFilters"
           class="flex items-center gap-2 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors">
@@ -68,7 +68,7 @@
       <span>{{ $t('MapShow.mapInstruction') }}</span>
     </div>
 
-    <!-- Map主体 -->
+    <!-- Map -->
     <div class="flex pr-40">
       <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300 flex-1" style="height: 500px;">
         <div id="map" ref="mapContainer" class="w-full h-full"></div>
@@ -92,10 +92,9 @@
             </div>
           </div>
           <div class="flex justify-between">
-            <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop"
-              class="hover:underline">
-              <button class="text-blue-500 hover:underline">{{ $t('MapShow.schoolPopup.viewDetails') }}</button>
-            </router-link>
+            <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop" class="text-blue-500 hover:underline">
+  <button class="text-blue-500 underline cursor-pointer">{{ $t('MapShow.schoolPopup.viewDetails') }}</button>
+</router-link>
             <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
               class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"

@@ -42,7 +42,7 @@
                 </button>
 
                 <span v-if="locationStatus"
-                    :class="{ 'text-green-600': locationStatus === $t('SchoolDetail.inSchoolZone'), 'text-red-500': locationStatus === $t('SchoolDetail.notInSchoolZone') }"
+                    :class="{ 'text-green-600': locationStatus === $t('SchoolDetail.inSchoolZone'), 'text-red-500': locationStatus === $t('SchoolDetail.notInSchoolZone') || locationStatus === 'Error, unable to check location' }"
                     class="ml-2 text-green-600 text-sm font-semibold">
                     <!-- Add the SVG icon before the text when inside the zone -->
                     <span v-if="locationStatus === $t('SchoolDetail.inSchoolZone')" class="flex gap-2">
@@ -68,7 +68,6 @@
                         </svg>
                         {{ locationStatus }}
                     </span>
-
                 </span>
             </div>
         </div>
@@ -93,7 +92,7 @@
                 <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center relative">
 
                     <button @click="toggleModal('lp')"
-                        class="absolute top-2 right-2 text-gray-600 hover:text-red-400 text-2xl">
+                        class="absolute top-2 right-2 text-gray-600 hover:text-red-400 text-2xl cursor-pointer">
                         &times;
                     </button>
 
@@ -264,15 +263,23 @@ const addToCompare = () => {
 
 function getCurrentLocation() {
     return new Promise((resolve, reject) => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                position => resolve(position.coords),
-                error => reject(error)
-            )
+        const userConsent = window.confirm('We try to check if your location is in the school zone. Do you allow us to access your location?');
+
+        if (userConsent) {
+            // If the user accepts, attempt to get the location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => resolve(position.coords),  // Resolve the location coordinates
+                    error => reject(error)  // Reject if there's an error
+                );
+            } else {
+                reject('Geolocation is not supported by this browser.');  // Reject if geolocation is not supported
+            }
         } else {
-            reject('Geolocation is not supported by this browser.')
+            // If the user denies, exit the function without doing anything
+            return;  // Just return without resolving or rejecting the promise
         }
-    })
+    });
 }
 
 function isPointInPolygon(point, polygon) {
