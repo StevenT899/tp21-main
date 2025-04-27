@@ -28,7 +28,8 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-6 rounded-xl border">
             <div>
                 <p class="text-xl">{{ $t('SchoolDetail.schoolType') }}</p>
-                <p class="font-semibold text-gray-900 mt-6">{{ $t(`schoolTypes.${school?.School_Sector}`) || school?.School_Sector }}</p>
+                <p class="font-semibold text-gray-900 mt-6">{{ $t(`schoolTypes.${school?.School_Sector}`) ||
+                    school?.School_Sector }}</p>
             </div>
             <div>
                 <p class="text-xl">{{ $t('SchoolDetail.yearRange') }}</p>
@@ -42,7 +43,7 @@
                 </button>
 
                 <span v-if="locationStatus"
-                    :class="{ 'text-green-600': locationStatus === $t('SchoolDetail.inSchoolZone'), 'text-red-500': locationStatus === $t('SchoolDetail.notInSchoolZone') || locationStatus === 'Error, unable to check location' }"
+                    :class="{ 'text-green-600': locationStatus === $t('SchoolDetail.inSchoolZone'), 'text-red-500': locationStatus === $t('SchoolDetail.notInSchoolZone') || locationStatus === $t('SchoolDetail.inSchoolZoneError')}"
                     class="ml-2 text-green-600 text-sm font-semibold">
                     <!-- Add the SVG icon before the text when inside the zone -->
                     <span v-if="locationStatus === $t('SchoolDetail.inSchoolZone')" class="flex gap-2">
@@ -130,12 +131,15 @@
         <div class="grid grid-cols-1 gap-6">
             <div class="bg-white p-6 rounded-xl border space-y-4">
                 <h2 class="text-xl font-semibold">{{ $t('SchoolDetail.staffAndEnrolment.schoolStaff') }}</h2>
-                <p class="text-gray-700">{{ $t('SchoolDetail.staffAndEnrolment.teachingStaff') }}: <strong>{{ school?.Teaching_Staff }}</strong></p>
-                <p class="text-gray-700">{{ $t('SchoolDetail.staffAndEnrolment.nonTeachingStaff') }}: <strong>{{ school?.Non_Teaching_Staff }}</strong></p>
+                <p class="text-gray-700">{{ $t('SchoolDetail.staffAndEnrolment.teachingStaff') }}: <strong>{{
+                    school?.Teaching_Staff }}</strong></p>
+                <p class="text-gray-700">{{ $t('SchoolDetail.staffAndEnrolment.nonTeachingStaff') }}: <strong>{{
+                    school?.Non_Teaching_Staff }}</strong></p>
 
                 <h2 class="text-xl font-semibold mt-6">{{ $t('SchoolDetail.staffAndEnrolment.studentEnrolment') }}</h2>
                 <div class="flex justify-between text-gray-700 me-30">
-                    <span>{{ $t('SchoolDetail.staffAndEnrolment.totalEnrolment') }}: <strong>{{ school?.Total_Enrolment }}</strong></span>
+                    <span>{{ $t('SchoolDetail.staffAndEnrolment.totalEnrolment') }}: <strong>{{ school?.Total_Enrolment
+                    }}</strong></span>
                     <span>
                         {{ $t('SchoolDetail.staffAndEnrolment.studentPerTeachingStaff') }}:
                         <strong>{{ Math.round(1 / (school?.Teaching_staff_per_student || 1)) }}</strong>
@@ -180,7 +184,9 @@
                     </div>
                 </div>
 
-                <p class="text-gray-700"><strong>{{ school?.ICSEA }}</strong>({{ $t('SchoolDetail.icseaInfo', { percentile: school?.ICSEA_percentile }) }})</p>
+                <p class="text-gray-700"><strong>{{ school?.ICSEA }}</strong>({{ $t('SchoolDetail.icseaInfo', {
+                    percentile: school?.ICSEA_percentile
+                }) }})</p>
             </div>
         </div>
 
@@ -204,6 +210,8 @@ import { useRoute, useRouter } from 'vue-router'
 // import * as turf from '@turf/turf';
 import GenderChartInDetailPage from '@/components/GenderChartInDetailPage.vue'
 import LanguageChartInDetailPage from '@/components/LanguageChartInDetailPage.vue'
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const locationStatus = ref('')
 const isButtonClicked = ref(false)
@@ -316,7 +324,9 @@ async function checkUserLocation() {
         const isInside = isPointInPolygon(currentCoords, coordinates[0])
 
         // Update location status
-        locationStatus.value = isInside ? 'This school is in your school zone' : 'This school is not in your school zone'
+        locationStatus.value = isInside
+            ? t('SchoolDetial.inSchoolZone')
+            : t('SchoolDetial.notInSchoolZone');
         isButtonClicked.value = true
 
     } catch (error) {

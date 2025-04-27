@@ -15,6 +15,11 @@ export default {
         Government: "Government",
         Independent: "Independent"
     },
+    schoolTypesSchool: {
+        Catholic: "Catholic School",
+        Government: "Government School",
+        Independent: "Independent School"
+    },
     languages: {
         "Chinese": "Chinese",
         "Japanese": "Japanese",
@@ -59,14 +64,13 @@ export default {
         checkPrefix: 'Check your {schoolZone}',
         schoolZone: 'school zone',
         searchPlaceholder: 'Enter suburb/ postcode/ school name',
-        searchPlaceholder2: 'Enter a location',
+        searchPlaceholder2: 'Enter an address',
         searchButton: 'Search',
-        noResult: 'No result found. Please try again!'
+        noResult: 'No result found. Please try search for another one!'
     },
     helpSection: {
         title: 'WE ARE HERE TO HELP',
-        paragraph1: 'School is more than academics—it’s where children grow and belong. Every child deserves to feel safe, seen, and supported at school.',
-        paragraph2: 'We hope this tool makes it just a little easier—for you, and for them.',
+        paragraph1: 'School is more than academics — it’s where children grow and belong. Every child deserves to feel safe, seen, and supported at school. We hope this tool makes it just a little easier — for you, and for them.',
         signature: '—NewBee Edu Team'
     },
     MapShow: {
@@ -215,6 +219,7 @@ export default {
         useLocation: '📍 Use Location',
         inSchoolZone: 'This school is in your school zone',
         notInSchoolZone: 'This school is not in your school zone',
+        SchoolZoneError: 'Error, unable to check location',
         languageProgram: {
             title: 'Language Program',
             modal: {

@@ -16,7 +16,7 @@
             title="{{ $t('compareView.schoolCard.removeButton') }}">
             {{ $t('compareView.schoolCard.removeButton') }}
           </button>
-          
+
           <div class="flex flex-col justify-between mb-4 h-28">
             <h2 class="text-3xl font-bold text-center text-600 mt-6">{{ schools[i - 1].name }}</h2>
 
@@ -41,7 +41,8 @@
           <div class="space-y-6 text-xl text-gray-800 min-h-[460px]">
             <div class="pb-4 border-b border-gray-300 sm:mt-20 md:mt-12 lg:mt-40 xl:mt-10">
               <span class="block font-bold">{{ $t('compareView.schoolCard.schoolType') }}</span>
-              <span class="block text-center mt-6">{{ $t(`schoolTypes.${schools[i - 1].type}`) || schools[i - 1].type }}</span>
+              <span class="block text-center mt-6">{{ $t(`schoolTypes.${schools[i - 1].type}`) || schools[i - 1].type
+                }}</span>
             </div>
 
             <div class="pb-4 border-b border-gray-300">
@@ -50,96 +51,111 @@
             </div>
 
             <div class="pb-4 border-b border-gray-300">
-  <div class="flex items-center justify-between">
-    <!-- Title and Icon -->
-    <span class="block font-bold mb-2 mt-1">{{ $t('compareView.schoolCard.languageProgram') }}</span>
+              <div class="flex items-center justify-between">
+                <!-- Title and Icon -->
+                <span class="block font-bold mb-2 mt-1">{{ $t('compareView.schoolCard.languageProgram') }}</span>
 
-    <!-- Language Program Icon -->
-    <div class="relative ml-2">
-      <svg width="16" height="16" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600 cursor-pointer" @click="toggleModal('lp')">
-        <path d="M14.1666 0.666504C21.5306 0.666504 27.4999 6.63584 27.4999 13.9998C27.4999 21.3638 21.5306 27.3332 14.1666 27.3332C6.80259 27.3332 0.833252 21.3638 0.833252 13.9998C0.833252 6.63584 6.80259 0.666504 14.1666 0.666504ZM14.1666 3.33317C11.3376 3.33317 8.6245 4.45698 6.62411 6.45736C4.62372 8.45775 3.49992 11.1709 3.49992 13.9998C3.49992 16.8288 4.62372 19.5419 6.62411 21.5423C8.6245 23.5427 11.3376 24.6665 14.1666 24.6665C16.9956 24.6665 19.7087 23.5427 21.7091 21.5423C23.7094 19.5419 24.8333 16.8288 24.8333 13.9998C24.8333 11.1709 23.7094 8.45775 21.7091 6.45736C19.7087 4.45698 16.9956 3.33317 14.1666 3.33317ZM14.1666 19.3332C14.5202 19.3332 14.8593 19.4736 15.1094 19.7237C15.3594 19.9737 15.4999 20.3129 15.4999 20.6665C15.4999 21.0201 15.3594 21.3593 15.1094 21.6093C14.8593 21.8594 14.5202 21.9998 14.1666 21.9998C13.813 21.9998 13.4738 21.8594 13.2238 21.6093C12.9737 21.3593 12.8333 21.0201 12.8333 20.6665C12.8333 20.3129 12.9737 19.9737 13.2238 19.7237C13.4738 19.4736 13.813 19.3332 14.1666 19.3332ZM14.1666 6.6665C15.2896 6.66654 16.3776 7.05764 17.2436 7.77264C18.1097 8.48763 18.6997 9.48188 18.9123 10.5846C19.125 11.6873 18.947 12.8297 18.409 13.8155C17.8709 14.8012 17.0064 15.5689 15.9639 15.9865C15.8095 16.0433 15.6703 16.135 15.5573 16.2545C15.4986 16.3212 15.4893 16.4065 15.4906 16.4945L15.4999 16.6665C15.4995 17.0063 15.3694 17.3332 15.1361 17.5803C14.9028 17.8274 14.584 17.9762 14.2447 17.9961C13.9055 18.016 13.5714 17.9056 13.3108 17.6875C13.0502 17.4694 12.8827 17.16 12.8426 16.8225L12.8333 16.6665V16.3332C12.8333 14.7958 14.0733 13.8732 14.9719 13.5118C15.3377 13.3658 15.6567 13.1229 15.8948 12.8092C16.1329 12.4954 16.2811 12.1228 16.3234 11.7312C16.3657 11.3397 16.3005 10.944 16.1349 10.5867C15.9693 10.2294 15.7094 9.92392 15.3833 9.70314C15.0572 9.48236 14.6771 9.35458 14.2838 9.33353C13.8905 9.31248 13.4989 9.39895 13.1511 9.58366C12.8033 9.76838 12.5123 10.0443 12.3095 10.3819C12.1067 10.7195 11.9997 11.106 11.9999 11.4998C11.9999 11.8535 11.8594 12.1926 11.6094 12.4426C11.3593 12.6927 11.0202 12.8332 10.6666 12.8332C10.313 12.8332 9.97382 12.6927 9.72378 12.4426C9.47373 12.1926 9.33325 11.8535 9.33325 11.4998C9.33325 10.218 9.84248 8.98858 10.7489 8.08215C11.6553 7.17573 12.8847 6.6665 14.1666 6.6665Z" fill="black" />
-      </svg>
-    </div>
-  </div>
+                <!-- Language Program Icon -->
+                <div class="relative ml-2">
+                  <svg width="16" height="16" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    class="w-6 h-6 text-gray-600 cursor-pointer" @click="toggleModal('lp')">
+                    <path
+                      d="M14.1666 0.666504C21.5306 0.666504 27.4999 6.63584 27.4999 13.9998C27.4999 21.3638 21.5306 27.3332 14.1666 27.3332C6.80259 27.3332 0.833252 21.3638 0.833252 13.9998C0.833252 6.63584 6.80259 0.666504 14.1666 0.666504ZM14.1666 3.33317C11.3376 3.33317 8.6245 4.45698 6.62411 6.45736C4.62372 8.45775 3.49992 11.1709 3.49992 13.9998C3.49992 16.8288 4.62372 19.5419 6.62411 21.5423C8.6245 23.5427 11.3376 24.6665 14.1666 24.6665C16.9956 24.6665 19.7087 23.5427 21.7091 21.5423C23.7094 19.5419 24.8333 16.8288 24.8333 13.9998C24.8333 11.1709 23.7094 8.45775 21.7091 6.45736C19.7087 4.45698 16.9956 3.33317 14.1666 3.33317ZM14.1666 19.3332C14.5202 19.3332 14.8593 19.4736 15.1094 19.7237C15.3594 19.9737 15.4999 20.3129 15.4999 20.6665C15.4999 21.0201 15.3594 21.3593 15.1094 21.6093C14.8593 21.8594 14.5202 21.9998 14.1666 21.9998C13.813 21.9998 13.4738 21.8594 13.2238 21.6093C12.9737 21.3593 12.8333 21.0201 12.8333 20.6665C12.8333 20.3129 12.9737 19.9737 13.2238 19.7237C13.4738 19.4736 13.813 19.3332 14.1666 19.3332ZM14.1666 6.6665C15.2896 6.66654 16.3776 7.05764 17.2436 7.77264C18.1097 8.48763 18.6997 9.48188 18.9123 10.5846C19.125 11.6873 18.947 12.8297 18.409 13.8155C17.8709 14.8012 17.0064 15.5689 15.9639 15.9865C15.8095 16.0433 15.6703 16.135 15.5573 16.2545C15.4986 16.3212 15.4893 16.4065 15.4906 16.4945L15.4999 16.6665C15.4995 17.0063 15.3694 17.3332 15.1361 17.5803C14.9028 17.8274 14.584 17.9762 14.2447 17.9961C13.9055 18.016 13.5714 17.9056 13.3108 17.6875C13.0502 17.4694 12.8827 17.16 12.8426 16.8225L12.8333 16.6665V16.3332C12.8333 14.7958 14.0733 13.8732 14.9719 13.5118C15.3377 13.3658 15.6567 13.1229 15.8948 12.8092C16.1329 12.4954 16.2811 12.1228 16.3234 11.7312C16.3657 11.3397 16.3005 10.944 16.1349 10.5867C15.9693 10.2294 15.7094 9.92392 15.3833 9.70314C15.0572 9.48236 14.6771 9.35458 14.2838 9.33353C13.8905 9.31248 13.4989 9.39895 13.1511 9.58366C12.8033 9.76838 12.5123 10.0443 12.3095 10.3819C12.1067 10.7195 11.9997 11.106 11.9999 11.4998C11.9999 11.8535 11.8594 12.1926 11.6094 12.4426C11.3593 12.6927 11.0202 12.8332 10.6666 12.8332C10.313 12.8332 9.97382 12.6927 9.72378 12.4426C9.47373 12.1926 9.33325 11.8535 9.33325 11.4998C9.33325 10.218 9.84248 8.98858 10.7489 8.08215C11.6553 7.17573 12.8847 6.6665 14.1666 6.6665Z"
+                      fill="black" />
+                  </svg>
+                </div>
+              </div>
 
 
-  <!-- Modal for Language Program -->
-<div v-if="showModal === 'lp'" class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-opacity-80 bg-gray-30 z-50">
-  <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center relative">
-   
-    <button @click="toggleModal('lp')" class="absolute top-2 right-2 text-gray-600 hover:text-red-400 text-2xl">
-      &times;
-    </button>
+              <!-- Modal for Language Program -->
+              <div v-if="showModal === 'lp'"
+                class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-opacity-80 bg-gray-30 z-50">
+                <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center relative">
 
-    <h2 class="text-xl font-semibold mb-4">{{ $t('compareView.languageProgram.title')}}</h2>
-    <p class="text-lg text-gray-700 mb-6">
-      {{ $t('compareView.languageProgram.description')}}
-    </p>
-    <button @click="toggleModal('languageProgram')" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-      {{ $t('compareView.languageProgram.readMore')}}
-    </button>
-  </div>
-</div>
+                  <button @click="toggleModal('lp')"
+                    class="absolute top-2 right-2 text-gray-600 hover:text-red-400 text-2xl">
+                    &times;
+                  </button>
 
-  
+                  <h2 class="text-xl font-semibold mb-4">{{ $t('compareView.languageProgram.title') }}</h2>
+                  <p class="text-lg text-gray-700 mb-6">
+                    {{ $t('compareView.languageProgram.description') }}
+                  </p>
+                  <button @click="toggleModal('languageProgram')"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                    {{ $t('compareView.languageProgram.readMore') }}
+                  </button>
+                </div>
+              </div>
 
-  <!-- Language Program Container -->
-  <div v-if="schools[i - 1].languageProgramArr.length" class="flex flex-wrap gap-4 mt-6 justify-center min-h-[80px]">
-    <!-- Render language program buttons -->
-    <span v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)" :key="j"
-      class="bg-blue-700 text-sm text-white px-4 py-2 rounded-full w-1/3 text-center truncate mb-1" :title="lang">
-      {{ $t(`languages.${lang}`) || lang }}
-    </span>
 
-    <!-- Empty placeholders -->
-    <span v-for="n in (4 - schools[i - 1].languageProgramArr.length)" :key="'empty-' + n" class="w-1/3 h-10 "></span>
-  </div>
 
-  <!-- Display "None" -->
-  <div v-else class="text-500 w-full text-center py-2 mt-6 min-h-[56px]">
-    {{ $t('compareView.schoolCard.none') }}
-  </div>
+              <!-- Language Program Container -->
+              <div v-if="schools[i - 1].languageProgramArr.length"
+                class="flex flex-wrap gap-4 mt-6 justify-center min-h-[80px]">
+                <!-- Render language program buttons -->
+                <span v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)" :key="j"
+                  class="bg-blue-700 text-sm text-white px-4 py-2 rounded-full w-1/3 text-center truncate mb-1"
+                  :title="lang">
+                  {{ $t(`languages.${lang}`) || lang }}
+                </span>
 
-  <!-- Empty row when "None" is displayed -->
-  <div v-if="schools[i - 1].languageProgramArr.length === 0" class="flex justify-center gap-4">
-    <span class="w-1/3 h-10"></span>
-    <span class="w-1/3 h-10"></span>
-  </div>
-</div>
+                <!-- Empty placeholders -->
+                <span v-for="n in (4 - schools[i - 1].languageProgramArr.length)" :key="'empty-' + n"
+                  class="w-1/3 h-10 "></span>
+              </div>
+
+              <!-- Display "None" -->
+              <div v-else class="text-500 w-full text-center py-2 mt-6 min-h-[56px]">
+                {{ $t('compareView.schoolCard.none') }}
+              </div>
+
+              <!-- Empty row when "None" is displayed -->
+              <div v-if="schools[i - 1].languageProgramArr.length === 0" class="flex justify-center gap-4">
+                <span class="w-1/3 h-10"></span>
+                <span class="w-1/3 h-10"></span>
+              </div>
+            </div>
 
 
             <div class="pb-4 border-b border-gray-300">
               <span class="block font-bold">{{ $t('compareView.schoolCard.studentPerStaff') }}</span>
               <span class="block text-center mt-6">{{ Math.round(formatNumber(1 / schools[i - 1].staffPerStudent))
-              }}</span>
+                }}</span>
             </div>
 
             <div class="pb-4 border-b border-gray-300">
-             <!-- ICSEA Section -->
-<div class="flex items-center justify-between">
-  <span class="font-bold">{{ $t('compareView.schoolCard.icsea') }}</span>
-  <div class="relative">
-    <svg width="16" height="16" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600 cursor-pointer" @click="toggleModal('icsea')">
-      <path d="M14.1666 0.666504C21.5306 0.666504 27.4999 6.63584 27.4999 13.9998C27.4999 21.3638 21.5306 27.3332 14.1666 27.3332C6.80259 27.3332 0.833252 21.3638 0.833252 13.9998C0.833252 6.63584 6.80259 0.666504 14.1666 0.666504ZM14.1666 3.33317C11.3376 3.33317 8.6245 4.45698 6.62411 6.45736C4.62372 8.45775 3.49992 11.1709 3.49992 13.9998C3.49992 16.8288 4.62372 19.5419 6.62411 21.5423C8.6245 23.5427 11.3376 24.6665 14.1666 24.6665C16.9956 24.6665 19.7087 23.5427 21.7091 21.5423C23.7094 19.5419 24.8333 16.8288 24.8333 13.9998C24.8333 11.1709 23.7094 8.45775 21.7091 6.45736C19.7087 4.45698 16.9956 3.33317 14.1666 3.33317ZM14.1666 19.3332C14.5202 19.3332 14.8593 19.4736 15.1094 19.7237C15.3594 19.9737 15.4999 20.3129 15.4999 20.6665C15.4999 21.0201 15.3594 21.3593 15.1094 21.6093C14.8593 21.8594 14.5202 21.9998 14.1666 21.9998C13.813 21.9998 13.4738 21.8594 13.2238 21.6093C12.9737 21.3593 12.8333 21.0201 12.8333 20.6665C12.8333 20.3129 12.9737 19.9737 13.2238 19.7237C13.4738 19.4736 13.813 19.3332 14.1666 19.3332ZM14.1666 6.6665C15.2896 6.66654 16.3776 7.05764 17.2436 7.77264C18.1097 8.48763 18.6997 9.48188 18.9123 10.5846C19.125 11.6873 18.947 12.8297 18.409 13.8155C17.8709 14.8012 17.0064 15.5689 15.9639 15.9865C15.8095 16.0433 15.6703 16.135 15.5573 16.2545C15.4986 16.3212 15.4893 16.4065 15.4906 16.4945L15.4999 16.6665C15.4995 17.0063 15.3694 17.3332 15.1361 17.5803C14.9028 17.8274 14.584 17.9762 14.2447 17.9961C13.9055 18.016 13.5714 17.9056 13.3108 17.6875C13.0502 17.4694 12.8827 17.16 12.8426 16.8225L12.8333 16.6665V16.3332C12.8333 14.7958 14.0733 13.8732 14.9719 13.5118C15.3377 13.3658 15.6567 13.1229 15.8948 12.8092C16.1329 12.4954 16.2811 12.1228 16.3234 11.7312C16.3657 11.3397 16.3005 10.944 16.1349 10.5867C15.9693 10.2294 15.7094 9.92392 15.3833 9.70314C15.0572 9.48236 14.6771 9.35458 14.2838 9.33353C13.8905 9.31248 13.4989 9.39895 13.1511 9.58366C12.8033 9.76838 12.5123 10.0443 12.3095 10.3819C12.1067 10.7195 11.9997 11.106 11.9999 11.4998C11.9999 11.8535 11.8594 12.1926 11.6094 12.4426C11.3593 12.6927 11.0202 12.8332 10.6666 12.8332C10.313 12.8332 9.97382 12.6927 9.72378 12.4426C9.47373 12.1926 9.33325 11.8535 9.33325 11.4998C9.33325 10.218 9.84248 8.98858 10.7489 8.08215C11.6553 7.17573 12.8847 6.6665 14.1666 6.6665Z" fill="black" />
-    </svg>
-    <div v-if="showModal === 'icsea'" class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-opacity-80 bg-gray-30 z-50">
-      <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center relative">
-  
-        <button @click="toggleModal('icsea')" class="absolute top-2 right-2 text-gray-600 hover:text-red-400 text-2xl">
-          &times;
-        </button>
-        
-        <h2 class="text-xl font-semibold mb-4">{{ $t('compareView.icseaModal.title')}}</h2>
-        <p class="text-lg text-gray-700 mb-6">
-          {{ $t('compareView.icseaModal.description')}}
-        </p>
-        <button @click="toggleModal('icsea')" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-          {{ $t('compareView.icseaModal.readMore')}}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+              <!-- ICSEA Section -->
+              <div class="flex items-center justify-between">
+                <span class="font-bold">{{ $t('compareView.schoolCard.icsea') }}</span>
+                <div class="relative">
+                  <svg width="16" height="16" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    class="w-6 h-6 text-gray-600 cursor-pointer" @click="toggleModal('icsea')">
+                    <path
+                      d="M14.1666 0.666504C21.5306 0.666504 27.4999 6.63584 27.4999 13.9998C27.4999 21.3638 21.5306 27.3332 14.1666 27.3332C6.80259 27.3332 0.833252 21.3638 0.833252 13.9998C0.833252 6.63584 6.80259 0.666504 14.1666 0.666504ZM14.1666 3.33317C11.3376 3.33317 8.6245 4.45698 6.62411 6.45736C4.62372 8.45775 3.49992 11.1709 3.49992 13.9998C3.49992 16.8288 4.62372 19.5419 6.62411 21.5423C8.6245 23.5427 11.3376 24.6665 14.1666 24.6665C16.9956 24.6665 19.7087 23.5427 21.7091 21.5423C23.7094 19.5419 24.8333 16.8288 24.8333 13.9998C24.8333 11.1709 23.7094 8.45775 21.7091 6.45736C19.7087 4.45698 16.9956 3.33317 14.1666 3.33317ZM14.1666 19.3332C14.5202 19.3332 14.8593 19.4736 15.1094 19.7237C15.3594 19.9737 15.4999 20.3129 15.4999 20.6665C15.4999 21.0201 15.3594 21.3593 15.1094 21.6093C14.8593 21.8594 14.5202 21.9998 14.1666 21.9998C13.813 21.9998 13.4738 21.8594 13.2238 21.6093C12.9737 21.3593 12.8333 21.0201 12.8333 20.6665C12.8333 20.3129 12.9737 19.9737 13.2238 19.7237C13.4738 19.4736 13.813 19.3332 14.1666 19.3332ZM14.1666 6.6665C15.2896 6.66654 16.3776 7.05764 17.2436 7.77264C18.1097 8.48763 18.6997 9.48188 18.9123 10.5846C19.125 11.6873 18.947 12.8297 18.409 13.8155C17.8709 14.8012 17.0064 15.5689 15.9639 15.9865C15.8095 16.0433 15.6703 16.135 15.5573 16.2545C15.4986 16.3212 15.4893 16.4065 15.4906 16.4945L15.4999 16.6665C15.4995 17.0063 15.3694 17.3332 15.1361 17.5803C14.9028 17.8274 14.584 17.9762 14.2447 17.9961C13.9055 18.016 13.5714 17.9056 13.3108 17.6875C13.0502 17.4694 12.8827 17.16 12.8426 16.8225L12.8333 16.6665V16.3332C12.8333 14.7958 14.0733 13.8732 14.9719 13.5118C15.3377 13.3658 15.6567 13.1229 15.8948 12.8092C16.1329 12.4954 16.2811 12.1228 16.3234 11.7312C16.3657 11.3397 16.3005 10.944 16.1349 10.5867C15.9693 10.2294 15.7094 9.92392 15.3833 9.70314C15.0572 9.48236 14.6771 9.35458 14.2838 9.33353C13.8905 9.31248 13.4989 9.39895 13.1511 9.58366C12.8033 9.76838 12.5123 10.0443 12.3095 10.3819C12.1067 10.7195 11.9997 11.106 11.9999 11.4998C11.9999 11.8535 11.8594 12.1926 11.6094 12.4426C11.3593 12.6927 11.0202 12.8332 10.6666 12.8332C10.313 12.8332 9.97382 12.6927 9.72378 12.4426C9.47373 12.1926 9.33325 11.8535 9.33325 11.4998C9.33325 10.218 9.84248 8.98858 10.7489 8.08215C11.6553 7.17573 12.8847 6.6665 14.1666 6.6665Z"
+                      fill="black" />
+                  </svg>
+                  <div v-if="showModal === 'icsea'"
+                    class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-opacity-80 bg-gray-30 z-50">
+                    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center relative">
+
+                      <button @click="toggleModal('icsea')"
+                        class="absolute top-2 right-2 text-gray-600 hover:text-red-400 text-2xl">
+                        &times;
+                      </button>
+
+                      <h2 class="text-xl font-semibold mb-4">{{ $t('compareView.icseaModal.title') }}</h2>
+                      <p class="text-lg text-gray-700 mb-6">
+                        {{ $t('compareView.icseaModal.description') }}
+                      </p>
+                      <button @click="toggleModal('icsea')"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                        {{ $t('compareView.icseaModal.readMore') }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <span class="block mt-6 text-center">{{ schools[i - 1].icsea }}</span>
             </div>
 
@@ -201,7 +217,7 @@
         <h2 class="text-2xl font-semibold mb-4">{{ $t('compareView.confirmationModal.title') }}</h2>
         <p class="text-gray-600 text-xl mb-6">{{ $t('compareView.confirmationModal.message') }}</p>
 
-  
+
         <div class="flex justify-center gap-4">
           <button @click="confirmRemove" class="px-4 py-2 bg-red-600 text-white text-lg rounded-md hover:bg-red-700">
             {{ $t('compareView.confirmationModal.remove') }}

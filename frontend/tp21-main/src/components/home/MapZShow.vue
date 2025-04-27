@@ -15,17 +15,18 @@
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
         </div>
-        <p class="text-gray-600 mb-3">{{ selectedSchool.type }} school</p>
+        <p class="text-gray-600 mb-3">{{ $t(`schoolTypesSchool.${selectedSchool.type}`) || selectedSchool.type }}</p>
         <div class="grid grid-cols-2 gap-2 mb-4">
           <div v-for="(language, index) in selectedSchool.languages" :key="index"
             class="rounded-md p-2 text-center text-sm" style="background-color: #EBF1FA;">
-            {{ language }}
+            {{ $t(`languages.${language}`) || language }}
           </div>
         </div>
         <div class="flex justify-between">
-          <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop" class="text-blue-500 hover:underline">
-  <button class="text-blue-500 underline cursor-pointer">{{ $t('MapShow.schoolPopup.viewDetails') }}</button>
-</router-link>
+          <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop"
+            class="text-blue-500 hover:underline">
+            <button class="text-blue-500 underline cursor-pointer">{{ $t('MapShow.schoolPopup.viewDetails') }}</button>
+          </router-link>
           <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
             class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -38,18 +39,18 @@
         </div>
       </div>
 
-      <button class="absolute top-4 right-11 bg-white text-gray-700 hover:bg-gray-100 px-2 py-1 rounded-md"
+      <button class="absolute top-2.5 right-11 bg-white text-gray-700 hover:bg-gray-100 px-2 py-1 rounded-md border-2 border-gray-300 cursor-pointer"
         @click="getCurrentLocation">
         {{ $t('MapZShow.mapControls.getLocation') }}
       </button>
     </div>
 
-     <!-- Right section: Compare Sidebar -->
-     <div v-if="checkCompareListLength"
+    <!-- Right section: Compare Sidebar -->
+    <div v-if="checkCompareListLength"
       class="compare-sidebar-container absolute top-0 right-0 w-80 h-1/2 flex flex-col p-4 bg-white shadow-lg border-l border-gray-200">
       <CompareSideBar @remove-all="handleRemoveAll" @remove-school="handleRemoveSchool" />
     </div>
-    
+
 
   </div>
 
@@ -59,7 +60,7 @@
       {{ toast.message }}
     </div>
   </transition>
-  
+
 </template>
 
 
@@ -156,7 +157,7 @@ const handleAddToCompare = (school) => {
 
   // Show success toast
   showToast('success', `"${school.School_Name}" added to compare!`)
-  
+
   // Update sessionStorage and trigger event
   sessionStorage.setItem('compareList', JSON.stringify(compareList.value))
   window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }))
@@ -243,6 +244,16 @@ function initializeSchools() {
         'icon-allow-overlap': true
       }
     });
+    
+    const closePopup = () => {
+      selectedSchool.value = null; // Reset the selected school to close the popup
+    };
+    map.value.on('click', (e) => {
+      const features = map.value.queryRenderedFeatures(e.point, { layers: ['school-points'] });
+      if (features.length === 0) {
+        closePopup();
+      }
+    });
 
     map.value.on('click', 'school-points', async e => {
       const p = e.features[0].properties;
@@ -253,7 +264,7 @@ function initializeSchools() {
         languages: p.languages ? p.languages.split(',') : []
       };
       isSchoolLoaded.value = false;
-      
+
       const sid = selectedSchool.value.id;
       fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
         .then(response => response.json())
@@ -354,26 +365,29 @@ function getCurrentLocation() {
 <style scoped>
 .map-wrapper {
   display: flex;
-  width: calc(100% - 200px);    
-  height: 100%;  
+  width: calc(100% - 200px);
+  height: 100%;
 }
 
-#map { 
+#map {
   display: flex;
-  width: 100%; 
+  width: 100%;
 }
 
 .compare-sidebar-container {
   position: fixed;
   top: 0;
   right: 0;
-  width: 150px; /* Sidebar width */
+  width: 150px;
+  /* Sidebar width */
   height: 100%;
   padding: 20px;
   background-color: white;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 10; /* Ensures the sidebar is above the map */
-  overflow-y: auto; /* Allows the sidebar content to scroll if necessary */
+  z-index: 10;
+  /* Ensures the sidebar is above the map */
+  overflow-y: auto;
+  /* Allows the sidebar content to scroll if necessary */
 }
 
 /* Toast Notification */
@@ -415,6 +429,4 @@ function getCurrentLocation() {
 .fade-leave-to {
   opacity: 0;
 }
-
-
 </style>

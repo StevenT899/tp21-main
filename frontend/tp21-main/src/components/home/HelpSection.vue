@@ -9,9 +9,7 @@
               <p class="text-xl text-gray-700 mb-4">
                   {{ $t('helpSection.paragraph1') }}
               </p>
-              <p class="text-xl text-gray-700 mb-4">
-                  {{ $t('helpSection.paragraph2') }}
-              </p><br>
+              <br>
               <p class="text-right italic font-medium">{{ $t('helpSection.signature') }}</p>
           </div>
       </div>

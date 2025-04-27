@@ -15,6 +15,11 @@ export default {
         Government: "公立学校",
         Independent: "私立学校"
     },
+    schoolTypesSchool: {
+        Catholic: "天主教学校",
+        Government: "公立学校",
+        Independent: "私立学校"
+    },
     languages: {
         "Chinese": "中文",
         "Japanese": "日语",
@@ -59,9 +64,9 @@ export default {
         checkPrefix: '查看你的 {schoolZone}',
         schoolZone: '学区',
         searchPlaceholder: '输入郊区/邮编/学校名称',
-        searchPlaceholder2: '输入地理位置',
+        searchPlaceholder2: '输入一个地址',
         searchButton: '搜索',
-        noResult: '未找到结果，请重试！'
+        noResult: '未找到结果，请尝试搜索别的！'
     },
     helpSection: {
         title: '我们随时提供帮助',
@@ -211,10 +216,11 @@ export default {
         addToCompare: '添加到比较',
         schoolType: '学校类型',
         yearRange: '年级范围',
-        schoolZoneCheck: '学区检查',
+        schoolZoneCheck: '检查学区',
         useLocation: '📍 使用位置',
         inSchoolZone: '这所学校在你的学区内',
         notInSchoolZone: '这所学校不在你的学区内',
+        SchoolZoneError: '错误，无法查看地理位置',
         languageProgram: {
             title: '语言课程',
             modal: {

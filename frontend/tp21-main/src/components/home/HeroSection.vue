@@ -12,18 +12,16 @@
                 <div class="flex flex-col sm:flex-row gap-4 mb-8">
                     <button @click="onExploreSchools" :class="activeView === 1
                         ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 text-gray-700'" :disabled="isExploreSchoolsButtonDisabled"
-                        class="py-2 px-6 rounded-md transition-colors">
+                        : 'bg-gray-200 text-gray-700'" class="py-2 px-6 rounded-md transition-colors">
                         {{ $t('homeView.exploreSchools') }}
                     </button>
 
                     <button @click="onShowMapZone" :class="activeView === 2
                         ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 text-gray-700'" :disabled="isShowMapZoneButtonDisabled"
-                        class="py-2 px-6 rounded-md transition-colors">
+                        : 'bg-gray-200 text-gray-700'" class="py-2 px-6 rounded-md transition-colors">
                         {{ $t('homeView.checkPrefix') }}
-                        <span class="underline underline-offset-2"
-                            @click.stop="openModal('ss')">{{ $t('homeView.schoolZone') }}</span>
+                        <span class="underline underline-offset-2" @click.stop="openModal('ss')">{{
+                            $t('homeView.schoolZone') }}</span>
                     </button>
                     <ModalBox ref="ModalBoxRef" />
                 </div>
@@ -69,7 +67,8 @@
                         ref="suggestionBox"
                         class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-md mt-1 z-10">
                         <div v-if="suburbResults.length > 0">
-                            <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">{{$t('homeView.suburb')}}</p>
+                            <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">
+                                {{ $t('homeView.suburb') }}</p>
                             <ul>
                                 <li v-for="(suburb, index) in suburbResults" :key="index"
                                     class="py-2 px-4 hover:bg-gray-100 cursor-pointer"
@@ -79,7 +78,8 @@
                             </ul>
                         </div>
                         <div v-if="schoolResults.length > 0">
-                            <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">{{$t('homeView.school')}}</p>
+                            <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">
+                                {{ $t('homeView.school') }}</p>
                             <ul>
                                 <li v-for="(school, index) in schoolResults" :key="index"
                                     class="py-2 px-4 hover:bg-gray-100 cursor-pointer"
@@ -395,9 +395,11 @@ const onExploreSchools = async () => {
     highlightSchoolSearch.value = true;
     isExploreSchoolsButtonDisabled.value = true;
     isShowMapZoneButtonDisabled.value = false;
+    showSuggestions.value = false;
+    searchResults.value = [];
     setTimeout(() => {
         highlightSchoolSearch.value = false;
-    }, 1000);
+    }, 3000);
     await showMapAndSearch()
 }
 const onShowMapZone = () => {
@@ -409,9 +411,11 @@ const onShowMapZone = () => {
     highlightZoneSearch.value = true;
     isExploreSchoolsButtonDisabled.value = false;
     isShowMapZoneButtonDisabled.value = true;
+    showSuggestions.value = false;
+    searchLocationResults.value = [];
     setTimeout(() => {
         highlightZoneSearch.value = false;
-    }, 1000);
+    }, 3000);
 
     nextTick(() => {
         const el = document.getElementById('map-zone-section')
@@ -512,6 +516,7 @@ const handleSuggestionSelected = (location) => {
 // Perform search
 const performSearch = async () => {
     searchLocationResults.value = [];
+    showSuggestions.value = false;
     isSearching.value = true;
     try {
         console.log('Address parameter for the initiated request:', searchQuery2.value);
@@ -643,20 +648,24 @@ fetchZoneSchools();
 <style scoped>
 @keyframes highlight {
     0% {
-        border-color: gray;
+        box-shadow: inset 0 0 0 0 rgba(43, 127, 255, 0);
     }
 
-    50% {
-        border-color: #155dfc;
+    1% {
+        box-shadow: inset 0 0 0 2px #2b7fff;
+    }
+
+    99% {
+        box-shadow: inset 0 0 0 2px #2b7fff;
     }
 
     100% {
-        border-color: gray;
+        box-shadow: inset 0 0 0 0 rgba(43, 127, 255, 0);
     }
 }
 
 .highlight-border {
-    animation: highlight 0.3s ease-in-out;
+    animation: highlight 1s linear;
 }
 
 .underline.hover:text-red-600 {
