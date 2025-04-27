@@ -242,7 +242,9 @@
 import { ref, onMounted } from 'vue'
 import GenderBarChart from '../components/GenderBarChart.vue'
 import LanguageBarChart from '../components/LanguageBarChart.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n();
 const schools = ref([])
 const recommendedSchools = ref([[], [], []])  // Recommended schools for each search input
 const searchQueries = ref(['', '', ''])  // Search query for each input box
@@ -267,16 +269,6 @@ const toggleModal = (modalType) => {
     showModal.value = modalType;
   }
 };
-
-
-const triggerToast = (message, type = 'success') => {
-  toastMessage.value = message
-  toastType.value = type
-  showToast.value = true
-  setTimeout(() => {
-    showToast.value = false
-  }, 3000)
-}
 
 const searchCompareSchools = async (index) => {
   const input = searchQueries.value[index - 1].trim().toLowerCase()
@@ -310,23 +302,32 @@ const selectRecommended = (item, index) => {
   recommendedSchools.value[index - 1] = []  // Clear recommendations
 }
 
+const triggerToast = (messageKey, type = 'success', params = {}) => {
+  toastMessage.value = t(messageKey, params)
+  toastType.value = type
+  showToast.value = true
+  setTimeout(() => {
+    showToast.value = false
+  }, 3000)
+}
+
 const addToCompare = async (index) => {
   const selectedSchoolName = searchQueries.value[index - 1]
 
   if (!selectedSchoolName) {
-    triggerToast('Please select a school first.', 'error')
+    triggerToast('messages.toast.error.noSchoolSelected', 'error')
     return
   }
 
   const selectedSchool = allSchools.value.find(s => s.School_Name === selectedSchoolName)
 
   if (!selectedSchool) {
-    triggerToast('This school is not found.', 'error')
+    triggerToast('messages.toast.error.schoolNotFound', 'error')
     return
   }
 
   if (schools.value.find(s => s.name === selectedSchool.School_Name)) {
-    triggerToast('This school has already been added.', 'error')
+    triggerToast('messages.toast.error.alreadyAdded', 'error')
     return
   }
 
@@ -335,24 +336,27 @@ const addToCompare = async (index) => {
     const detailed = await res.json()
 
     const formatted = {
-      name: detailed.School_Name || 'N/A',
-      type: detailed.School_Sector || 'N/A',
-      yearRange: detailed.Year_Range || 'N/A',
-      languageProgram: Array.isArray(detailed.languages) ? detailed.languages.join(', ') : detailed.languageProgram || 'None',
-      staffPerStudent: detailed.Teaching_staff_per_student || 'N/A',
-      totalEnrolment: detailed.Total_Enrolment || 'N/A',
-
-      studentLanguageBackground: detailed.Language_Flag || 'N/A',
-      icsea: detailed.ICSEA || 'N/A',
+      name: detailed.School_Name || t('messages.school.na'),
+      type: detailed.School_Sector || t('messages.school.na'),
+      yearRange: detailed.Year_Range || t('messages.school.na'),
+      languageProgram: Array.isArray(detailed.languages) ?
+        detailed.languages.join(', ') :
+        detailed.languageProgram || t('messages.school.none'),
+      staffPerStudent: detailed.Teaching_staff_per_student || t('messages.school.na'),
+      totalEnrolment: detailed.Total_Enrolment || t('messages.school.na'),
+      studentLanguageBackground: detailed.Language_Flag || t('messages.school.na'),
+      icsea: detailed.ICSEA || t('messages.school.na'),
       english: Number(detailed.English) || 0,
       notEnglish: Number(detailed.not_English) || 0,
       notStated: Number(detailed.not_stated) || 0,
       Girls_Enrolment: Number(detailed.Girls_Enrolment) || 0,
       Boys_Enrolment: Number(detailed.Boys_Enrolment) || 0,
-      languageProgramArr: Array.isArray(detailed.languages) ? detailed.languages : (detailed.languageProgram ? [detailed.languageProgram] : []),
+      languageProgramArr: Array.isArray(detailed.languages) ?
+        detailed.languages :
+        (detailed.languageProgram ? [detailed.languageProgram] : []),
       url: detailed.School_URL || '',
-      suburb: detailed.Suburb || 'N/A',
-      postcode: detailed.Postcode || 'N/A'
+      suburb: detailed.Suburb || t('messages.school.na'),
+      postcode: detailed.Postcode || t('messages.school.na')
     }
 
     schools.value.push(formatted)
@@ -360,10 +364,10 @@ const addToCompare = async (index) => {
     stored.push(formatted)
     sessionStorage.setItem('compareList', JSON.stringify(stored))
     searchQueries.value[index - 1] = ''  // Clear the input field after adding
-    triggerToast('School added successfully!', 'success')
+    triggerToast('messages.toast.success.schoolAdded', 'success')
   } catch (err) {
     console.error('Failed to fetch detailed school data:', err)
-    triggerToast('Failed to fetch school data.', 'error')
+    triggerToast('messages.toast.error.fetchFailed', 'error')
   }
 }
 

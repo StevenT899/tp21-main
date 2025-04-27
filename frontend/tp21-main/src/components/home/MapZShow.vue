@@ -39,7 +39,8 @@
         </div>
       </div>
 
-      <button class="absolute top-2.5 right-11 bg-white text-gray-700 hover:bg-gray-100 px-2 py-1 rounded-md border-2 border-gray-300 cursor-pointer"
+      <button
+        class="absolute top-2.5 right-11 bg-white text-gray-700 hover:bg-gray-100 px-2 py-1 rounded-md border-2 border-gray-300 cursor-pointer"
         @click="getCurrentLocation">
         {{ $t('MapZShow.mapControls.getLocation') }}
       </button>
@@ -71,6 +72,9 @@ import CompareSideBar from '@/components/CompareSideBar.vue';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import schoolIcon from '@/assets/images/school.png';
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n();
 
 const emit = defineEmits(['locationObtained']);
 
@@ -113,7 +117,8 @@ const toast = ref({
 
 let toastTimeout = null;
 
-const showToast = (type, message, duration = 3000) => {
+const showToast = (type, messageKey, params = {}, duration = 3000) => {
+  const message = t(`messages.toast.${type}.${messageKey}`, params)
   toast.value = { show: true, type, message }
   if (toastTimeout) clearTimeout(toastTimeout)
   toastTimeout = setTimeout(() => {
@@ -131,7 +136,7 @@ const handleAddToCompare = (school) => {
   // Check if the school object is valid
   if (!school || !school.School_AGE_ID) {
     console.warn('Invalid school object or missing School_AGE_ID')
-    showToast('error', 'Invalid school data. Cannot add to compare.')
+    showToast('error', 'invalidSchoolData')
     return
   }
 
@@ -141,13 +146,13 @@ const handleAddToCompare = (school) => {
   // If it already exists, show warning and return
   if (exists) {
     console.log('School already exists in compareList:', school.School_Name)
-    showToast('warning', `"${school.School_Name}" is already in your compare list.`)
+    showToast('warning', 'alreadyInCompare', { schoolName: school.School_Name })
     return
   }
 
   // Check if the compareList has reached the limit of 3 schools
   if (compareList.value.length >= 3) {
-    showToast('warning', 'You can only compare up to 3 schools.')
+    showToast('warning', 'compareLimit')
     return
   }
 
@@ -156,7 +161,7 @@ const handleAddToCompare = (school) => {
   console.log('MapZShow: School added to compareList:', school.School_Name)
 
   // Show success toast
-  showToast('success', `"${school.School_Name}" added to compare!`)
+  showToast('success', 'addedToCompare', { schoolName: school.School_Name })
 
   // Update sessionStorage and trigger event
   sessionStorage.setItem('compareList', JSON.stringify(compareList.value))
@@ -244,7 +249,7 @@ function initializeSchools() {
         'icon-allow-overlap': true
       }
     });
-    
+
     const closePopup = () => {
       selectedSchool.value = null; // Reset the selected school to close the popup
     };

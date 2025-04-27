@@ -53,6 +53,31 @@ export default {
         girl: "女生",
         boy: "男生"
     },
+    messages: {
+        toast: {
+            error: {
+                invalidSchoolData: '学校数据无效，无法添加到比较。',
+                noSchoolSelected: '请先选择一所学校。',
+                schoolNotFound: '未找到这所学校。',
+                alreadyAdded: '这所学校已被添加。',
+                fetchFailed: '获取学校数据失败。'
+            },
+            warning: {
+                alreadyInCompare: '已在您的比较列表中。',
+                compareLimit: '您最多只能比较3所学校。'
+            },
+            success: {
+                addedToCompare: '已添加到比较！',
+                schoolAdded: '学校添加成功！',
+                removedFromCompare: '已成功从比较列表中移除。',
+                allSchoolsRemoved: '所有学校已从比较列表中移除。'
+            }
+        },
+        school: {
+            na: '暂缺',
+            none: '无'
+        }
+    },
     homeView: {
         heroTitle: '为你的孩子找到合适的小学',
         heroDesc1: '探索、比较并了解维多利亚州的学校。我们帮助移民家庭自信地做出学校选择。',

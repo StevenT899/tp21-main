@@ -47,11 +47,38 @@ export default {
             notStated: "Not Stated",
             english: "English",
             otherLanguages: "Other Languages"
-          }
+        }
     },
     gender: {
         girl: "Girl",
         boy: "Boy"
+    },
+    messages: {
+        toast: {
+            error: {
+                invalidSchoolData: 'Invalid school data. Cannot add to compare.',
+
+                noSchoolSelected: 'Please select a school first.',
+                schoolNotFound: 'This school is not found.',
+                alreadyAdded: 'This school has already been added.',
+                fetchFailed: 'Failed to fetch school data.'
+
+            },
+            warning: {
+                alreadyInCompare: 'is already in your compare list.',
+                compareLimit: 'You can only compare up to 3 schools.'
+            },
+            success: {
+                addedToCompare: 'added to compare!',
+                schoolAdded: 'School added successfully!',
+                removedFromCompare: 'Removed from your compare list successfully.',
+                allSchoolsRemoved: 'All schools have been removed from your compare list.'
+            }
+        },
+        school: {
+            na: 'N/A',
+            none: 'None'
+        }
     },
     homeView: {
         heroTitle: 'Find the Right Primary School for Your Child',

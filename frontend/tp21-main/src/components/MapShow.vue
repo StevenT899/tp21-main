@@ -99,7 +99,7 @@
             <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop"
               class="text-blue-500 hover:underline">
               <button class="text-blue-500 underline cursor-pointer">{{ $t('MapShow.schoolPopup.viewDetails')
-                }}</button>
+              }}</button>
             </router-link>
             <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
               class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
@@ -129,8 +129,6 @@
 
 </template>
 
-
-
 <script setup>
 import { ref, onMounted, reactive, defineProps, watch, computed, onUnmounted } from 'vue'
 import mapboxgl from 'mapbox-gl'
@@ -138,10 +136,9 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import schoolIcon from '@/assets/images/school.png';
 import CompareSideBar from '@/components/CompareSideBar.vue';
 import ModalBox from './ModalBox.vue';
+import { useI18n } from 'vue-i18n'
 
-
-
-
+const { t } = useI18n();
 const ModalBoxRef = ref(null);
 const openModal = (modalType) => {
   ModalBoxRef.value.toggleModal(modalType);
@@ -169,7 +166,8 @@ const scrollToTop = () => {
 const toast = ref({ show: false, type: '', message: '' })
 let toastTimeout = null
 
-const showToast = (type, message, duration = 3000) => {
+const showToast = (type, messageKey, params = {}, duration = 3000) => {
+  const message = t(`messages.toast.${type}.${messageKey}`, params)
   toast.value = { show: true, type, message }
   if (toastTimeout) clearTimeout(toastTimeout)
   toastTimeout = setTimeout(() => {
@@ -190,7 +188,7 @@ const handleAddToCompare = (school) => {
   // Check if the school object is valid
   if (!school || !school.School_AGE_ID) {
     console.warn('Invalid school object or missing School_AGE_ID')
-    showToast('error', 'Invalid school data. Cannot add to compare.')
+    showToast('error', 'invalidSchoolData')
     return
   }
 
@@ -200,13 +198,13 @@ const handleAddToCompare = (school) => {
   // If it already exists, show warning and return
   if (exists) {
     console.log('School already exists in compareList:', school.School_Name)
-    showToast('warning', `"${school.School_Name}" is already in your compare list.`)
+    showToast('warning', 'alreadyInCompare', { schoolName: school.School_Name })
     return
   }
 
   // Check if the compareList has reached the limit of 3 schools
   if (compareList.value.length >= 3) {
-    showToast('warning', 'You can only compare up to 3 schools.')
+    showToast('warning', 'compareLimit')
     return
   }
 
@@ -215,7 +213,7 @@ const handleAddToCompare = (school) => {
   console.log('MapShow: School added to compareList:', school.School_Name)
 
   // Show success toast
-  showToast('success', `"${school.School_Name}" added to compare!`)
+  showToast('success', 'addedToCompare', { schoolName: school.School_Name })
 
   // Update sessionStorage and trigger event
   sessionStorage.setItem('compareList', JSON.stringify(compareList.value))
@@ -569,8 +567,6 @@ onMounted(() => {
   width: calc(100% - 200px);
   /* Adjust the width of the map here */
 }
-
-
 
 .compare-sidebar-container {
   position: relative;
