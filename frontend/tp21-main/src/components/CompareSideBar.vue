@@ -8,9 +8,10 @@
   
         <!-- School List -->
         <div class="school-list">
-          <div v-for="(school, index) in compareList" :key="school.id" class="school-card">
+          <div v-for="(school, index) in compareList" :key="school.id" class="school-card mt-2 mb-2">
             <div>
               <h3 class="school-name">{{ school.name || school.School_Name }}</h3>
+              <p class="school-suburb text-grey-400">{{ school.type || school.sector || school.School_Sector }}</p>
               <p class="school-suburb">{{ school.suburb || school.Suburb }}</p>
               <button @click="removeFromCompare(index)" class="remove-button">
                 Remove
@@ -19,26 +20,27 @@
           </div>
         </div>
   
-        <div class="button-group">
-          <!-- Remove All Button -->
-          <button v-if="compareList.length > 0" @click="removeAll" class="remove-all-button">
-            Remove All
-          </button>
-  
-          <!-- Compare Now Button -->
+        <div class="button-group mt-1">
+
+             <!-- Compare Now Button -->
           <router-link to="/compare" @click.native="scrollToTop" class="compare-link">
-            <button class="compare-button">
+            <button class="compare-button mt-1">
               Compare
             </button>
           </router-link>
+
+          <!-- Remove All Button -->
+          <button v-if="compareList.length > 0" @click="removeAll" class="remove-all-button mt-1">
+            Remove All
+          </button>
         </div>
       </div>
   
       <transition name="fade">
-        <div v-if="toast.show" :class="['toast', toast.type]">
-          {{ toast.message }}
-        </div>
-      </transition>
+      <div v-if="toast.show" :class="['toast', toast.type]">
+        {{ toast.message }}
+      </div>
+    </transition>
     </div>
   </template>
   
@@ -156,185 +158,210 @@
   </script>
   
   <style scoped>
-  .compare-sidebar-container {
-    position: relative;
-    width: 100%;
-    padding: 0.3rem 1rem 1rem 1rem;
-    box-sizing: border-box;
-  }
-  
+/* Toast Notification */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  z-index: 1000;
+}
+
+.toast.success {
+  background-color: #4CAF50;
+}
+
+.toast.error {
+  background-color: #f44336;
+}
+
+.toast.info {
+  background-color: #2196F3;
+}
+
+.toast.warning {
+  background-color: #ff9800;
+}
+
+/* Compare Sidebar Container */
+.compare-sidebar-container {
+  position: relative;
+ 
+  padding: 0.3rem;
+  box-sizing: border-box;
+  width: 300px;
+}
+
+/* Sidebar content */
+.compare-content {
+  width: 100%;
+  max-width: 10rem; 
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; 
+}
+
+/* Header text */
+.header-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.2rem 0;
+}
+
+/* School List */
+.school-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem; /* 列表卡片更紧凑 */
+  width: 100%;
+}
+
+/* School Card */
+.school-card {
+  background-color: white;
+  padding: 0.2rem 0.4rem; /* 卡片内边距缩小 */
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  width: 100%;
+}
+
+/* School Name */
+.school-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.05rem;
+  line-height: 1.15;
+}
+
+/* School Suburb */
+.school-suburb {
+  font-size: 0.75rem;
+  color: #3b82f6;
+  margin-bottom: 0.1rem;
+  line-height: 1.15;
+}
+
+/* Remove Button */
+.remove-button {
+  color: #ef4444;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.6rem;
+  border-radius: 0.25rem;
+  background: #fff;
+  border: 1px solid #ef4444;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+  margin-top: 0.05rem;
+  display: inline-block;
+  text-align: left;
+  font-weight: 500;
+}
+
+.remove-button:hover {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* Button Group */
+.button-group {
+  gap: 0.4rem;
+  width: auto;
+  justify-content: flex-end;
+}
+
+/* Remove All Button & Compare Button */
+.remove-all-button,
+.compare-button {
+  padding: 0.25rem 0.8rem;
+  font-size: 0.8rem;
+  border-radius: 0.25rem;
+  transition: all 0.18s;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  width: auto;
+  min-width: 70px;
+  max-width: 100px;
+  font-weight: 500;
+}
+
+/* Remove All Button Style */
+.remove-all-button {
+  background-color: #6b7280;
+  color: white;
+}
+
+.remove-all-button:hover {
+  background-color: #4b5563;
+}
+
+/* Compare Button Style */
+.compare-button {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.compare-button:hover {
+  background-color: #2563eb;
+}
+
+/* Router Link styling */
+.compare-link {
+  display: inline-block;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
   .compare-content {
-    width: 100%;
-    max-width: 28rem;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
+    max-width: 100%;
+    padding: 0;
   }
-  
-  .header-text {
-    font-size: 1rem;
-    font-weight: 600;
-    padding: 0.2rem 0;
-  }
-  
-  .school-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    width: 100%;
-  }
-  
-  .school-card {
-    background-color: white;
-    padding: 0.32rem 0.5rem;
-    border-radius: 0.32rem;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-    width: 100%;
-  }
-  
-  .school-name {
-    font-weight: 600;
-    font-size: 0.92rem;
-    margin-bottom: 0.08rem;
-    line-height: 1.15;
-  }
-  
-  .school-type {
-    font-size: 0.78rem;
-    color: #6b7280;
-    margin-bottom: 0.08rem;
-    line-height: 1.15;
-  }
-  
-  .school-suburb {
-    font-size: 0.78rem;
-    color: #3b82f6;
-    margin-bottom: 0.18rem;
-    line-height: 1.15;
-  }
-  
-  .remove-button {
-    color: #ef4444;
-    font-size: 0.78rem;
-    padding: 0.13rem 0.7rem;
-    border-radius: 0.25rem;
-    background: #fff;
-    border: 1px solid #ef4444;
-    cursor: pointer;
-    transition: background 0.18s, color 0.18s, border 0.18s;
-    margin-top: 0.08rem;
-    display: inline-block;
-    text-align: left;
-    font-weight: 500;
-  }
-  
-  .remove-button:hover {
-    background-color: #fee2e2;
-    color: #b91c1c;
-    border-color: #b91c1c;
-  }
-  
+
   .button-group {
-    display: flex;
-    gap: 0.5rem;
-    width: auto;
-    margin-top: 0.3rem;
+    gap: 0.3rem;
     justify-content: flex-end;
+    flex-direction: row;
   }
-  
+
   .remove-all-button,
   .compare-button {
-    padding: 0.28rem 1rem;
-    font-size: 0.85rem;
-    border-radius: 0.25rem;
-    transition: all 0.18s;
-    text-align: center;
-    border: none;
-    cursor: pointer;
-    width: auto;
-    min-width: 80px;
-    max-width: 120px;
-    font-weight: 500;
-    box-sizing: border-box;
+    font-size: 0.75rem;
+    padding: 0.22rem 0.7rem;
+    min-width: 60px;
+    max-width: 90px;
   }
-  
-  .remove-all-button {
-    background-color: #6b7280;
-    color: white;
+
+  .school-card {
+    padding: 0.2rem 0.3rem;
   }
-  
-  .remove-all-button:hover {
-    background-color: #4b5563;
+
+  .header-text {
+    font-size: 0.9rem;
   }
-  
-  .compare-button {
-    background-color: #3b82f6;
-    color: white;
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .compare-content {
+    max-width: 90%;
   }
-  
-  .compare-button:hover {
-    background-color: #2563eb;
+
+  .school-card {
+    padding: 0.25rem 0.4rem;
   }
-  
-  .compare-link {
-    display: inline-block;
+}
+
+@media (min-width: 1025px) {
+  .compare-content {
+    max-width: 22rem;
   }
-  
-  .toast {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 7px 14px;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 12px;
-    text-align: center;
-    z-index: 1000;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 640px) {
-    .compare-content {
-      max-width: 100%;
-      padding: 0;
-    }
-  
-    .button-group {
-      gap: 0.3rem;
-      justify-content: flex-end;
-      flex-direction: row;
-    }
-    .remove-all-button,
-    .compare-button {
-      font-size: 0.8rem;
-      padding: 0.22rem 0.7rem;
-      min-width: 70px;
-      max-width: 100px;
-    }
-    .school-card {
-      padding: 0.25rem 0.3rem;
-    }
-    .header-text {
-      font-size: 0.95rem;
-    }
-  }
-  
-  @media (min-width: 641px) and (max-width: 1024px) {
-    .compare-content {
-      max-width: 90%;
-    }
-  
-    .school-card {
-      padding: 0.32rem 0.4rem;
-    }
-  }
-  
-  @media (min-width: 1025px) {
-    .compare-content {
-      max-width: 28rem;
-    }
-  }
-  </style>
+}
+</style>
+
   

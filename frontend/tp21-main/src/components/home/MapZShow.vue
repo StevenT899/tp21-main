@@ -1,7 +1,9 @@
 <template>
-  <div class="map-container flex">
-    <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300 transition-all duration-300" :class="{'w-full': !checkCompareListLength, 'w-3/4': checkCompareListLength}" style="height: 500px;">
+  <div class="map-container flex pr-40">
+    <!-- Map section -->
+    <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300 transition-all duration-300" style="height: 500px;">
       <div id="map" class="w-full h-full"></div>
+
       <!-- School Popup -->
       <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg"
         style="top: 50%; right: 20px; transform: translateY(-50%); width: 300px; z-index: 10;">
@@ -14,14 +16,12 @@
           </svg>
         </div>
         <p class="text-gray-600 mb-3">{{ selectedSchool.type }} school</p>
-
         <div class="grid grid-cols-2 gap-2 mb-4">
           <div v-for="(language, index) in selectedSchool.languages" :key="index"
             class="rounded-md p-2 text-center text-sm" style="background-color: #EBF1FA;">
             {{ language }}
           </div>
         </div>
-
         <div class="flex justify-between">
           <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop" class="hover:underline">
             <button class="text-blue-500 hover:underline">{{ $t('MapZShow.schoolPopup.viewDetails') }}</button>
@@ -37,16 +37,19 @@
           </button>
         </div>
       </div>
+
       <button class="absolute top-4 right-11 bg-white text-gray-700 hover:bg-gray-100 px-2 py-1 rounded-md"
         @click="getCurrentLocation">
         {{ $t('MapZShow.mapControls.getLocation') }}
       </button>
+
+      <!-- Sidebar section -->
+      <div v-if="checkCompareListLength" class="absolute top-0 right-0 h-full flex flex-col p-4 bg-white shadow-lg border-l border-gray-200">
+        <CompareSideBar @remove-all="handleRemoveAll" @remove-school="handleRemoveSchool" />
+      </div>
     </div>
 
-    <!-- Sidebar section on the right -->
-    <div v-if="checkCompareListLength" class="compare-sidebar w-1/4 p-4 bg-white shadow-lg rounded-lg ms-4 transition-all duration-300" style="height: 500px;">
-      <CompareSideBar @remove-all="handleRemoveAll" @remove-school="handleRemoveSchool" />
-    </div>
+
 
     <!-- Toast Notification -->
     <transition name="fade">
@@ -155,7 +158,6 @@ const handleAddToCompare = (school) => {
   window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }))
 };
 
-// 添加处理函数
 const handleRemoveAll = () => {
   console.log('MapZShow: Removing all schools');
   compareList.value = [];

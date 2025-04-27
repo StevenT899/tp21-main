@@ -149,7 +149,7 @@
                 <!-- Language Program -->
 
                 <div class="flex items-center gap-2">
-                    <h2 class="text-xl font-semibold">{{ $t('SchoolDetail.languageProgram.title') }}</h2>
+                    <h2 class="text-xl font-semibold">Index of Community Socio-Educational Advantage (ICSEA)</h2>
                     <div class="relative ml-2">
                         <svg width="16" height="16" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg"
                             class="w-6 h-6 text-gray-600 cursor-pointer" @click="toggleModal('icsea')">
