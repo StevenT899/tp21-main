@@ -3,7 +3,7 @@
       <div v-if="compareList.length > 0" class="compare-content">
         <!-- Header -->
         <div class="text-lg font-semibold header-text">
-          Added Schools ({{ compareList.length }}/3)
+          {{ $t('CompareSideBar.header', { count: compareList.length }) }}
         </div>
   
         <!-- School List -->
@@ -22,7 +22,7 @@
       </p>
 
       <button @click="removeFromCompare(index)" class="remove-button">
-        Remove
+        {{ $t('CompareSideBar.removeButton')}}
       </button>
     </div>
   </div>
@@ -33,13 +33,13 @@
              <!-- Compare Now Button -->
           <router-link to="/compare" @click.native="scrollToTop" class="compare-link">
             <button class="compare-button mt-1">
-              Compare
+              {{ $t('CompareSideBar.compareButton') }}
             </button>
           </router-link>
 
           <!-- Remove All Button -->
           <button v-if="compareList.length > 0" @click="removeAll" class="remove-all-button mt-1">
-            Remove All
+            {{ $t('CompareSideBar.removeAllButton') }}
           </button>
         </div>
       </div>
