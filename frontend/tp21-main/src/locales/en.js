@@ -10,12 +10,52 @@ export default {
     footer: {
         acknowledgment: "NewBee Edu acknowledges the Traditional Owners of the lands on which we work. We recognize their spiritual and cultural connection to country and we pay our respects to Elders past, present and emerging."
     },
+    schoolTypes: {
+        Catholic: "Catholic",
+        Government: "Government",
+        Independent: "Independent"
+    },
+    languages: {
+        "Chinese": "Chinese",
+        "Japanese": "Japanese",
+        "Indonesian": "Indonesian",
+        "Auslan": "Auslan",
+        "Spanish": "Spanish",
+        "Italian": "Italian",
+        "French": "French",
+        "German": "German",
+        "Aboriginal Languages": "Aboriginal Languages",
+        "Korean": "Korean",
+        "Greek": "Greek",
+        "Vietnamese": "Vietnamese",
+        "Hindi": "Hindi",
+        "Macedonian": "Macedonian",
+        "Turkish": "Turkish"
+    },
+    chart: {
+        labels: {
+            notStated: "Not Stated",
+            englishBackground: "From English Background'",
+            otherLanguagesBackground: "From Other Languages Background"
+        },
+        languages: {
+            notStated: "Not Stated",
+            english: "English",
+            otherLanguages: "Other Languages"
+          }
+    },
+    gender: {
+        girl: "Girl",
+        boy: "Boy"
+    },
     homeView: {
         heroTitle: 'Find the Right Primary School for Your Child',
         heroDesc1: 'Explore, compare, and understand Victorian schools. We help migrant families make confident school choices.',
         heroDesc2: 'Use our simple map tool to search schools, see what they offer, and find the best fit for your child — academically, culturally, and practically.',
         heroStart: 'Choose an option to get started!',
         exploreSchools: 'Explore schools',
+        suburb: 'Suburb',
+        school: 'School',
         checkPrefix: 'Check your {schoolZone}',
         schoolZone: 'school zone',
         searchPlaceholder: 'Enter suburb/ postcode/ school name',
@@ -33,6 +73,28 @@ export default {
         filterSection: {
             schoolType: "School Type",
             languageProgram: "Language Program",
+            schoolTypes: {
+                Catholic: "Catholic",
+                Government: "Government",
+                Independent: "Independent"
+            },
+            languages: {
+                "Chinese": "Chinese",
+                "Japanese": "Japanese",
+                "Indonesian": "Indonesian",
+                "Auslan": "Auslan",
+                "Spanish": "Spanish",
+                "Italian": "Italian",
+                "French": "French",
+                "German": "German",
+                "Aboriginal Languages": "Aboriginal Languages",
+                "Korean": "Korean",
+                "Greek": "Greek",
+                "Vietnamese": "Vietnamese",
+                "Hindi": "Hindi",
+                "Macedonian": "Macedonian",
+                "Turkish": "Turkish"
+            },
             filter: "Filter",
             reset: "Reset",
             all: "ALL"
@@ -126,7 +188,7 @@ export default {
         removeAllButton: 'Remove All',
         compareButton: 'Compare'
     },
-    ModalBox:{
+    ModalBox: {
         languageProgram: {
             title: 'What is a Language Program?',
             description: 'A language program in government primary schools offers students the opportunity to learn a language other than English. These programs help students develop language skills, support cultural diversity.',
@@ -137,7 +199,7 @@ export default {
             description: 'ICSEA is a number that shows the average education and income background of families at a school. It helps give context, but it’s not a score of how “good” a school is.',
             readMore: 'Read More'
         },
-        schoolZone:{
+        schoolZone: {
             title: 'What is a school zone?',
             description: 'School zones are government-set areas that decide which local school your child can attend based on your address.',
             readMore: 'Read More'
@@ -177,6 +239,7 @@ export default {
             description: 'ICSEA is a number that shows the average education and income background of families at a school. It helps give context, but it’s not a score of how “good” a school is.',
             readMore: 'Read More'
         },
+        icseaTitle: "Index of Community Socio-Educational Advantage (ICSEA)",
         icseaInfo: 'Higher than {percentile}% of primary schools in Victoria',
     }
 };

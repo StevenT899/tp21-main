@@ -69,7 +69,7 @@
                         ref="suggestionBox"
                         class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-md mt-1 z-10">
                         <div v-if="suburbResults.length > 0">
-                            <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">Suburb</p>
+                            <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">{{$t('homeView.suburb')}}</p>
                             <ul>
                                 <li v-for="(suburb, index) in suburbResults" :key="index"
                                     class="py-2 px-4 hover:bg-gray-100 cursor-pointer"
@@ -79,7 +79,7 @@
                             </ul>
                         </div>
                         <div v-if="schoolResults.length > 0">
-                            <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">School</p>
+                            <p class="text-sm font-semibold text-gray-700 p-2 border-b border-gray-200">{{$t('homeView.school')}}</p>
                             <ul>
                                 <li v-for="(school, index) in schoolResults" :key="index"
                                     class="py-2 px-4 hover:bg-gray-100 cursor-pointer"

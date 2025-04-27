@@ -41,7 +41,7 @@
           <div class="space-y-6 text-xl text-gray-800 min-h-[460px]">
             <div class="pb-4 border-b border-gray-300 sm:mt-20 md:mt-12 lg:mt-40 xl:mt-10">
               <span class="block font-bold">{{ $t('compareView.schoolCard.schoolType') }}</span>
-              <span class="block text-center mt-6">{{ schools[i - 1].type }}</span>
+              <span class="block text-center mt-6">{{ $t(`schoolTypes.${schools[i - 1].type}`) || schools[i - 1].type }}</span>
             </div>
 
             <div class="pb-4 border-b border-gray-300">
@@ -88,7 +88,7 @@
     <!-- Render language program buttons -->
     <span v-for="(lang, j) in schools[i - 1].languageProgramArr.slice(0, 4)" :key="j"
       class="bg-blue-700 text-sm text-white px-4 py-2 rounded-full w-1/3 text-center truncate mb-1" :title="lang">
-      {{ lang }}
+      {{ $t(`languages.${lang}`) || lang }}
     </span>
 
     <!-- Empty placeholders -->

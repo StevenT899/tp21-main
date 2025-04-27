@@ -10,7 +10,7 @@
         <select id="school-type" v-model="filters.schoolType"
           class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="ALL">{{ $t('MapShow.filterSection.all') }}</option>
-          <option v-for="type in availableSchoolTypes" :key="type" :value="type">{{ type }}</option>
+          <option v-for="type in availableSchoolTypes" :key="type" :value="type">{{ $t(`MapShow.filterSection.schoolTypes.${type}`) || type }}</option>
         </select>
       </div>
 
@@ -30,7 +30,7 @@
         <select id="language-program" v-model="filters.languageProgram"
           class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="ALL">{{ $t('MapShow.filterSection.all') }}</option>
-          <option v-for="language in availableLanguages" :key="language" :value="language">{{ language }}</option>
+          <option v-for="language in availableLanguages" :key="language" :value="language">{{ $t(`MapShow.filterSection.languages.${language}`) || language }}</option>
         </select>
       </div>
 

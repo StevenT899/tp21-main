@@ -24,10 +24,21 @@ def get_zone_schools_by_name():
 @bp.route('/api/proxy/place-autocomplete', methods=['GET'])
 def place_autocomplete():
     input_data = request.args.get('input')
+    components = 'country:au'
     google_api_key = 'AIzaSyAptCwXW0pUgbqzN4s-e66aQYH7k5qKjkY'
-    url = f'https://maps.googleapis.com/maps/api/place/autocomplete/json?input={input_data}&key={google_api_key}&types=geocode'
+    url = f'https://maps.googleapis.com/maps/api/place/autocomplete/json?input={input_data}&key={google_api_key}&types=geocode&components={components}'
     response = requests.get(url)
-    return jsonify(response.json())
+    data = response.json()
+
+    # filter only in VIC
+    filtered_predictions = []
+    if data.get('status') == 'OK':
+        for prediction in data.get('predictions', []):
+            if 'VIC' in prediction.get('description', ''):
+                filtered_predictions.append(prediction)
+        data['predictions'] = filtered_predictions
+
+    return jsonify(data)
 
 @bp.route('/api/proxy/geocode', methods=['GET'])
 def geocode():

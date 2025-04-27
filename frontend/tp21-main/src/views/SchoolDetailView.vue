@@ -28,7 +28,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-6 rounded-xl border">
             <div>
                 <p class="text-xl">{{ $t('SchoolDetail.schoolType') }}</p>
-                <p class="font-semibold text-gray-900 mt-6">{{ school?.School_Sector }}</p>
+                <p class="font-semibold text-gray-900 mt-6">{{ $t(`schoolTypes.${school?.School_Sector}`) || school?.School_Sector }}</p>
             </div>
             <div>
                 <p class="text-xl">{{ $t('SchoolDetail.yearRange') }}</p>
@@ -109,7 +109,7 @@
             <div class="flex flex-wrap gap-2">
                 <span v-for="(lang, index) in school?.languages || []" :key="index"
                     class="px-3 py-1 text-sm bg-blue-400 text-white rounded">
-                    {{ lang }}
+                    {{ $t(`languages.${lang}`) || lang }}
                 </span>
                 <span v-if="!(school?.languages && school.languages.length)" class="py-1 text-lg text-gray-700 rounded">
                     {{ $t('SchoolDetail.languageProgram.noLanguages') }}
@@ -148,7 +148,7 @@
                 <!-- Language Program -->
 
                 <div class="flex items-center gap-2">
-                    <h2 class="text-xl font-semibold">Index of Community Socio-Educational Advantage (ICSEA)</h2>
+                    <h2 class="text-xl font-semibold">{{ $t('SchoolDetail.icseaTitle') }}</h2>
                     <div class="relative ml-2">
                         <svg width="16" height="16" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg"
                             class="w-6 h-6 text-gray-600 cursor-pointer" @click="toggleModal('icsea')">

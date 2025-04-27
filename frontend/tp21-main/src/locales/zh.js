@@ -10,12 +10,52 @@ export default {
     footer: {
         acknowledgment: "NewBee Edu 认可我们工作所在土地的传统所有者。我们承认他们与这片土地的精神和文化联系，并向过去、现在和未来的长辈们表示敬意。"
     },
+    schoolTypes: {
+        Catholic: "天主教学校",
+        Government: "公立学校",
+        Independent: "私立学校"
+    },
+    languages: {
+        "Chinese": "中文",
+        "Japanese": "日语",
+        "Indonesian": "印尼语",
+        "Auslan": "澳大利亚手语",
+        "Spanish": "西班牙语",
+        "Italian": "意大利语",
+        "French": "法语",
+        "German": "德语",
+        "Aboriginal Languages": "原住民语言",
+        "Korean": "韩语",
+        "Greek": "希腊语",
+        "Vietnamese": "越南语",
+        "Hindi": "印地语",
+        "Macedonian": "马其顿语",
+        "Turkish": "土耳其语"
+    },
+    chart: {
+        labels: {
+            notStated: "未声明",
+            englishBackground: "英语背景",
+            otherLanguagesBackground: "其他语言背景"
+        },
+        languages: {
+            notStated: "未说明",
+            english: "英语背景",
+            otherLanguages: "其他语言背景"
+        }
+    },
+    gender: {
+        girl: "女生",
+        boy: "男生"
+    },
     homeView: {
         heroTitle: '为你的孩子找到合适的小学',
         heroDesc1: '探索、比较并了解维多利亚州的学校。我们帮助移民家庭自信地做出学校选择。',
-        heroDesc2: '使用我们简单的地图工具搜索学校，了解他们的特色，并为你的孩子找到最适合的学校 —— 在学术、文化和实际方面。',
+        heroDesc2: '使用我们简单的地图工具搜索学校，了解它们提供的课程，并找到最适合您孩子的学校 —— 无论是从学术上、文化上还是实际需求上。',
         heroStart: '选择一个选项开始吧！',
         exploreSchools: '探索学校',
+        suburb: '郊区',
+        school: '学校',
         checkPrefix: '查看你的 {schoolZone}',
         schoolZone: '学区',
         searchPlaceholder: '输入郊区/邮编/学校名称',
@@ -25,7 +65,7 @@ export default {
     },
     helpSection: {
         title: '我们随时提供帮助',
-        paragraph1: '学校不仅仅是学习知识的地方——它是孩子们成长和找到归属感的地方。每个孩子都应该在学校里感到安全、被关注和得到支持。',
+        paragraph1: '学校不仅仅是学术场所，它是孩子们成长和归属的地方。每个孩子都应该在学校中感到安全、被关注和被支持。我们希望这个工具能帮助您和您的孩子让这一切变得更容易。',
         paragraph2: '我们希望这个工具能让您和孩子们的事情变得稍微轻松一些。',
         signature: '—NewBee Edu 团队'
     },
@@ -33,6 +73,28 @@ export default {
         filterSection: {
             schoolType: "学校类型",
             languageProgram: "语言课程",
+            schoolTypes: {
+                Catholic: "天主教学校",
+                Government: "公立学校",
+                Independent: "私立学校"
+            },
+            languages: {
+                "Chinese": "中文",
+                "Japanese": "日语",
+                "Indonesian": "印尼语",
+                "Auslan": "澳大利亚手语",
+                "Spanish": "西班牙语",
+                "Italian": "意大利语",
+                "French": "法语",
+                "German": "德语",
+                "Aboriginal Languages": "原住民语言",
+                "Korean": "韩语",
+                "Greek": "希腊语",
+                "Vietnamese": "越南语",
+                "Hindi": "印地语",
+                "Macedonian": "马其顿语",
+                "Turkish": "土耳其语"
+            },
             filter: "筛选",
             reset: "重置",
             all: "全部"
@@ -77,7 +139,7 @@ export default {
     compareView: {
         pageHeader: {
             title: '比较你选择的学校',
-            description: '你最多可以选择3所学校。看看它们如何进行对比。'
+            description: '你最多可以选择3所学校，横向对比他们之间的区别。'
         },
         schoolCard: {
             removeButton: '移除学校',
@@ -86,7 +148,7 @@ export default {
             yearRange: '年级范围',
             languageProgram: '语言课程',
             none: '无',
-            studentPerStaff: '每位教职员工对应的学生数',
+            studentPerStaff: '每名教学人员对应的学生数',
             icsea: '社区社会教育优势指数 (ICSEA)',
             icseaTooltip: 'ICSEA反映了学生的社会教育背景。平均值为1000。分数越高表示优势越大。',
             enrolments: '招生人数',
@@ -117,7 +179,7 @@ export default {
         },
     },
     CompareSideBar: {
-        header: '已添加用于比较的学校 ({count}/3)',
+        header: '已添加的学校 ({count}/3)',
         schoolInfo: {
             type: '类型: {type}',
             suburb: '郊区: {suburb}'
@@ -126,7 +188,7 @@ export default {
         removeAllButton: '全部移除',
         compareButton: '比较'
     },
-    ModalBox:{
+    ModalBox: {
         languageProgram: {
             title: '什么是语言课程？',
             description: '政府小学的语言课程为学生提供了学习英语以外语言的机会。这些课程有助于学生发展语言技能，支持文化多样性。',
@@ -137,7 +199,7 @@ export default {
             description: 'ICSEA 是一个反映学校学生家庭平均教育和收入背景的数值。它有助于提供背景信息，但并不是衡量学校“好坏”的分数。',
             readMore: '了解更多'
         },
-        schoolZone:{
+        schoolZone: {
             title: '什么是学区？',
             description: '学区是政府设置的区域，根据你的地址决定你的孩子可以上哪所当地的学校。',
             readMore: '了解更多'
@@ -177,6 +239,7 @@ export default {
             description: 'ICSEA 是一个反映学校学生家庭平均教育和收入背景的数值。它有助于提供背景信息，但并不是衡量学校“好坏”的分数。',
             readMore: '了解更多'
         },
+        icseaTitle: "社区社会教育优势指数 (ICSEA)",
         icseaInfo: '高于维多利亚州 {percentile}% 的小学',
     }
 };
