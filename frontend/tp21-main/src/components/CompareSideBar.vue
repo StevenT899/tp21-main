@@ -8,17 +8,25 @@
   
         <!-- School List -->
         <div class="school-list">
-          <div v-for="(school, index) in compareList" :key="school.id" class="school-card mt-2 mb-2">
-            <div>
-              <h3 class="school-name">{{ school.name || school.School_Name }}</h3>
-              <p class="school-sector">{{ school.type || school.sector || school.School_Sector }}</p>
-              <p class="school-suburb">{{ school.suburb || school.Suburb }}</p>
-              <button @click="removeFromCompare(index)" class="remove-button">
-                Remove
-              </button>
-            </div>
-          </div>
-        </div>
+  <div v-for="(school, index) in compareList" :key="school.id" class="school-card mt-2 mb-2">
+    <div>
+      <h3 class="school-name">{{ school.name || school.School_Name }}</h3>
+      <p class="school-sector">{{ school.type || school.sector || school.School_Sector }}</p>
+      
+      <!-- School Suburb with SVG Icon -->
+      <p class="school-suburb flex items-center">
+        <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-1">
+          <path d="M0.5 4.5C0.5 3.30653 0.974106 2.16193 1.81802 1.31802C2.66193 0.474106 3.80653 0 5 0C6.19347 0 7.33807 0.474106 8.18198 1.31802C9.02589 2.16193 9.5 3.30653 9.5 4.5C9.5 5.69347 9.02589 6.83807 8.18198 7.68198C7.33807 8.52589 6.19347 9 5 9C3.80653 9 2.66193 8.52589 1.81802 7.68198C0.974106 6.83807 0.5 5.69347 0.5 4.5ZM5 2.5C5.275 2.5 5.5 2.275 5.5 2C5.5 1.725 5.275 1.5 5 1.5C3.34375 1.5 2 2.84375 2 4.5C2 4.775 2.225 5 2.5 5C2.775 5 3 4.775 3 4.5C3 3.39687 3.89687 2.5 5 2.5ZM4 15V9.90938C4.66119 10.0302 5.33881 10.0302 6 9.90938V15C6 15.5531 5.55312 16 5 16C4.44688 16 4 15.5531 4 15Z" fill="#004ABA"/>
+        </svg>
+        {{ school.suburb || school.Suburb }}
+      </p>
+
+      <button @click="removeFromCompare(index)" class="remove-button">
+        Remove
+      </button>
+    </div>
+  </div>
+</div>
   
         <div class="button-group mt-1">
 
