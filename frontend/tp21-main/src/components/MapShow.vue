@@ -117,8 +117,9 @@
 
 
     <div v-if="checkCompareListLength"
-      class="absolute top-0 right-0 w-35 h-full flex flex-col p-4 bg-white shadow-lg border-l border-gray-200">
-      <CompareSideBar />
+     class="absolute top-0 h-full flex flex-col p-4 bg-white shadow-lg border-l border-gray-200"
+     style="width: 190px; right: -40px;">
+  <CompareSideBar />
     </div>
 
     <!-- Toast -->
@@ -611,5 +612,8 @@ onMounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+  
 }
+
+
 </style>

@@ -1,10 +1,11 @@
 <template>
-  <div class="flex pr-40">
-    <!-- Left section: Map -->
-    <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300 flex-1" style="height: 500px;">
+  <div class="map-outer-container flex">
+
+    <!-- 左边：地图区域 -->
+    <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300" style="height: 500px;">
       <div id="map" class="w-full h-full"></div>
 
-      <!-- School Popup -->
+      <!-- Popup -->
       <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg"
         style="top: 50%; right: 20px; transform: translateY(-50%); width: 300px; z-index: 10;">
         <div class="flex justify-between items-start">
@@ -46,23 +47,21 @@
       </button>
     </div>
 
-    <!-- Right section: Compare Sidebar -->
-    <div v-if="checkCompareListLength"
-      class="compare-sidebar-container absolute top-0 right-0 w-80 h-1/2 flex flex-col p-4 bg-white shadow-lg border-l border-gray-200">
+   
+    <div v-if="checkCompareListLength" class="ms-1">
       <CompareSideBar @remove-all="handleRemoveAll" @remove-school="handleRemoveSchool" />
     </div>
 
-
   </div>
 
-  <!-- Toast Notification -->
+  <!-- Toast -->
   <transition name="fade">
     <div v-if="toast.show" :class="['toast', toast.type]">
       {{ toast.message }}
     </div>
   </transition>
-
 </template>
+
 
 
 
@@ -199,7 +198,8 @@ onMounted(() => {
     initializeZonePolygon();
     initializeSchools();
     initializeSearchPoint();
-    fitMapToSchools()
+    fitMapToSchools();
+    map.value.resize();
   });
 
   // Listen for storage events and custom events
@@ -368,32 +368,31 @@ function getCurrentLocation() {
 </script>
 
 <style scoped>
-.map-wrapper {
+.map-outer-container {
   display: flex;
-  width: calc(100% - 200px);
-  height: 100%;
+  align-items: flex-start;
+}
+
+.map-wrapper {
+  width: calc(100% - 200px); 
+  height: 500px;
+  position: relative;
 }
 
 #map {
-  display: flex;
   width: 100%;
+  height: 100%;
 }
 
 .compare-sidebar-container {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 150px;
-  /* Sidebar width */
-  height: 100%;
-  padding: 20px;
+  width: 200px; /* 侧边栏宽度，按你的需要设置 */
+  height: 500px;
   background-color: white;
+  border-left: 1px solid #ddd;
+  padding: 20px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  /* Ensures the sidebar is above the map */
-  overflow-y: auto;
-  /* Allows the sidebar content to scroll if necessary */
 }
+
 
 /* Toast Notification */
 .toast {

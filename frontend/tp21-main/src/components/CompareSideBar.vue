@@ -286,10 +286,10 @@ onUnmounted(() => {
   transition: background 0.18s, color 0.18s, border 0.18s;
   margin-top: 0.05rem;
   display: inline-block;
-  text-align: left;
+  text-align: center;
   font-weight: 500;
   margin-left: auto;
-  /* Pushes the button to the right */
+  
 }
 
 .remove-button:hover {
@@ -300,9 +300,11 @@ onUnmounted(() => {
 
 /* Button Group */
 .button-group {
-  gap: 0.4rem;
-  width: auto;
-  justify-content: flex-end;
+  display: flex;
+  flex-direction: column; /* 👈 按钮竖着排 */
+  align-items: flex-end; /* 👈 整组靠右对齐 */
+  gap: 0.1rem; /* 按钮间隔 */
+  width: 100%;
 }
 
 /* Remove All Button & Compare Button */
@@ -315,10 +317,9 @@ onUnmounted(() => {
   text-align: center;
   border: none;
   cursor: pointer;
-  width: auto;
-  min-width: 70px;
-  max-width: 100px;
-  font-weight: 500;
+  min-width: 100px;
+  transition: background-color 0.3s;
+
 }
 
 /* Remove All Button Style */
@@ -363,27 +364,21 @@ onUnmounted(() => {
   .remove-all-button,
   .compare-button {
     padding: 0.25rem 0.8rem;
-    /* Same padding for both */
-    font-size: 0.8rem;
-    /* Same font size */
-    border-radius: 0.25rem;
-    /* Rounded corners */
-    transition: all 0.18s;
-    text-align: center;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    /* Make both buttons take full width inside their container */
-    min-width: 70px;
-    max-width: 100px;
-    font-weight: 500;
+  font-size: 0.8rem;
+  border-radius: 0.25rem;
+  transition: all 0.18s;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  min-width: 100px;
+  transition: background-color 0.3s;
   }
 
 
   .remove-all-button:hover,
   .compare-button:hover {
     background-color: #2563eb;
-    /* Same hover color */
+    
   }
 
   /* Focus state */
@@ -391,7 +386,7 @@ onUnmounted(() => {
   .compare-button:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
-    /* Optional for focus state */
+
   }
 
 
@@ -404,13 +399,33 @@ onUnmounted(() => {
   }
 }
 
-@media (min-width: 641px) and (max-width: 1024px) {
+@media (min-width: 600px) and (max-width: 1024px) {
   .compare-content {
     max-width: 90%;
   }
 
   .school-card {
     padding: 0.25rem 0.4rem;
+  }
+
+  .remove-all-button,
+  .compare-button {
+    padding: 0.25rem 0.8rem;
+  font-size: 0.8rem;
+  border-radius: 0.25rem;
+  transition: all 0.18s;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  min-width: 100px;
+  transition: background-color 0.3s;
+  }
+
+
+  .remove-all-button:hover,
+  .compare-button:hover {
+    background-color: #2563eb;
+    
   }
 }
 
