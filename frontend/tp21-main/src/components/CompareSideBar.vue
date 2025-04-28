@@ -8,7 +8,7 @@
 
       <!-- School List -->
       <div class="school-list">
-        <div v-for="(school, index) in compareList" :key="school.id" class="school-card mt-2 mb-2">
+        <div v-for="(school, index) in compareList" :key="school.id" class="school-card mt-1 mb-2">
           <div>
             <h3 class="school-name">{{ school.name || school.School_Name }}</h3>
             <p class="school-sector">{{ school.type || school.sector || school.School_Sector }}</p>
@@ -24,13 +24,12 @@
               {{ school.suburb || school.Suburb }}
             </p>
 
-            <div class="flex justify-end mt-1">
-    <button @click="removeFromCompare(index)" class="remove-button">
-      {{ $t('CompareSideBar.removeButton') }}
-    </button>
-  </div>
+            <div class="flex justify-end">
+              <button @click="removeFromCompare(index)" class="remove-button">
+                {{ $t('CompareSideBar.removeButton') }}
+              </button>
+            </div>
 
-            
           </div>
         </div>
       </div>
@@ -250,7 +249,7 @@ onUnmounted(() => {
 /* School Card */
 .school-card {
   background-color: #F1F1F1;
-  padding: 0.8rem 0.8rem;
+  padding: 0.4rem 0.4rem;
   border-radius: 0.25rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   width: 100%;
@@ -282,7 +281,7 @@ onUnmounted(() => {
 .remove-button {
   color: #333333;
   font-size: 0.75rem; 
-  padding: 0.25rem 0.8rem;
+  padding: 0.25rem 0.4rem;
   border-radius: 8px; 
   background: #ffffff;
   border: none;
