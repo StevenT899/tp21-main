@@ -385,7 +385,7 @@ function getCurrentLocation() {
 }
 
 .compare-sidebar-container {
-  width: 200px; /* 侧边栏宽度，按你的需要设置 */
+  width: 200px;
   height: 500px;
   background-color: white;
   border-left: 1px solid #ddd;

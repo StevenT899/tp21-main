@@ -24,9 +24,13 @@
               {{ school.suburb || school.Suburb }}
             </p>
 
-            <button @click="removeFromCompare(index)" class="remove-button">
-              {{ $t('CompareSideBar.removeButton') }}
-            </button>
+            <div class="flex justify-end mt-1">
+    <button @click="removeFromCompare(index)" class="remove-button">
+      {{ $t('CompareSideBar.removeButton') }}
+    </button>
+  </div>
+
+            
           </div>
         </div>
       </div>
@@ -245,8 +249,8 @@ onUnmounted(() => {
 
 /* School Card */
 .school-card {
-  background-color: white;
-  padding: 0.2rem 0.4rem;
+  background-color: #F1F1F1;
+  padding: 0.8rem 0.8rem;
   border-radius: 0.25rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   width: 100%;
@@ -276,21 +280,22 @@ onUnmounted(() => {
 }
 
 .remove-button {
-  color: #ef4444;
-  font-size: 0.7rem;
-  padding: 0.1rem 0.6rem;
-  border-radius: 0.25rem;
-  background: #fff;
-  border: 1px solid #ef4444;
+  color: #333333;
+  font-size: 0.75rem; 
+  padding: 0.25rem 0.8rem;
+  border-radius: 8px; 
+  background: #ffffff;
+  border: none;
   cursor: pointer;
   transition: background 0.18s, color 0.18s, border 0.18s;
-  margin-top: 0.05rem;
-  display: inline-block;
-  text-align: center;
-  font-weight: 500;
-  margin-left: auto;
-  
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
 }
+
+
+
 
 .remove-button:hover {
   background-color: #fee2e2;
@@ -301,9 +306,9 @@ onUnmounted(() => {
 /* Button Group */
 .button-group {
   display: flex;
-  flex-direction: column; /* 👈 按钮竖着排 */
-  align-items: flex-end; /* 👈 整组靠右对齐 */
-  gap: 0.1rem; /* 按钮间隔 */
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
   width: 100%;
 }
 
@@ -319,6 +324,7 @@ onUnmounted(() => {
   cursor: pointer;
   min-width: 100px;
   transition: background-color 0.3s;
+  border-radius: 8px; 
 
 }
 
@@ -392,6 +398,7 @@ onUnmounted(() => {
 
   .school-card {
     padding: 0.2rem 0.3rem;
+    background-color: #f8fafc;
   }
 
   .header-text {
