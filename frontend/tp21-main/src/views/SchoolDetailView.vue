@@ -37,7 +37,7 @@
             </div>
             <div>
                 <p class="text-xl">{{ $t('SchoolDetail.schoolZoneCheck') }}</p>
-                <button v-if="!isButtonClicked" @click="checkUserLocation"
+                <button v-if="!isButtonClicked" @click="checkLocation"
                     class="mt-6 inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 text-sm rounded hover:bg-blue-200">
                     {{ $t('SchoolDetail.useLocation') }}
                 </button>
@@ -210,6 +210,7 @@ import { useRoute, useRouter } from 'vue-router'
 // import * as turf from '@turf/turf';
 import GenderChartInDetailPage from '@/components/GenderChartInDetailPage.vue'
 import LanguageChartInDetailPage from '@/components/LanguageChartInDetailPage.vue'
+import { point, polygon, booleanPointInPolygon } from '@turf/turf';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
@@ -223,7 +224,7 @@ const toast = ref({ show: false, type: '', message: '' })
 
 const showModal = ref(null)
 
-
+const pointInsz = ref(false)
 
 const toggleModal = (modalType) => {
     if (showModal.value === modalType) {
@@ -306,7 +307,7 @@ function isPointInPolygon(point, polygon) {
 
     return inside;
 }
-
+//你之前的代码，我没动。
 async function checkUserLocation() {
     try {
         const currentLocation = await getCurrentLocation()
@@ -334,12 +335,29 @@ async function checkUserLocation() {
         locationStatus.value = 'Error, unable to check location'
     }
 }
-
-
-
-
-
-
+// 新改的代码，PointInsz判断是否在学区内 if pointInsz.value = true 就在学区内。
+async function checkLocation() {
+    try {
+        const currentLocation = await getCurrentLocation();
+        const currentCoords = [currentLocation.longitude, currentLocation.latitude];
+        const pt = point(currentCoords);
+        try {
+            const coords = JSON.parse(school.value.coordinates);
+            if (booleanPointInPolygon(pt, polygon(coords))) {
+                pointInsz.value = true;
+            }
+        } catch (e) {
+            console.error("eeeeeeeeeeeeeeeeeeeeeeeee",e);
+        }
+        if (pointInsz.value) {
+            console.log("您在学校区域内");
+        } else {
+            console.log("您不在学校区域内");
+        }
+    } catch (error) {
+        console.error("获取位置失败:", error);
+    }
+}
 
 // Fetch school data from API on mounted
 onMounted(() => {
