@@ -246,13 +246,13 @@ const toggleModal = (modalType) => {
 let toastTimeout = null
 
 // Function to show toast notifications
-const showToast = (type, message, duration = 3000) => {
-    toast.value = { show: true, type, message }
-    if (toastTimeout) clearTimeout(toastTimeout)
+const showToast = (type, messageKey, duration = 3000) => {
+    toast.value = { show: true, type, message: t(`messages.toast.${type}.${messageKey}`) };
+    if (toastTimeout) clearTimeout(toastTimeout);
     toastTimeout = setTimeout(() => {
-        toast.value.show = false
-    }, duration)
-}
+        toast.value.show = false;
+    }, duration);
+};
 
 // Function to go back to the previous page
 const goBack = () => {
@@ -261,22 +261,22 @@ const goBack = () => {
 
 // Add the current school to the compare list
 const addToCompare = () => {
-    const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]')
+    const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
 
     if (compareList.some(item => item.School_AGE_ID === school.value?.School_AGE_ID)) {
-        showToast('warning', "This school is already in your compare list.")
-        return
+        showToast('warning', 'alreadyInCompare');
+        return;
     }
 
     if (compareList.length >= 3) {
-        showToast('warning', "You can only compare up to 3 schools.")
-        return
+        showToast('warning', 'compareLimit');
+        return;
     }
 
-    compareList.push(school.value)
-    sessionStorage.setItem('compareList', JSON.stringify(compareList))
-    showToast('success', `${school.value.School_Name} has been added to your compare list.`)
-}
+    compareList.push(school.value);
+    sessionStorage.setItem('compareList', JSON.stringify(compareList));
+    showToast('success', 'addedToCompare');
+};
 
 
 function getCurrentLocation() {

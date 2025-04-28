@@ -1,10 +1,7 @@
 <template>
   <div class="map-outer-container flex">
-
-    <!-- 左边：地图区域 -->
     <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300" style="height: 500px;">
       <div id="map" class="w-full h-full"></div>
-
       <!-- Popup -->
       <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg"
         style="top: 50%; right: 20px; transform: translateY(-50%); width: 300px; z-index: 10;">
@@ -47,10 +44,9 @@
       </button>
     </div>
 
-   
     <div v-if="checkCompareListLength" class="ms-1">
       <CompareSideBar @remove-all="handleRemoveAll" @remove-school="handleRemoveSchool" @rm="onSingleRemoved"
-      @rma="onAllRemoved" />
+        @rma="onAllRemoved" />
     </div>
 
   </div>
@@ -64,18 +60,16 @@
 </template>
 
 
-
-
 <script setup>
 import { onMounted, ref, watch, defineEmits, computed, onUnmounted } from 'vue';
 import CompareSideBar from '@/components/CompareSideBar.vue';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import selfIcon from '@/assets/images/self_position.png';
 import schoolIcon from '@/assets/images/school.png';
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n();
-
 const emit = defineEmits(['locationObtained']);
 
 const props = defineProps({
@@ -184,11 +178,11 @@ const handleRemoveSchool = (schoolId) => {
 
 
 function onSingleRemoved() {
-  
+
   showToast('success', 'removedFromCompare')
 }
 function onAllRemoved() {
- 
+
   showToast('success', 'allSchoolsRemoved')
 }
 
@@ -245,6 +239,25 @@ onMounted(() => {
 });
 
 // initialize data
+function initializeSearchPoint() {
+  map.value.loadImage(selfIcon, (err, img) => {
+    if (err) throw err;
+    map.value.addImage('self-icon', img);
+    map.value.addSource('search-point', { type: 'geojson', data: buildSearchPointGeoJSON(props.coordinates) });
+    map.value.addLayer({
+      id: 'self-icon',
+      type: 'symbol',
+      source: 'search-point',
+      layout: {
+        'icon-image': 'self-icon',
+        'icon-size': 0.5,
+        'icon-allow-overlap': true
+      }
+    });
+
+  });
+}
+
 function initializeSchools() {
   map.value.loadImage(schoolIcon, (err, img) => {
     if (err) throw err;
@@ -314,11 +327,6 @@ function initializeZonePolygon() {
   map.value.addLayer({ id: 'zone-line', type: 'line', source: 'zone-polygons', paint: { 'line-color': '#088', 'line-width': 2 } });
 }
 
-function initializeSearchPoint() {
-  map.value.addSource('search-point', { type: 'geojson', data: buildSearchPointGeoJSON(props.coordinates) });
-  map.value.addLayer({ id: 'search-point-layer', type: 'circle', source: 'search-point', paint: { 'circle-radius': 8, 'circle-color': '#f30' } });
-}
-
 function buildSchoolsGeoJSON(schools) {
   return {
     type: 'FeatureCollection',
@@ -386,7 +394,7 @@ function getCurrentLocation() {
 }
 
 .map-wrapper {
-  width: calc(100% - 200px); 
+  width: calc(100% - 200px);
   height: 500px;
   position: relative;
 }
