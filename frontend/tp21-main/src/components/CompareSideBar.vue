@@ -8,7 +8,7 @@
 
       <!-- School List -->
       <div class="school-list">
-        <div v-for="(school, index) in compareList" :key="school.id" class="school-card mt-2 mb-2">
+        <div v-for="(school, index) in compareList" :key="school.id" class="school-card mt-1 mb-2">
           <div>
             <h3 class="school-name">{{ school.name || school.School_Name }}</h3>
             <p class="school-sector">{{ school.type || school.sector || school.School_Sector }}</p>
@@ -24,9 +24,12 @@
               {{ school.suburb || school.Suburb }}
             </p>
 
-            <button @click="removeFromCompare(index)" class="remove-button">
-              {{ $t('CompareSideBar.removeButton') }}
-            </button>
+            <div class="flex justify-end">
+              <button @click="removeFromCompare(index)" class="remove-button">
+                {{ $t('CompareSideBar.removeButton') }}
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
@@ -245,8 +248,8 @@ onUnmounted(() => {
 
 /* School Card */
 .school-card {
-  background-color: white;
-  padding: 0.2rem 0.4rem;
+  background-color: #F1F1F1;
+  padding: 0.4rem 0.4rem;
   border-radius: 0.25rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   width: 100%;
@@ -276,21 +279,22 @@ onUnmounted(() => {
 }
 
 .remove-button {
-  color: #ef4444;
-  font-size: 0.7rem;
-  padding: 0.1rem 0.6rem;
-  border-radius: 0.25rem;
-  background: #fff;
-  border: 1px solid #ef4444;
+  color: #333333;
+  font-size: 0.75rem; 
+  padding: 0.25rem 0.4rem;
+  border-radius: 8px; 
+  background: #ffffff;
+  border: none;
   cursor: pointer;
   transition: background 0.18s, color 0.18s, border 0.18s;
-  margin-top: 0.05rem;
-  display: inline-block;
-  text-align: left;
-  font-weight: 500;
-  margin-left: auto;
-  /* Pushes the button to the right */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
 }
+
+
+
 
 .remove-button:hover {
   background-color: #fee2e2;
@@ -300,9 +304,11 @@ onUnmounted(() => {
 
 /* Button Group */
 .button-group {
-  gap: 0.4rem;
-  width: auto;
-  justify-content: flex-end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  width: 100%;
 }
 
 /* Remove All Button & Compare Button */
@@ -315,10 +321,10 @@ onUnmounted(() => {
   text-align: center;
   border: none;
   cursor: pointer;
-  width: auto;
-  min-width: 70px;
-  max-width: 100px;
-  font-weight: 500;
+  min-width: 100px;
+  transition: background-color 0.3s;
+  border-radius: 8px; 
+
 }
 
 /* Remove All Button Style */
@@ -363,27 +369,21 @@ onUnmounted(() => {
   .remove-all-button,
   .compare-button {
     padding: 0.25rem 0.8rem;
-    /* Same padding for both */
-    font-size: 0.8rem;
-    /* Same font size */
-    border-radius: 0.25rem;
-    /* Rounded corners */
-    transition: all 0.18s;
-    text-align: center;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    /* Make both buttons take full width inside their container */
-    min-width: 70px;
-    max-width: 100px;
-    font-weight: 500;
+  font-size: 0.8rem;
+  border-radius: 0.25rem;
+  transition: all 0.18s;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  min-width: 100px;
+  transition: background-color 0.3s;
   }
 
 
   .remove-all-button:hover,
   .compare-button:hover {
     background-color: #2563eb;
-    /* Same hover color */
+    
   }
 
   /* Focus state */
@@ -391,12 +391,13 @@ onUnmounted(() => {
   .compare-button:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
-    /* Optional for focus state */
+
   }
 
 
   .school-card {
     padding: 0.2rem 0.3rem;
+    background-color: #f8fafc;
   }
 
   .header-text {
@@ -404,13 +405,33 @@ onUnmounted(() => {
   }
 }
 
-@media (min-width: 641px) and (max-width: 1024px) {
+@media (min-width: 600px) and (max-width: 1024px) {
   .compare-content {
     max-width: 90%;
   }
 
   .school-card {
     padding: 0.25rem 0.4rem;
+  }
+
+  .remove-all-button,
+  .compare-button {
+    padding: 0.25rem 0.8rem;
+  font-size: 0.8rem;
+  border-radius: 0.25rem;
+  transition: all 0.18s;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  min-width: 100px;
+  transition: background-color 0.3s;
+  }
+
+
+  .remove-all-button:hover,
+  .compare-button:hover {
+    background-color: #2563eb;
+    
   }
 }
 

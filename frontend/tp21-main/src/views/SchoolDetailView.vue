@@ -25,15 +25,16 @@
         </div>
 
         <!-- Basic Info -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-6 rounded-xl border">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 rounded-xl" style="background-color: #F4F7FC;">
+
             <div>
                 <p class="text-xl">{{ $t('SchoolDetail.schoolType') }}</p>
-                <p class="font-semibold text-gray-900 mt-6">{{ $t(`schoolTypes.${school?.School_Sector}`) ||
+                <p class="text-gray-900 mt-6">{{ $t(`schoolTypes.${school?.School_Sector}`) ||
                     school?.School_Sector }}</p>
             </div>
             <div>
                 <p class="text-xl">{{ $t('SchoolDetail.yearRange') }}</p>
-                <p class="font-semibold text-gray-900 mt-6">{{ school?.Year_Range }}</p>
+                <p class="text-gray-900 mt-6">{{ school?.Year_Range }}</p>
             </div>
             <div>
                 <p class="text-xl">{{ $t('SchoolDetail.schoolZoneCheck') }}</p>
@@ -74,7 +75,7 @@
         </div>
 
         <!-- Language Program -->
-        <div class="bg-white p-6 rounded-xl border space-y-4">
+        <div class="bg-white p-6 rounded-xl space-y-4" style="background-color: #F4F7FC;">
             <div class="flex items-center gap-2">
                 <h2 class="text-xl font-semibold">{{ $t('SchoolDetail.languageProgram.title') }}</h2>
                 <div class="relative ml-2">
@@ -129,7 +130,7 @@
 
         <!-- Staff and Enrolment (Vertical layout) -->
         <div class="grid grid-cols-1 gap-6">
-            <div class="bg-white p-6 rounded-xl border space-y-4">
+            <div class="bg-white p-6 rounded-xl space-y-4" style="background-color: #F4F7FC;">
                 <h2 class="text-xl font-semibold">{{ $t('SchoolDetail.staffAndEnrolment.schoolStaff') }}</h2>
                 <p class="text-gray-700">{{ $t('SchoolDetail.staffAndEnrolment.teachingStaff') }}: <strong>{{
                     school?.Teaching_Staff }}</strong></p>
@@ -207,7 +208,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-// import * as turf from '@turf/turf';
 import GenderChartInDetailPage from '@/components/GenderChartInDetailPage.vue'
 import LanguageChartInDetailPage from '@/components/LanguageChartInDetailPage.vue'
 import { point, polygon, booleanPointInPolygon } from '@turf/turf';

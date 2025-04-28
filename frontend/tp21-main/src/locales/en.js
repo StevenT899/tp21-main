@@ -210,7 +210,7 @@ export default {
         },
     },
     CompareSideBar: {
-        header: 'Schools Added for Comparison ({count}/3)',
+        header: 'Added List ({count}/3)',
         schoolInfo: {
             type: 'Type: {type}',
             suburb: 'Suburb: {suburb}'
