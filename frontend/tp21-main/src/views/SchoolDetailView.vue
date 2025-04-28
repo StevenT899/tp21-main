@@ -43,17 +43,21 @@
                     {{ $t('SchoolDetail.useLocation') }}
                 </button>
 
-                <span v-if="locationStatus"
-                    :class="{ 'text-green-600': locationStatus === $t('SchoolDetail.inSchoolZone'), 'text-red-500': locationStatus === $t('SchoolDetail.notInSchoolZone') || locationStatus === $t('SchoolDetail.inSchoolZoneError')}"
+                <span v-if="isButtonClicked"
+                    :class="{
+                    'text-green-600': locationStatus === ZONE_IN,
+                    'text-red-500':   locationStatus === ZONE_OUT || locationStatus === ZONE_ERR
+                    }"
                     class="ml-2 text-green-600 text-sm font-semibold">
                     <!-- Add the SVG icon before the text when inside the zone -->
-                    <span v-if="locationStatus === $t('SchoolDetail.inSchoolZone')" class="flex gap-2">
+                    <span v-if="locationStatus === ZONE_IN" class="flex gap-2">
                         <svg width="16" height="16" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M15.3167 26.05L28.8292 12.5375L26.1458 9.85417L15.3167 20.6833L9.85417 15.2208L7.17083 17.9042L15.3167 26.05ZM4.58333 35.25C3.52917 35.25 2.62706 34.875 1.877 34.1249C1.12694 33.3749 0.751278 32.4721 0.75 31.4167V4.58333C0.75 3.52917 1.12567 2.62706 1.877 1.877C2.62833 1.12694 3.53044 0.751278 4.58333 0.75H31.4167C32.4708 0.75 33.3736 1.12567 34.1249 1.877C34.8763 2.62833 35.2513 3.53044 35.25 4.58333V31.4167C35.25 32.4708 34.875 33.3736 34.1249 34.1249C33.3749 34.8763 32.4721 35.2513 31.4167 35.25H4.58333Z"
                                 fill="#00AD06" />
-                        </svg>
-                        {{ locationStatus }}
+                        </svg>       
+                        
+                       {{ $t('SchoolDetail.inSchoolZone') }}               
                     </span>
 
 
@@ -68,7 +72,12 @@
                                 d="M29.6875 12.5875L25.4125 8.3125L19 14.725L12.5875 8.3125L8.3125 12.5875L14.725 19L8.3125 25.4125L12.5875 29.6875L19 23.275L25.4125 29.6875L29.6875 25.4125L23.275 19L29.6875 12.5875Z"
                                 fill="white" />
                         </svg>
-                        {{ locationStatus }}
+                        
+                            {{locationStatus === ZONE_OUT
+                                ? $t('SchoolDetail.notInSchoolZone')
+                                : $t('SchoolDetail.SchoolZoneError')
+                            }}
+                       
                     </span>
                 </span>
             </div>
@@ -291,51 +300,12 @@ function getCurrentLocation() {
     });
 }
 
-function isPointInPolygon(point, polygon) {
-    let x = point[0], y = point[1];
-    let inside = false;
 
-    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-        let xi = polygon[i][0], yi = polygon[i][1];
-        let xj = polygon[j][0], yj = polygon[j][1];
 
-        let intersect = ((yi > y) !== (yj > y)) &&
-            (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+const ZONE_IN   = 'IN_ZONE'
+const ZONE_OUT  = 'OUT_ZONE'
+const ZONE_ERR  = 'ZONE_ERROR'
 
-        if (intersect) inside = !inside;
-    }
-
-    return inside;
-}
-//你之前的代码，我没动。
-async function checkUserLocation() {
-    try {
-        const currentLocation = await getCurrentLocation()
-        const currentCoords = [currentLocation.longitude, currentLocation.latitude]
-
-        let coordinates = school.value.coordinates[0];  // Get the polygon coordinates
-
-        // Ensure the polygon is closed
-        if (coordinates[0][0][0] !== coordinates[0][coordinates[0].length - 1][0] ||
-            coordinates[0][0][1] !== coordinates[0][coordinates[0].length - 1][1]) {
-            coordinates[0].push(coordinates[0][0]) // Close the polygon
-        }
-
-        // Check if the user's location is inside the polygon
-        const isInside = isPointInPolygon(currentCoords, coordinates[0])
-
-        // Update location status
-        locationStatus.value = isInside
-            ? t('SchoolDetial.inSchoolZone')
-            : t('SchoolDetial.notInSchoolZone');
-        isButtonClicked.value = true
-
-    } catch (error) {
-        console.error('Error checking location:', error)
-        locationStatus.value = 'Error, unable to check location'
-    }
-}
-// 新改的代码，PointInsz判断是否在学区内 if pointInsz.value = true 就在学区内。
 async function checkLocation() {
     try {
         const currentLocation = await getCurrentLocation();
@@ -350,12 +320,18 @@ async function checkLocation() {
             console.error("eeeeeeeeeeeeeeeeeeeeeeeee",e);
         }
         if (pointInsz.value) {
-            console.log("您在学校区域内");
+            locationStatus.value = ZONE_IN 
+            isButtonClicked.value = true;
+            console.log("In school zone");
         } else {
-            console.log("您不在学校区域内");
+            locationStatus.value = ZONE_OUT 
+            isButtonClicked.value = true;
+            console.log("Not in school zone");
         }
     } catch (error) {
-        console.error("获取位置失败:", error);
+        locationStatus.value = ZONE_ERR
+        isButtonClicked.value = true;
+        console.error("Failed:", error);
     }
 }
 

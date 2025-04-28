@@ -62,7 +62,12 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+
+const emit = defineEmits(['rm', 'rma'])
+
 const { t } = useI18n();
+// Manage compareList using reactive ref
+const compareList = ref([])
 
 // Scroll to top function
 const scrollToTop = () => {
@@ -80,7 +85,9 @@ let toastTimeout = null
 
 const showToast = (type, messageKey, params = {}, duration = 3000) => {
   const message = t(`messages.toast.${type}.${messageKey}`, params)
+  console.log('[Toast] showToast:', type, messageKey, message)
   toast.value = { show: true, type, message }
+
 
   if (toastTimeout) clearTimeout(toastTimeout)
   toastTimeout = setTimeout(() => {
@@ -93,7 +100,7 @@ const removeFromCompare = (index) => {
   console.log('CompareSideBar: Removing school at index:', index)
   compareList.value.splice(index, 1)
   saveCompareList()
-  showToast('success', 'removedFromCompare')
+  emit('rm')
   window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }))
 }
 
@@ -102,12 +109,13 @@ const removeAll = () => {
   console.log('CompareSideBar: Removing all schools')
   compareList.value = []
   saveCompareList()
-  showToast('success', 'allSchoolsRemoved')
+  emit('rma')
+
   window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }))
 }
 
-// Manage compareList using reactive ref
-const compareList = ref([])
+
+
 
 // Watch sessionStorage and update compareList when the page reloads
 const loadCompareList = () => {
@@ -172,6 +180,7 @@ onMounted(() => {
   window.addEventListener('compareListUpdated', handleCompareListUpdate)
   loadCompareList()
 })
+
 
 // Remove event listeners
 onUnmounted(() => {
@@ -440,4 +449,9 @@ onUnmounted(() => {
     max-width: 22rem;
   }
 }
+
+
+
+
+
 </style>

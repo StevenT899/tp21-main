@@ -65,11 +65,11 @@ export default {
 
             },
             warning: {
-                alreadyInCompare: 'is already in your compare list.',
+                alreadyInCompare: 'Already in your compare list.',
                 compareLimit: 'You can only compare up to 3 schools.'
             },
             success: {
-                addedToCompare: 'added to compare!',
+                addedToCompare: 'Added to compare!',
                 schoolAdded: 'School added successfully!',
                 removedFromCompare: 'Removed from your compare list successfully.',
                 allSchoolsRemoved: 'All schools have been removed from your compare list.'

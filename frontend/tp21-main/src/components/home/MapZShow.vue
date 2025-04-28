@@ -49,7 +49,8 @@
 
    
     <div v-if="checkCompareListLength" class="ms-1">
-      <CompareSideBar @remove-all="handleRemoveAll" @remove-school="handleRemoveSchool" />
+      <CompareSideBar @remove-all="handleRemoveAll" @remove-school="handleRemoveSchool" @rm="onSingleRemoved"
+      @rma="onAllRemoved" />
     </div>
 
   </div>
@@ -180,6 +181,17 @@ const handleRemoveSchool = (schoolId) => {
   sessionStorage.setItem('compareList', JSON.stringify(compareList.value));
   window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList.value }));
 };
+
+
+function onSingleRemoved() {
+  
+  showToast('success', 'removedFromCompare')
+}
+function onAllRemoved() {
+ 
+  showToast('success', 'allSchoolsRemoved')
+}
+
 
 onMounted(() => {
   mapboxgl.accessToken = 'pk.eyJ1IjoicmV2aXZlZGVzaXJlIiwiYSI6ImNtOG50dzNmbDA0cGQyam9od2QzMjRnOHMifQ.1TH3sOapBo7eXNQ-2hBu6A';

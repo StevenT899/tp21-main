@@ -116,10 +116,12 @@
     </div>
 
 
-    <div v-if="checkCompareListLength"
-     class="absolute top-0 h-full flex flex-col p-4 bg-white shadow-lg border-l border-gray-200"
-     style="width: 190px; right: -40px;">
-  <CompareSideBar />
+    <div v-if="checkCompareListLength" 
+    class="absolute top-0 h-full flex flex-col p-4 bg-white shadow-lg border-l border-gray-200" 
+    style="width: 190px; right: -40px;">
+      <CompareSideBar 
+      @rm="onSingleRemoved"
+      @rma="onAllRemoved"/>
     </div>
 
     <!-- Toast -->
@@ -144,6 +146,9 @@ const ModalBoxRef = ref(null);
 const openModal = (modalType) => {
   ModalBoxRef.value.toggleModal(modalType);
 };
+
+
+
 
 // Use ref to manage compareList for reactivity
 const compareList = ref(JSON.parse(sessionStorage.getItem('compareList') || '[]'));
@@ -174,6 +179,16 @@ const showToast = (type, messageKey, params = {}, duration = 3000) => {
   toastTimeout = setTimeout(() => {
     toast.value.show = false
   }, duration)
+}
+
+
+function onSingleRemoved() {
+  
+  showToast('success', 'removedFromCompare')
+}
+function onAllRemoved() {
+ 
+  showToast('success', 'allSchoolsRemoved')
 }
 
 const isInCompareList = computed(() => {
