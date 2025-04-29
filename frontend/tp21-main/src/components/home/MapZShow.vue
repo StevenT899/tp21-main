@@ -188,7 +188,7 @@ function onAllRemoved() {
 
 
 onMounted(() => {
-  mapboxgl.accessToken = 'pk.eyJ1IjoicmV2aXZlZGVzaXJlIiwiYSI6ImNtOG50dzNmbDA0cGQyam9od2QzMjRnOHMifQ.1TH3sOapBo7eXNQ-2hBu6A';
+  mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
   map.value = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',

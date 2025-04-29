@@ -364,7 +364,7 @@ watch([
 
 // Initialize the map
 const initializeMap = () => {
-  mapboxgl.accessToken = 'pk.eyJ1IjoicmV2aXZlZGVzaXJlIiwiYSI6ImNtOG50dzNmbDA0cGQyam9od2QzMjRnOHMifQ.1TH3sOapBo7eXNQ-2hBu6A'
+  mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
   map = new mapboxgl.Map({
     container: mapContainer.value,
