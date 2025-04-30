@@ -434,7 +434,10 @@ const onShowMapZone = () => {
             if (el) el.scrollIntoView({ behavior: 'smooth' })
         })
 
-        getLocation();
+        setTimeout(() => {
+            getLocation();
+        }, 1000); // 等待 1 秒后再获取位置
+    
     }
 
 }
@@ -442,12 +445,12 @@ const onShowMapZone = () => {
 const getLocation = () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-            (position) => {
+            async (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
                 console.log('lat:', latitude, 'long:', longitude);
                 coordinates.value = [longitude, latitude];
-                checkPointInPolygons();
+                await checkPointInPolygons();
             },
             (error) => {
                 console.error('Error during fetching location:', error.message);
