@@ -20,8 +20,11 @@
                         ? 'bg-blue-600 text-white'
                         : 'bg-gray-200 text-gray-700'" class="py-2 px-6 rounded-md transition-colors">
                         {{ $t('homeView.checkPrefix') }}
-                        <span class="underline underline-offset-2" @click.stop="openModal('ss')">{{
+                        <span v-if="!canSchoolZoneDesripBeChecked" class="underline underline-offset-2">{{
                             $t('homeView.schoolZone') }}</span>
+                        <span v-if="canSchoolZoneDesripBeChecked" class="underline underline-offset-2"
+                            @click.stop="openModal('ss')">{{
+                                $t('homeView.schoolZone') }}</span>
                     </button>
                     <ModalBox ref="ModalBoxRef" />
                 </div>
@@ -153,7 +156,9 @@ import ModalBox from '../ModalBox.vue';
 
 const ModalBoxRef = ref(null);
 const openModal = (modalType) => {
-    ModalBoxRef.value.toggleModal(modalType);
+    if (canSchoolZoneDesripBeChecked.value) {
+        ModalBoxRef.value.toggleModal(modalType);
+    }
 };
 
 // search bar
@@ -184,6 +189,8 @@ const highlightSchoolSearch = ref(false);
 const highlightZoneSearch = ref(false);
 const isExploreSchoolsButtonDisabled = ref(false);
 const isShowMapZoneButtonDisabled = ref(false);
+const canSchoolZoneDesripBeChecked = ref(false);
+const buttonClickTime = ref(0);
 
 // fetch schools from database
 const fetchSchools = async () => {
@@ -388,6 +395,8 @@ const selectResult = (result, type) => {
 
 // BUTTONS: SCHOOLS / SCHOOL ZONE 
 const onExploreSchools = async () => {
+    buttonClickTime.value = 0;
+    canSchoolZoneDesripBeChecked.value = false;
     activeView.value = VIEW_SCHOOL
     searchQuery.value = '';
     showMapZone.value = false
@@ -403,25 +412,31 @@ const onExploreSchools = async () => {
     await showMapAndSearch()
 }
 const onShowMapZone = () => {
-    activeView.value = VIEW_ZONE
-    searchQuery2.value = '';
-    showMap.value = false
-    showNoResultMessage.value = false
-    showMapZone.value = true
-    highlightZoneSearch.value = true;
-    isExploreSchoolsButtonDisabled.value = false;
-    isShowMapZoneButtonDisabled.value = true;
-    showSuggestions.value = false;
-    searchLocationResults.value = [];
-    setTimeout(() => {
-        highlightZoneSearch.value = false;
-    }, 3000);
+    buttonClickTime.value++;
+    if (buttonClickTime.value === 1) {
+        canSchoolZoneDesripBeChecked.value = true
+        activeView.value = VIEW_ZONE
+        searchQuery2.value = '';
+        showMap.value = false
+        showNoResultMessage.value = false
+        showMapZone.value = true
+        highlightZoneSearch.value = true;
+        isExploreSchoolsButtonDisabled.value = false;
+        isShowMapZoneButtonDisabled.value = true;
+        showSuggestions.value = false;
+        searchLocationResults.value = [];
+        setTimeout(() => {
+            highlightZoneSearch.value = false;
+        }, 3000);
 
-    nextTick(() => {
-        const el = document.getElementById('map-zone-section')
-        if (el) el.scrollIntoView({ behavior: 'smooth' })
-    })
-    getLocation();
+        nextTick(() => {
+            const el = document.getElementById('map-zone-section')
+            if (el) el.scrollIntoView({ behavior: 'smooth' })
+        })
+
+        getLocation();
+    }
+
 }
 
 const getLocation = () => {
