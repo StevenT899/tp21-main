@@ -200,17 +200,11 @@
             </div>
         </div>
 
-        <!-- Toast Notification -->
         <transition name="fade">
-            <div v-if="toast.show" :class="[
-                'fixed top-6 left-1/2 transform -translate-x-1/2',
-                'px-6 py-4 rounded-xl shadow-lg text-white z-50 text-lg max-w-xl w-full text-center',
-                toast.type === 'success' ? 'bg-green-600' :
-                    toast.type === 'warning' ? 'bg-yellow-500' :
-                        'bg-red-600']">
-                {{ toast.message }}
-            </div>
-        </transition>
+      <div v-if="toast.show" :class="['toast', toast.type]">
+        {{ toast.message }}
+      </div>
+    </transition>
     </div>
 </template>
 
@@ -221,6 +215,7 @@ import GenderChartInDetailPage from '@/components/GenderChartInDetailPage.vue'
 import LanguageChartInDetailPage from '@/components/LanguageChartInDetailPage.vue'
 import { point, polygon, booleanPointInPolygon } from '@turf/turf';
 import { useI18n } from 'vue-i18n';
+import '../assets/toast.css'
 const { t } = useI18n();
 
 const locationStatus = ref('')

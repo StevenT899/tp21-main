@@ -68,6 +68,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import selfIcon from '@/assets/images/self_position.png';
 import schoolIcon from '@/assets/images/school.png';
 import { useI18n } from 'vue-i18n'
+import '@/assets/toast.css'
 
 const { t } = useI18n();
 const emit = defineEmits(['locationObtained']);
@@ -411,46 +412,5 @@ function getCurrentLocation() {
   border-left: 1px solid #ddd;
   padding: 20px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-
-/* Toast Notification */
-.toast {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 20px;
-  border-radius: 5px;
-  color: #fff;
-  font-size: 14px;
-  text-align: center;
-  z-index: 1000;
-}
-
-.toast.success {
-  background-color: #4CAF50;
-}
-
-.toast.error {
-  background-color: #f44336;
-}
-
-.toast.info {
-  background-color: #2196F3;
-}
-
-.toast.warning {
-  background-color: #ff9800;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>

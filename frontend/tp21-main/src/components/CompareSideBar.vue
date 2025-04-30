@@ -61,6 +61,7 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import '../assets/toast.css'
 
 
 const emit = defineEmits(['rm', 'rma'])
@@ -191,35 +192,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Toast Notification */
-.toast {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 20px;
-  border-radius: 5px;
-  color: #fff;
-  font-size: 14px;
-  text-align: center;
-  z-index: 1000;
-}
-
-.toast.success {
-  background-color: #4CAF50;
-}
-
-.toast.error {
-  background-color: #f44336;
-}
-
-.toast.info {
-  background-color: #2196F3;
-}
-
-.toast.warning {
-  background-color: #ff9800;
-}
 
 /* Compare Sidebar Container */
 .compare-sidebar-container {
@@ -377,7 +349,7 @@ onUnmounted(() => {
   /* Remove All Button & Compare Button */
   .remove-all-button,
   .compare-button {
-    padding: 0.25rem 0.8rem;
+  padding: 0.25rem 0.8rem;
   font-size: 0.8rem;
   border-radius: 0.25rem;
   transition: all 0.18s;
@@ -425,7 +397,7 @@ onUnmounted(() => {
 
   .remove-all-button,
   .compare-button {
-    padding: 0.25rem 0.8rem;
+  padding: 0.25rem 0.8rem;
   font-size: 0.8rem;
   border-radius: 0.25rem;
   transition: all 0.18s;
