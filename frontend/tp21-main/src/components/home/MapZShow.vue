@@ -195,7 +195,7 @@ onMounted(() => {
     style: 'mapbox://styles/mapbox/streets-v11',
     center: [144.9631, -37.8136],
     zoom: 11,
-    maxZoom: 14
+    maxZoom: 12
   });
 
   // Add navigation control
@@ -255,7 +255,6 @@ function initializeSearchPoint() {
         'icon-allow-overlap': true
       }
     });
-
   });
 }
 
