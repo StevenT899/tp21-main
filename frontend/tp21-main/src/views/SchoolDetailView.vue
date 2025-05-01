@@ -135,12 +135,20 @@
                     </button>
                 </div>
             </div>
+
             <div class="grid grid-cols-4 gap-4 text-center">
-                <span v-for="(lang, index) in school?.languages || []" :key="index"
-                    class="px-3 py-1 text-md bg-blue-400 text-white rounded">
+                <span
+                    v-for="(lang, index) in school?.languages || []"
+                    :key="index"
+                    class="px-3 py-1 text-md bg-blue-400 text-white rounded"
+                >
                     {{ $t(`languages.${lang}`) || lang }}
                 </span>
-                <span v-if="!(school?.languages && school.languages.length)" class="py-1 text-lg text-gray-700 rounded">
+                
+                <span
+                    v-if="!(school?.languages && school.languages.length)"
+                    class="col-span-4 text-left py-1 text-lg text-gray-700 rounded"
+                >
                     {{ $t('SchoolDetail.languageProgram.noLanguages') }}
                 </span>
             </div>
