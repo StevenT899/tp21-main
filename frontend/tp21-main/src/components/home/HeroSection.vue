@@ -1,3 +1,15 @@
+<!-- /**
+  HeroSection.vue
+ 
+  Description:
+    HeroSection contain search school and explore school features for user to search and find searching results,
+    after that, primary school information will be gotten from backend and pass to Maps to show. 
+ 
+  Key Features:
+    - Search primary schools by entering school name, suburb name or postcode.
+    - Search school zone, finding schools within specific school zone according to an address.
+    - Shearching suggestion box to prompt users.
+ / -->
 <template>
     <section class="py-12 px-6 md:px-12 lg:px-24 bg-white relative overflow-visable">
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
@@ -433,11 +445,10 @@ const onShowMapZone = () => {
             const el = document.getElementById('map-zone-section')
             if (el) el.scrollIntoView({ behavior: 'smooth' })
         })
-
+        // waiting to get address location
         setTimeout(() => {
             getLocation();
-        }, 1000); // 等待 1 秒后再获取位置
-    
+        }, 1000);
     }
 
 }
@@ -572,8 +583,6 @@ const performSearch = async () => {
         isSearching.value = false;
     }
 };
-
-
 
 const fetchZoneSchools = async () => {
     try {
