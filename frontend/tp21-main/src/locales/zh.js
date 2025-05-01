@@ -91,7 +91,7 @@ export default {
         searchPlaceholder: '输入郊区/邮编/学校名称',
         searchPlaceholder2: '输入一个地址',
         searchButton: '搜索',
-        noResult: '未找到结果，请尝试搜索别的！'
+        noResult: '未找到有效结果，请搜索其他位置'
     },
     helpSection: {
         title: '我们随时提供帮助',

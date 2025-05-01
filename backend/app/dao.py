@@ -1,6 +1,6 @@
 # app/dao.py
 from .models import School, Language, LanguageProgram, db
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 
 def fetch_all_schools():
     """
@@ -10,7 +10,7 @@ def fetch_all_schools():
         list: A list of dictionaries containing school details and languages.
     """
     # Query schools with eager loading of associated languages
-    schools = School.query.options(joinedload(School.languages)).all()
+    schools = School.query.options(selectinload(School.languages)).all()
     result = []
     for school in schools:
         result.append({
@@ -46,7 +46,7 @@ def fetch_all_zone_schools():
         list: A list of dictionaries containing school details, coordinates, and languages.
     """
     # Query schools with zone information and eager loading of languages
-    schools = db.session.query(School).join(LanguageProgram).filter(School.coordinates != None).options(joinedload(School.languages)).all()
+    schools = db.session.query(School).outerjoin(LanguageProgram).filter(School.coordinates != None, School.coordinates != '[]').options(selectinload(School.languages)).all()
     result = []
     for school in schools:
         result.append({
@@ -85,7 +85,7 @@ def fetch_zone_schools_by_name(name):
         list: A list of dictionaries containing matching school details, coordinates, and languages.
     """
     # Query schools by name with zone information and eager loading of languages
-    schools = db.session.query(School).join(LanguageProgram).join(Language).filter(School.coordinates != None).filter(School.School_Name.like(f'%{name}%')).options(joinedload(School.languages)).all()
+    schools = db.session.query(School).outerjoin(LanguageProgram).outerjoin(Language).filter(School.coordinates != None, School.coordinates != '[]', School.School_Name.ilike(f"%{name}%")).options(selectinload(School.languages)).all()
     result = []
     for school in schools:
         result.append({
@@ -125,7 +125,7 @@ def fetch_school_by_id(sid):
               or None if the school is not found.
     """
     # Query a specific school by ID with eager loading of languages
-    school = db.session.query(School).join(LanguageProgram).join(Language).filter(School.School_AGE_ID == sid).options(joinedload(School.languages)).first()
+    school = db.session.query(School).outerjoin(LanguageProgram).outerjoin(Language).filter(School.School_AGE_ID == sid).options(joinedload(School.languages)).first()
     
     if not school:
         return None
