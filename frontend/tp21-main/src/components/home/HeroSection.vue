@@ -1,3 +1,4 @@
+
 <!-- /**
   HeroSection.vue
  
@@ -10,6 +11,7 @@
     - Search school zone, finding schools within specific school zone according to an address.
     - Shearching suggestion box to prompt users.
  / -->
+
 <template>
     <section class="py-12 px-6 md:px-12 lg:px-24 bg-white relative overflow-visable">
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">

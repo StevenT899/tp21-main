@@ -29,7 +29,11 @@
         <div v-for="(school, index) in compareList" :key="school.id" class="school-card mt-1 mb-2">
           <div>
             <h3 class="school-name">{{ school.name || school.School_Name }}</h3>
-            <p class="school-sector">{{ school.type || school.sector || school.School_Sector }}</p>
+            <!-- <p class="school-sector">{{ school.type || school.sector || school.School_Sector }}</p> -->
+            <p class="school-sector">
+              {{ $t(`schoolTypes.${ school.type}`) || $t(`schoolTypes.${ school.sector}`) || $t(`schoolTypes.${ school.School_Sector}`)
+                }}
+            </p>
 
             <!-- School Suburb with SVG Icon -->
             <p class="school-suburb flex items-center">

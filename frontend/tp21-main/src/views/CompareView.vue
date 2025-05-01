@@ -294,7 +294,7 @@ const toggleModal = (modalType) => {
 const searchCompareSchools = async (index) => {
   const input = searchQueries.value[index - 1].trim().toLowerCase()
 
-  if (!input) {
+  if (!input || input.length < 3) {
     recommendedSchools.value[index - 1] = []  // Clear results if input is empty
     return
   }

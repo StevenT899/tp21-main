@@ -1,3 +1,10 @@
+<!--
+  Root application component
+  --------------------------
+  Composes the main home page layout by including:
+    • HeroSection: the primary banner with headline and search functionality
+    • HelpSection: the informational help block with guidance and signature
+-->
 <template>
   <div class="app">
     <HeroSection />

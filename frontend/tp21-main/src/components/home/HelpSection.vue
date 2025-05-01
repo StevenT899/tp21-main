@@ -1,3 +1,4 @@
+
 <!-- HelpSection.vue 
   Description:
     The HelpSection shows our team is eager to create useful website to really help users.
@@ -5,6 +6,7 @@
   Key Features:
     1. Show our team mission 
  -->
+
 <template>
     <section class="py-12 px-6 md:px-12 lg:px-24 bg-gray-50">
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">

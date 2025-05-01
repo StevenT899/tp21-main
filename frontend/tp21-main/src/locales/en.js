@@ -212,7 +212,7 @@ export default {
     CompareSideBar: {
         header: 'Added List ({count}/3)',
         schoolInfo: {
-            type: 'Type: {type}',
+            type: '{type}',
             suburb: 'Suburb: {suburb}'
         },
         removeButton: 'Remove',
