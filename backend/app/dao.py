@@ -1,296 +1,158 @@
 # app/dao.py
-import mysql.connector
-from .config import DB
-
-
-def get_conn():
-    return mysql.connector.connect(**DB)
-
+from .models import School, Language, LanguageProgram, db
+from sqlalchemy.orm import joinedload
 
 def fetch_all_schools():
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute(
-        """
-            SELECT 
-                s.School_AGE_ID, 
-                s.School_Name, 
-                s.Suburb, 
-                s.Postcode, 
-                s.School_Sector, 
-                s.School_URL, 
-                s.Year_Range, 
-                s.ICSEA, 
-                s.ICSEA_percentile,  # Make sure this is selected
-                s.Teaching_Staff, 
-                s.Non_Teaching_Staff, 
-                s.Teaching_staff_per_student, 
-                s.Girls_Enrolment, 
-                s.Boys_Enrolment, 
-                s.Total_Enrolment, 
-                s.Latitude, 
-                s.Longitude, 
-                s.SA2_ID, 
-                s.Language_Flag,
-                GROUP_CONCAT(TRIM(REPLACE(l.Language, '\r', '')) SEPARATOR ',') AS languages
-            FROM 
-                schools s
-            LEFT JOIN 
-                Language_Program lp ON s.School_AGE_ID = lp.School_AGE_ID
-            LEFT JOIN 
-                `Language` l ON lp.Language_ID = l.Language_id
-            GROUP BY 
-                s.School_AGE_ID;
-        """
-    )
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
-
+    """
+    Retrieve all schools with their associated languages.
+    
+    Returns:
+        list: A list of dictionaries containing school details and languages.
+    """
+    # Query schools with eager loading of associated languages
+    schools = School.query.options(joinedload(School.languages)).all()
     result = []
-    for row in rows:
-        result.append(
-            {
-                'School_AGE_ID': row[0],
-                'School_Name': row[1],
-                'Suburb': row[2],
-                'Postcode': row[3],
-                'School_Sector': row[4],
-                'School_URL': row[5],
-                'Year_Range': row[6],
-                'ICSEA': row[7],
-                'ICSEA_percentile': row[8],
-                'Teaching_Staff': row[9],
-                'Non_Teaching_Staff': row[10],
-                'Teaching_staff_per_student': row[11],
-                'Girls_Enrolment': row[12],
-                'Boys_Enrolment': row[13],
-                'Total_Enrolment': row[14],
-                'Latitude': row[15],
-                'Longitude': row[16],
-                'SA2_ID': row[17],
-                'Language_Flag': row[18],
-                'languages': row[19].split(',') if row[19] else []
-            }
-        )
+    for school in schools:
+        result.append({
+            'School_AGE_ID': school.School_AGE_ID,
+            'School_Name': school.School_Name,
+            'Suburb': school.Suburb,
+            'Postcode': school.Postcode,
+            'School_Sector': school.School_Sector,
+            'School_URL': school.School_URL,
+            'Year_Range': school.Year_Range,
+            'ICSEA': school.ICSEA,
+            'ICSEA_percentile': school.ICSEA_percentile,
+            'Teaching_Staff': school.Teaching_Staff,
+            'Non_Teaching_Staff': school.Non_Teaching_Staff,
+            'Teaching_staff_per_student': school.Teaching_staff_per_student,
+            'Girls_Enrolment': school.Girls_Enrolment,
+            'Boys_Enrolment': school.Boys_Enrolment,
+            'Total_Enrolment': school.Total_Enrolment,
+            'Latitude': school.Latitude,
+            'Longitude': school.Longitude,
+            'SA2_ID': school.SA2_ID,
+            'Language_Flag': school.Language_Flag,
+            'languages': [lang.Language for lang in school.languages]
+        })
     return result
+
 
 def fetch_all_zone_schools():
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute(
-        """
-            SELECT 
-                s.School_AGE_ID, 
-                s.School_Name, 
-                s.Suburb, 
-                s.Postcode, 
-                s.School_Sector, 
-                s.School_URL, 
-                s.Year_Range, 
-                s.ICSEA, 
-                s.Teaching_Staff, 
-                s.Non_Teaching_Staff, 
-                s.Teaching_staff_per_student, 
-                s.Girls_Enrolment, 
-                s.Boys_Enrolment, 
-                s.Total_Enrolment, 
-                s.Latitude, 
-                s.Longitude, 
-                s.SA2_ID, 
-                s.Language_Flag,
-                s.coordinates,
-                GROUP_CONCAT(TRIM(REPLACE(l.Language, '\r', '')) SEPARATOR ',') AS languages
-            FROM 
-                schools s
-            LEFT JOIN 
-                Language_Program lp ON s.School_AGE_ID = lp.School_AGE_ID
-            LEFT JOIN 
-                `Language` l ON lp.Language_ID = l.Language_id
-            WHERE
-                s.coordinates IS NOT NULL AND s.coordinates != '[]'
-            GROUP BY 
-                s.School_AGE_ID;
-        """
-    )
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
-
+    """
+    Retrieve schools with zone information and associated languages.
+    
+    Returns:
+        list: A list of dictionaries containing school details, coordinates, and languages.
+    """
+    # Query schools with zone information and eager loading of languages
+    schools = db.session.query(School).join(LanguageProgram).filter(School.coordinates != None).options(joinedload(School.languages)).all()
     result = []
-    for row in rows:
-        result.append(
-            {
-                "School_AGE_ID": row[0],
-                "School_Name": row[1],
-                "Suburb": row[2],
-                "Postcode": row[3],
-                "School_Sector": row[4],
-                "School_URL": row[5],
-                "Year_Range": row[6],
-                "ICSEA": row[7],
-                "Teaching_Staff": row[8],
-                "Non_Teaching_Staff": row[9],
-                "Teaching_staff_per_student": row[10],
-                "Girls_Enrolment": row[11],
-                "Boys_Enrolment": row[12],
-                "Total_Enrolment": row[13],
-                "Latitude": row[14],
-                "Longitude": row[15],
-                "SA2_ID": row[16],
-                "Language_Flag": row[17],
-                "coordinates": row[18],
-                "languages": row[19].split(",") if row[19] else [],
-            }
-        )
+    for school in schools:
+        result.append({
+            'School_AGE_ID': school.School_AGE_ID,
+            'School_Name': school.School_Name,
+            'Suburb': school.Suburb,
+            'Postcode': school.Postcode,
+            'School_Sector': school.School_Sector,
+            'School_URL': school.School_URL,
+            'Year_Range': school.Year_Range,
+            'ICSEA': school.ICSEA,
+            'Teaching_Staff': school.Teaching_Staff,
+            'Non_Teaching_Staff': school.Non_Teaching_Staff,
+            'Teaching_staff_per_student': school.Teaching_staff_per_student,
+            'Girls_Enrolment': school.Girls_Enrolment,
+            'Boys_Enrolment': school.Boys_Enrolment,
+            'Total_Enrolment': school.Total_Enrolment,
+            'Latitude': school.Latitude,
+            'Longitude': school.Longitude,
+            'SA2_ID': school.SA2_ID,
+            'Language_Flag': school.Language_Flag,
+            'coordinates': school.coordinates,
+            'languages': [lang.Language for lang in school.languages]
+        })
     return result
+
 
 def fetch_zone_schools_by_name(name):
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute(
-        """
-            SELECT 
-                s.School_AGE_ID, 
-                s.School_Name, 
-                s.Suburb, 
-                s.Postcode, 
-                s.School_Sector, 
-                s.School_URL, 
-                s.Year_Range, 
-                s.ICSEA, 
-                s.Teaching_Staff, 
-                s.Non_Teaching_Staff, 
-                s.Teaching_staff_per_student, 
-                s.Girls_Enrolment, 
-                s.Boys_Enrolment, 
-                s.Total_Enrolment, 
-                s.Latitude, 
-                s.Longitude, 
-                s.SA2_ID, 
-                s.Language_Flag,
-                s.coordinates,
-                GROUP_CONCAT(TRIM(REPLACE(l.Language, '\r', '')) SEPARATOR ',') AS languages
-            FROM 
-                schools s
-            LEFT JOIN 
-                Language_Program lp ON s.School_AGE_ID = lp.School_AGE_ID
-            LEFT JOIN 
-                `Language` l ON lp.Language_ID = l.Language_id
-            WHERE
-                s.coordinates IS NOT NULL AND s.coordinates != '[]'
-                AND s.School_Name LIKE %s
-            GROUP BY 
-                s.School_AGE_ID;
-        """, ('%' + name + '%',)
-    )
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
-
+    """
+    Retrieve schools by name with zone information and associated languages.
+    
+    Args:
+        name (str): The search term for school names.
+    
+    Returns:
+        list: A list of dictionaries containing matching school details, coordinates, and languages.
+    """
+    # Query schools by name with zone information and eager loading of languages
+    schools = db.session.query(School).join(LanguageProgram).join(Language).filter(School.coordinates != None).filter(School.School_Name.like(f'%{name}%')).options(joinedload(School.languages)).all()
     result = []
-    for row in rows:
-        result.append(
-            {
-                "School_AGE_ID": row[0],
-                "School_Name": row[1],
-                "Suburb": row[2],
-                "Postcode": row[3],
-                "School_Sector": row[4],
-                "School_URL": row[5],
-                "Year_Range": row[6],
-                "ICSEA": row[7],
-                "Teaching_Staff": row[8],
-                "Non_Teaching_Staff": row[9],
-                "Teaching_staff_per_student": row[10],
-                "Girls_Enrolment": row[11],
-                "Boys_Enrolment": row[12],
-                "Total_Enrolment": row[13],
-                "Latitude": row[14],
-                "Longitude": row[15],
-                "SA2_ID": row[16],
-                "Language_Flag": row[17],
-                "coordinates": row[18],
-                "languages": row[19].split(",") if row[19] else [],
-            }
-        )
+    for school in schools:
+        result.append({
+            'School_AGE_ID': school.School_AGE_ID,
+            'School_Name': school.School_Name,
+            'Suburb': school.Suburb,
+            'Postcode': school.Postcode,
+            'School_Sector': school.School_Sector,
+            'School_URL': school.School_URL,
+            'Year_Range': school.Year_Range,
+            'ICSEA': school.ICSEA,
+            'Teaching_Staff': school.Teaching_Staff,
+            'Non_Teaching_Staff': school.Non_Teaching_Staff,
+            'Teaching_staff_per_student': school.Teaching_staff_per_student,
+            'Girls_Enrolment': school.Girls_Enrolment,
+            'Boys_Enrolment': school.Boys_Enrolment,
+            'Total_Enrolment': school.Total_Enrolment,
+            'Latitude': school.Latitude,
+            'Longitude': school.Longitude,
+            'SA2_ID': school.SA2_ID,
+            'Language_Flag': school.Language_Flag,
+            'coordinates': school.coordinates,
+            'languages': [lang.Language for lang in school.languages]
+        })
     return result
 
+
 def fetch_school_by_id(sid):
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute(
-        """
-            SELECT 
-                s.School_AGE_ID, 
-                s.School_Name, 
-                s.Suburb, 
-                s.Postcode, 
-                s.School_Sector, 
-                s.School_URL, 
-                s.Year_Range, 
-                s.ICSEA, 
-                s.ICSEA_percentile,  # Include ICSEA_percentile
-                s.Teaching_Staff, 
-                s.Non_Teaching_Staff, 
-                s.Teaching_staff_per_student, 
-                s.Girls_Enrolment, 
-                s.Boys_Enrolment, 
-                s.Total_Enrolment, 
-                s.Latitude, 
-                s.Longitude, 
-                s.SA2_ID, 
-                s.Language_Flag,
-                s.English,
-                s.not_English,
-                s.not_stated,
-                GROUP_CONCAT(TRIM(REPLACE(l.Language, '\r', '')) SEPARATOR ',') AS languages,
-                s.Latitude, 
-                s.Longitude,
-                s.coordinates
-            FROM 
-                schools s
-            LEFT JOIN 
-                Language_Program lp ON s.School_AGE_ID = lp.School_AGE_ID
-            LEFT JOIN 
-                `Language` l ON lp.Language_ID = l.Language_id
-            WHERE 
-                s.School_AGE_ID = %s
-            GROUP BY 
-                s.School_AGE_ID;
-        """,
-        (sid,),
-    )
-    row = cur.fetchone()
-    cur.close()
-    conn.close()
-    if not row:
+    """
+    Retrieve a single school by its ID with detailed information.
+    
+    Args:
+        sid (int): The unique identifier for the school.
+    
+    Returns:
+        dict: A dictionary containing detailed school information and languages,
+              or None if the school is not found.
+    """
+    # Query a specific school by ID with eager loading of languages
+    school = db.session.query(School).join(LanguageProgram).join(Language).filter(School.School_AGE_ID == sid).options(joinedload(School.languages)).first()
+    
+    if not school:
         return None
+    
     return {
-         'School_AGE_ID': row[0],
-                'School_Name': row[1],
-                'Suburb': row[2],
-                'Postcode': row[3],
-                'School_Sector': row[4],
-                'School_URL': row[5],
-                'Year_Range': row[6],
-                'ICSEA': row[7],
-                'ICSEA_percentile': row[8],  
-                'Teaching_Staff': row[9],
-                'Non_Teaching_Staff': row[10],
-                'Teaching_staff_per_student': row[11],
-                'Girls_Enrolment': row[12],
-                'Boys_Enrolment': row[13],
-                'Total_Enrolment': row[14],
-                'Latitude': row[15],
-                'Longitude': row[16],
-                'SA2_ID': row[17],
-                'Language_Flag': row[18],
-                'English': row[19],
-                'not_English': row[20],
-                'not_stated': row[21],
-                'languages': row[22].split(',') if row[22] else [],
-                'Latitude' : row[23],
-                'Longitude': row[24],
-                'coordinates': row[25]
+        'School_AGE_ID': school.School_AGE_ID,
+        'School_Name': school.School_Name,
+        'Suburb': school.Suburb,
+        'Postcode': school.Postcode,
+        'School_Sector': school.School_Sector,
+        'School_URL': school.School_URL,
+        'Year_Range': school.Year_Range,
+        'ICSEA': school.ICSEA,
+        'ICSEA_percentile': school.ICSEA_percentile,
+        'Teaching_Staff': school.Teaching_Staff,
+        'Non_Teaching_Staff': school.Non_Teaching_Staff,
+        'Teaching_staff_per_student': school.Teaching_staff_per_student,
+        'Girls_Enrolment': school.Girls_Enrolment,
+        'Boys_Enrolment': school.Boys_Enrolment,
+        'Total_Enrolment': school.Total_Enrolment,
+        'Latitude': school.Latitude,
+        'Longitude': school.Longitude,
+        'SA2_ID': school.SA2_ID,
+        'Language_Flag': school.Language_Flag,
+        'English': school.English,
+        'not_English': school.not_English,
+        'not_stated': school.not_stated,
+        'languages': [lang.Language for lang in school.languages],
+        'coordinates': school.coordinates
     }

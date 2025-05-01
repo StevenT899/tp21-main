@@ -10,8 +10,5 @@ DB = {
     'database': cfg.get('mysql', 'database'),
 }
 
-SQLALCHEMY_DATABASE_URI = f"mysql+mysqlconnector://{DB['user']}:{DB['password']}@{DB['host']}/{DB['database']}"
-SQLALCHEMY_TRACK_MODIFICATIONS = False  # Disable object modification tracking to save memory.
-
 VALID_USERNAME = cfg.get('login', 'username')
 VALID_PASSWORD = cfg.get('login', 'password')
