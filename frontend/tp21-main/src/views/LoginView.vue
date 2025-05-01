@@ -1,3 +1,12 @@
+<!-- /**
+  Login.vue
+ 
+  Description:
+    Renders the sign-in form for users, including username and password inputs,
+    and a submit button to authenticate via API.
+
+ / -->
+
 <template>
     <div class="login-container">
         <div class="card">

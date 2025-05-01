@@ -1,3 +1,19 @@
+<!-- /**
+  MapZShow.vue
+ 
+  Description:
+    Displays an interactive Mapbox GL map with a school zone polygon, user location marker, and school markers.
+    Users can click on schools to view details in a popup, add them to a comparison sidebar, and request their current location.
+ 
+  Key Features:
+    - Renders zone polygon and search-point layers from `polygonValue` and `coordinates` props
+    - Loads and updates school markers from the `schools` prop with custom icons
+    - Clickable popups showing school name, type, languages, and add-to-compare controls
+    - CompareSideBar component for managing up to three selected schools with remove-all and remove-single actions
+    - Button to fetch and emit the user’s current geolocation via `locationObtained` event
+    - Toast notifications for success, warning, and error feedback on add/remove operations
+ / -->
+
 <template>
   <div class="map-outer-container flex">
     <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300" style="height: 500px;">

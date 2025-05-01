@@ -1,3 +1,9 @@
+<!-- /**
+  Navbar.vue
+ 
+  Description:
+   Navigation bar component for the application, providing links to different sections
+ / -->
 <template>
     <!-- Navigation Bar -->
     <nav class="bg-blue-600 text-white py-3 px-6 flex items-center justify-between">

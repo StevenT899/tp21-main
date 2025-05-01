@@ -1,3 +1,10 @@
+<!-- /**
+  GenderBarChart.vue
+ 
+  Description:
+    Renders a stacked bar chart showing the gender distribution of students (girls vs boys)
+    using ECharts, displayed in CompareView.
+ / -->
 <template>
   <!-- Gender distribution chart using ECharts -->
   <v-chart

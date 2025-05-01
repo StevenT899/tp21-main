@@ -1,3 +1,12 @@
+<!-- /**
+  LanguageBarChart.vue
+ 
+  Description:
+    Renders a vertical stacked bar chart showing student language background distribution 
+    (English, non-English, and not stated) using ECharts, displayed in CompareView.
+
+ / -->
+
 <template>
   <!-- Vertical stacked bar chart showing language background data -->
   <v-chart :option="chartOptions" autoresize style="height: 380px; width: 180px; margin: auto;" />

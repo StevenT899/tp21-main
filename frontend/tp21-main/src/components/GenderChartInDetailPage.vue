@@ -1,3 +1,11 @@
+<!-- /**
+  GenderBarChartInDetailPage.vue
+ 
+  Description:
+    Renders a stacked bar chart showing the gender distribution of students (girls vs boys)
+    using ECharts, displayed in SchoolDetailView.
+ / -->
+
 <template>
   <!-- Gender distribution chart using ECharts -->
   <v-chart :option="chartOptions" autoresize style="height: 200px; width: 100%; margin: auto;" />

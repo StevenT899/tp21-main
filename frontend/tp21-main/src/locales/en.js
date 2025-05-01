@@ -40,7 +40,7 @@ export default {
     chart: {
         labels: {
             notStated: "Not Stated",
-            englishBackground: "From English Background'",
+            englishBackground: "From English Background",
             otherLanguagesBackground: "From Other Languages Background"
         },
         languages: {

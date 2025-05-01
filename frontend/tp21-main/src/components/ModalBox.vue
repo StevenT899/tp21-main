@@ -1,3 +1,16 @@
+<!-- /**
+  ModalBox.vue
+ 
+  Description:
+    Renders modal dialogs for language program details, ICSEA information, and school zone descriptions.
+ 
+  Key Features:
+    - Supports three modal types: 'lp' (language program), 'icsea', and 'ss' (school zone)
+    - Semi-transparent blurred backdrop overlay with centered dialog box
+    - Localized titles, descriptions, and buttons via vue-i18n keys
+    - Toggles visibility through the exposed `toggleModal` method
+ / -->
+
 <template>
 
   <div> <!-- Modal for language -->

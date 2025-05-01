@@ -1,3 +1,19 @@
+<!-- /**
+  MapShow.vue
+ 
+  Description:
+    Renders the interactive school map page, allowing users to search, filter, and compare schools.
+ 
+  Key Features:
+    - Mapbox GL map displaying school markers with custom icons
+    - Filter controls for school type and language program with apply/reset actions
+    - Search integration for school names, suburbs, and postcodes
+    - Clickable markers opening popups with school details and add-to-compare functionality
+    - CompareSideBar component to manage up to three selected schools
+    - ModalBox for displaying informational modals (language program, ICSEA, school zone)
+    - Toast notifications for feedback on add/remove/filter actions
+    - Responsive layout with sidebar toggle and map instructions
+ / -->
 <template>
   <div class="map-container relative">
     <!--Filter + Reset + Sidebar -->

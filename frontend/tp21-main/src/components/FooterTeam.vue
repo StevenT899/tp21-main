@@ -1,3 +1,10 @@
+<!-- /**
+  Footer.vue
+ 
+  Description:
+    Renders the global page footer, including localized acknowledgment message.
+ / -->
+ 
 <template>
     <!-- Footer -->
     <footer class="py-8 px-6 md:px-12 lg:px-24 bg-white border-t  border-gray-400">

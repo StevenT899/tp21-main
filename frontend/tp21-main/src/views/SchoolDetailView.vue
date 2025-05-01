@@ -1,3 +1,21 @@
+<!-- /**
+  SchoolDetail.vue
+ 
+  Description:
+    Renders detailed information for a single school, including its name, location, website link,
+    and options to add the school to the comparison list. Provides real-time zone checking
+    against the user’s current location and displays in-zone/out-of-zone status.
+ 
+  Key Features:
+    - Header with school name, suburb, postcode, and external website link
+    - “Add to Compare” button with sessionStorage management and toast notifications
+    - “Use Location” button that prompts for geolocation and checks against the schoolzone’s polygon
+    - Displays school type, year range, and ICSEA score (with informational modal)
+    - Language program section with modal details and chart of student language backgrounds
+    - Staff and enrolment section showing teaching/non-teaching counts, total enrolment,
+      student-per-staff ratio, gender distribution chart, and student cultural background chart
+ / -->
+
 <template>
     <div class="max-w-4xl mx-auto px-6 py-6 space-y-6">
         <!-- Header -->
@@ -117,9 +135,9 @@
                     </button>
                 </div>
             </div>
-            <div class="flex flex-wrap gap-2">
+            <div class="grid grid-cols-4 gap-4 text-center">
                 <span v-for="(lang, index) in school?.languages || []" :key="index"
-                    class="px-3 py-1 text-sm bg-blue-400 text-white rounded">
+                    class="px-3 py-1 text-md bg-blue-400 text-white rounded">
                     {{ $t(`languages.${lang}`) || lang }}
                 </span>
                 <span v-if="!(school?.languages && school.languages.length)" class="py-1 text-lg text-gray-700 rounded">

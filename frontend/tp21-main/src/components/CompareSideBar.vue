@@ -1,3 +1,21 @@
+<!-- CompareSideBar.vue 
+  Description:
+    The CompareSideBar component displays the user’s selected schools in a sidebar.
+    It provides controls to remove individual schools, clear all selections, and navigate to the comparison page,
+    with toast notifications for each action.
+ 
+  Key Features:
+    1. Loads and syncs the compareList from sessionStorage.
+    2. removeFromCompare(index): removes a single school, updates storage, and emits 'rm'.
+    3. removeAll(): clears all schools, updates storage, and emits 'rma'.
+    4. Listens for and dispatches 'compareListUpdated' custom events to keep components in sync.
+    5. Adds/removes storage and compareListUpdated event listeners on mount and unmount.
+    6. “Compare Now” button routes to '/compare' and scrolls to the top.
+ 
+  Emits:
+    - rm  : emitted when a single school is removed.
+    - rma : emitted when all schools are removed. -->
+
 <template>
   <div class="compare-sidebar-container">
     <div v-if="compareList.length > 0" class="compare-content">

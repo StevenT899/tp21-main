@@ -1,3 +1,24 @@
+<!--
+  CompareView.vue
+ 
+  Description:
+    Renders the school comparison page where users can view up to three selected schools side by side.
+    Each school card displays key details (name, location, type, year range, language programs, ICSEA, enrolment),
+    interactive gender and language distribution charts, and controls to remove or add schools.
+    Placeholder cards allow searching and adding new schools. Removal actions are confirmed via modal dialogs,
+    informational modals expose details for language programs and ICSEA, and toast notifications provide feedback.
+ 
+  Key Features:
+    - Loads and displays up to three schools from sessionStorage.
+    - Placeholder slots for adding schools via live search and recommendations.
+    - Removal confirmation modal for individual schools.
+    - Informational modals for language program and ICSEA explanations.
+    - Toast notifications for success and error events.
+ / -->
+
+
+
+
 <template>
   <div class="min-h-screen bg-gray-50 p-8 mx-auto max-w-[1400px]">
     <!-- Page Header -->

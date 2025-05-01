@@ -1,3 +1,12 @@
+<!-- /**
+  LanguageBarChart.vue
+ 
+  Description:
+    Renders a vertical stacked bar chart showing student language background distribution 
+    (English, non-English, and not stated) using ECharts, displayed in SchoolDetailView.
+
+ / -->
+
 <template>
   <!-- Cultural Background Chart -->
   <v-chart :option="chartOptions" autoresize style="height: 200px; width: 100%; margin: auto;" />
