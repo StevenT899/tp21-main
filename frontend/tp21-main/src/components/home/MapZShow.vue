@@ -15,8 +15,38 @@
  / -->
 
 <template>
+
+<div class="flex items-center flex-wrap mb-2">
+  <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500 me-2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg> -->
+
+      <svg class= "me-2" width="27" height="25" viewBox="0 0 27 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.5 16.6666V12.5M13.5 8.33331H13.5113M24.75 12.5C24.75 18.2529 19.7132 22.9166 13.5 22.9166C7.2868 22.9166 2.25 18.2529 2.25 12.5C2.25 6.74701 7.2868 2.08331 13.5 2.08331C19.7132 2.08331 24.75 6.74701 24.75 12.5Z" stroke="#757575" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+        <span>{{ $t('MapShow.mapInstruction1') }} </span>
+        <img
+          :src="schoolIcon"
+          alt="School Icon"
+          class="w-5 h-5 mx-1 ms-2 me-2"
+        />
+        <span>{{ $t('MapShow.mapInstruction2') }} </span>
+        <div class="rounded-md p-2 text-center text-sm ms-2 me-2" style="background-color: #EBF1FA;">
+              {{ $t(`MapShow.mapInstruction4`) }}
+        </div>
+        <span>{{ $t('MapShow.mapInstruction3') }} </span>
+      </div>
+      <span class="mb-2 ms-9">{{ $t('MapShow.mapInstruction5') }} </span>
+
   <div class="map-outer-container flex">
+
+    
     <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300" style="height: 500px;">
+      
       <div id="map" class="w-full h-full"></div>
       <!-- Popup -->
       <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg"

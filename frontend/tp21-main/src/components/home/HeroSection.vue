@@ -23,7 +23,7 @@
                 <p class="font-semibold text-lg mb-4">{{ $t('homeView.heroStart') }}</p>
 
                 <!-- schools / school zone -->
-                <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                <div class="flex flex-col sm:flex-row mb-8">
                     <button @click="onExploreSchools" :class="activeView === 1
                         ? 'bg-blue-600 text-white'
                         : 'bg-gray-200 text-gray-700'" class="py-2 px-6 rounded-md transition-colors">

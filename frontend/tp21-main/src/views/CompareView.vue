@@ -22,9 +22,23 @@
 <template>
   <div class="min-h-screen bg-gray-50 p-8 mx-auto max-w-[1400px]">
     <!-- Page Header -->
-    <div class="text-start mb-10">
+    <div class="text-start mb-5">
       <h1 class="text-3xl font-semibold text-blue-600 mb-2">{{ $t('compareView.pageHeader.title') }}</h1>
       <p class="text-lg text-gray-600">{{ $t('compareView.pageHeader.description') }}</p>
+
+      <div class="map-instruction flex items-center gap-2 mb-2 pr-40 mt-1">
+        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg> -->
+        <svg width="27" height="25" viewBox="0 0 27 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.5 16.6666V12.5M13.5 8.33331H13.5113M24.75 12.5C24.75 18.2529 19.7132 22.9166 13.5 22.9166C7.2868 22.9166 2.25 18.2529 2.25 12.5C2.25 6.74701 7.2868 2.08331 13.5 2.08331C19.7132 2.08331 24.75 6.74701 24.75 12.5Z" stroke="#757575" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+        <span>{{ $t('compareView.pageHeader.description2') }}</span>
+      </div>
+
     </div>
 
     <!-- School Comparison Cards -->

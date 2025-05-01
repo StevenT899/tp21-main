@@ -130,7 +130,11 @@ export default {
             reset: "Reset",
             all: "ALL"
         },
-        mapInstruction: "Click on any school icon on the map to preview key info and add to compare.",
+        mapInstruction1: "Click on any ",
+        mapInstruction2: "icon on the map to preview key info including",
+        mapInstruction3: "and add to compare.",
+        mapInstruction4: "Language Program",
+        mapInstruction5: "School zone boundaries apply to the 2026 intake year.",
         schoolPopup: {
             viewDetails: "View details",
             addToCompare: "Add to compare",
@@ -170,7 +174,9 @@ export default {
     compareView: {
         pageHeader: {
             title: 'COMPARE YOUR SELECTED SCHOOLS',
-            description: 'You can select up to 3 schools. See how they compare side-by-side.'
+            description: 'You can select up to 3 schools. See how they compare side-by-side.',
+            description2: 'School data reflects the status as of 2024, based on official datasets.'
+
         },
         schoolCard: {
             removeButton: 'Remove School',

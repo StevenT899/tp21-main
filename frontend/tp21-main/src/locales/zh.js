@@ -129,7 +129,11 @@ export default {
             reset: "重置",
             all: "全部"
         },
-        mapInstruction: "点击地图上的任何学校图标以预览关键信息并添加到比较列表中。",
+        mapInstruction1: "点击地图上的任何",
+        mapInstruction2: "学校图标以预览关键信息，包括",
+        mapInstruction3: "并添加到比较列表中。",
+        mapInstruction4: "语言课程",
+        mapInstruction5: "学校区域的划定范围适用于2026年入学年份",
         schoolPopup: {
             viewDetails: "查看详情",
             addToCompare: "添加到比较",
@@ -169,7 +173,8 @@ export default {
     compareView: {
         pageHeader: {
             title: '比较你选择的学校',
-            description: '你最多可以选择3所学校，横向对比他们之间的区别。'
+            description: '你最多可以选择3所学校，横向对比他们之间的区别。',
+            description2: '学校数据基于官方的数据集反映了2024年的情况'
         },
         schoolCard: {
             removeButton: '移除学校',

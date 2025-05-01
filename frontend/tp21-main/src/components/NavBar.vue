@@ -20,8 +20,14 @@
             </router-link>
         </div>
         <div class="flex-grow flex items-center justify-center space-x-6 hidden md:flex">
-            <router-link to="/home" class="hover:underline">{{ $t('nav.home') }}</router-link>
-            <router-link to="/compare" class="hover:underline">{{ $t('nav.compare') }}</router-link>
+            <router-link to="/home" class="hover:underline" 
+                active-class="underline" exact>
+                {{ $t('nav.home') }}
+            </router-link>
+            <router-link to="/compare" class="hover:underline"
+                active-class="underline" exact>
+                {{ $t('nav.compare') }}
+            </router-link>
             <a href="#" class="hover:underline">{{ $t('nav.journey') }}</a>
             <a href="#" class="hover:underline">{{ $t('nav.support') }}</a>
         </div>
