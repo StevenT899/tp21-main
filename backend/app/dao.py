@@ -1,6 +1,6 @@
 # app/dao.py
 from .models import School, Language, LanguageProgram, db
-from sqlalchemy.orm import joinedload, selectinload
+from sqlalchemy.orm import joinedload, selectinload, load_only
 
 def fetch_all_schools():
     """
@@ -10,7 +10,19 @@ def fetch_all_schools():
         list: A list of dictionaries containing school details and languages.
     """
     # Query schools with eager loading of associated languages
-    schools = School.query.options(selectinload(School.languages)).all()
+    schools = School.query.options(
+        load_only(
+            School.School_AGE_ID, 
+            School.School_Name, 
+            School.Suburb,
+            School.Postcode,
+            School.School_Sector,
+            School.Latitude,
+            School.Longitude,
+            School.Language_Flag
+        ),
+        selectinload(School.languages).load_only(Language.Language)
+    ).all()
     result = []
     for school in schools:
         result.append({
@@ -19,19 +31,8 @@ def fetch_all_schools():
             'Suburb': school.Suburb,
             'Postcode': school.Postcode,
             'School_Sector': school.School_Sector,
-            'School_URL': school.School_URL,
-            'Year_Range': school.Year_Range,
-            'ICSEA': school.ICSEA,
-            'ICSEA_percentile': school.ICSEA_percentile,
-            'Teaching_Staff': school.Teaching_Staff,
-            'Non_Teaching_Staff': school.Non_Teaching_Staff,
-            'Teaching_staff_per_student': school.Teaching_staff_per_student,
-            'Girls_Enrolment': school.Girls_Enrolment,
-            'Boys_Enrolment': school.Boys_Enrolment,
-            'Total_Enrolment': school.Total_Enrolment,
             'Latitude': school.Latitude,
             'Longitude': school.Longitude,
-            'SA2_ID': school.SA2_ID,
             'Language_Flag': school.Language_Flag,
             'languages': [lang.Language for lang in school.languages]
         })
