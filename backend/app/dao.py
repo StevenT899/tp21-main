@@ -1,5 +1,5 @@
 # app/dao.py
-from .models import School, Language, LanguageProgram, db
+from .models import School, Language, LanguageProgram, Article, db
 from sqlalchemy.orm import joinedload, selectinload, load_only
 
 def fetch_all_schools():
@@ -157,3 +157,45 @@ def fetch_school_by_id(sid):
         'languages': [lang.Language for lang in school.languages],
         'coordinates': school.coordinates
     }
+
+def fetch_all_articles():
+    """
+    Retrieve all QA articles with selected fields.
+    Returns:
+        list: A list of dictionaries containing article details.
+    """
+    articles = Article.query.options(
+        load_only(
+            Article.ID,
+            Article.topic,
+            Article.content,
+            Article.reference,
+            Article.licence
+        )
+    ).all()
+    result = []
+    for article in articles:
+        result.append({
+            'ID': article.ID,
+            'topic': article.topic,
+            'content': article.content,
+            'reference': article.reference,
+            'licence': article.licence
+        })
+    return result
+
+def fetch_article_by_id(article_id):
+    """
+    Retrieve a single QA article by its ID.
+    Returns:
+        Article or None
+    """
+    return Article.query.options(
+        load_only(
+            Article.ID,
+            Article.topic,
+            Article.content,
+            Article.reference,
+            Article.licence
+        )
+    ).get(article_id)
