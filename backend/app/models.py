@@ -44,3 +44,13 @@ class LanguageProgram(db.Model):
     
     School_AGE_ID = db.Column(db.Integer, db.ForeignKey('schools.School_AGE_ID'), primary_key=True)
     Language_ID = db.Column(db.Integer, db.ForeignKey('Language.Language_ID'), primary_key=True)
+
+class Article(db.Model):
+    """QA_Article table for school support articles"""
+    __tablename__ = 'QA_Article'
+
+    ID = db.Column(db.Integer, primary_key=True)
+    topic = db.Column(db.Text, nullable = True)
+    content = db.Column(db.Text, nullable = True)
+    reference = db.Column(db.Text, nullable = True)
+    licence = db.Column(db.Text, nullable = True)
