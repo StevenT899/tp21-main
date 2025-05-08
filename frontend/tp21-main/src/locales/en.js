@@ -279,5 +279,49 @@ export default {
         },
         icseaTitle: "Index of Community Socio-Educational Advantage (ICSEA)",
         icseaInfo: 'Higher than {percentile}% of primary schools in Victoria',
-    }
+    },
+    journeyView: {
+        pageHeader: {
+            title: 'YOUR CHILD\'S EDUCATIONAL JOURNEY IN VICTORIA',
+            description: 'Not sure what lies ahead in your child\'s school years? This page shows you the key stages in Victoria\'s education system — from Prep to primary and beyond — so you can feel more prepared to support your child every step of the way.',
+            description2: 'School data reflects the status as of 2024, based on official datasets.'
+
+        },
+        schoolCard: {
+            removeButton: 'Remove School',
+            visitWebsite: 'Visit school website',
+            schoolType: 'School Type',
+            yearRange: 'Year Range',
+            languageProgram: 'Language Program',
+            none: 'None',
+            studentPerStaff: 'Student Per Teaching Staff',
+            icsea: 'Index of Community Socio-Educational Advantage (ICSEA)',
+            icseaTooltip: 'ICSEA reflects the socio-educational background of students. The average is 1000. Higher scores indicate greater advantage.',
+            enrolments: 'Enrolments',
+            totalEnrolment: 'Total enrolment:',
+            searchToAdd: 'Search To Add A School',
+            searchPlaceholder: 'Enter school name ',
+            addToCompare: 'Add to compare'
+        },
+        confirmationModal: {
+            title: 'Remove School',
+            message: 'Are you sure you want to remove this school from the comparison?',
+            remove: 'Remove',
+            cancel: 'Cancel'
+        },
+        toast: {
+            success: 'Success message (you can customize this)',
+            warning: 'Warning message (you can customize this)'
+        },
+        languageProgram: {
+            title: 'What is a Language Program?',
+            description: 'A language program in government primary schools offers students the opportunity to learn a language other than English. These programs help students develop language skills, support cultural diversity.',
+            readMore: 'Read More'
+        },
+        icseaModal: {
+            title: 'What is an ICSEA?',
+            description: 'ICSEA is a number that shows the average education and income background of families at a school. It helps give context, but it’s not a score of how “good” a school is.',
+            readMore: 'Read More'
+        },
+    },
 };

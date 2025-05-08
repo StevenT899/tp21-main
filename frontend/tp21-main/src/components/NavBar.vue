@@ -28,7 +28,8 @@
                 active-class="underline" exact>
                 {{ $t('nav.compare') }}
             </router-link>
-            <a href="#" class="hover:underline">{{ $t('nav.journey') }}</a>
+            <router-link to="/journey" class="hover:underline"
+                active-class="underline" exact>{{ $t('nav.journey') }}</router-link>
             <a href="#" class="hover:underline">{{ $t('nav.support') }}</a>
         </div>
         <div class="flex items-center space-x-2 md:space-x-4">

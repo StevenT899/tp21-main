@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue';
 import CompareView from '../views/CompareView.vue';
 import LoginView from '../views/LoginView.vue';
 import SchoolDetailView from '@/views/SchoolDetailView.vue';
+import JourneyView from '@/views/JourneyView.vue';
 
 const routes = [
   {
@@ -24,6 +25,12 @@ const routes = [
     path: '/compare',
     name: 'Compare',
     component: CompareView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/journey',
+    name: 'Journey',
+    component: JourneyView,
     meta: { requiresAuth: true }
   },
   {
