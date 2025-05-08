@@ -2,83 +2,49 @@
   <div class="journey-container" :class="{ 'zh': currentLanguage === 'zh' }">
     <!-- 语言切换按钮 -->
     <div class="language-toggle">
-      <button 
-        @click="changeLanguage('en')" 
-        class="lang-btn" 
-        :class="{ 'active': currentLanguage === 'en' }"
-      >
+      <button @click="changeLanguage('en')" class="lang-btn" :class="{ 'active': currentLanguage === 'en' }">
         English
       </button>
-      <button 
-        @click="changeLanguage('zh')" 
-        class="lang-btn" 
-        :class="{ 'active': currentLanguage === 'zh' }"
-      >
+      <button @click="changeLanguage('zh')" class="lang-btn" :class="{ 'active': currentLanguage === 'zh' }">
         中文
       </button>
     </div>
-    
+
     <div class="journey-intro">
       <h2 class="journey-title">{{ translations[currentLanguage].title }}</h2>
       <p class="journey-subtitle">{{ translations[currentLanguage].subtitle }}</p>
-      
+
       <!-- 袋鼠指导角色 -->
       <div class="kangaroo-guide" @click="toggleSpeech">
         <div class="kangaroo-image"></div>
       </div>
-      
+
       <div class="speech-bubble" :class="{ 'active': speechActive }" ref="speechBubble">
         {{ currentSpeech }}
       </div>
-      
+
       <div class="tutorial-hint">
         <i class="material-icons">touch_app</i>
         <span>{{ translations[currentLanguage].tutorial }}</span>
       </div>
     </div>
-    
+
     <!-- 时间轴容器，带导航按钮 -->
     <div class="timeline-container">
       <div class="timeline-nav">
-        <button 
-          class="nav-button" 
-          :disabled="isScrollStart" 
-          @click="scrollTimeline(-1)"
-        >
+        <button class="nav-button" :disabled="isScrollStart" @click="scrollTimeline(-1)">
           <i class="material-icons">chevron_left</i>
         </button>
-        <button 
-          class="nav-button" 
-          :disabled="isScrollEnd" 
-          @click="scrollTimeline(1)"
-        >
+        <button class="nav-button" :disabled="isScrollEnd" @click="scrollTimeline(1)">
           <i class="material-icons">chevron_right</i>
         </button>
       </div>
-      
-      <div 
-        class="flat-timeline" 
-        ref="timeline" 
-        @scroll="checkScrollPosition"
-        @mousedown="startDrag"
-        @mousemove="onDrag"
-        @mouseup="endDrag"
-        @mouseleave="endDrag"
-        @touchstart="startDrag"
-        @touchmove="onDrag"
-        @touchend="endDrag"
-      >
+
+      <div class="flat-timeline" ref="timeline" @scroll="checkScrollPosition" @mousedown="startDrag" @mousemove="onDrag"
+        @mouseup="endDrag" @mouseleave="endDrag" @touchstart="startDrag" @touchmove="onDrag" @touchend="endDrag">
         <!-- 教育阶段卡片 -->
-        <div 
-          v-for="(stage, index) in stages" 
-          :key="index"
-          class="flat-step"
-          :class="stage.class"
-          tabindex="0"
-          :ref="'stage_' + index"
-          @click="flipCard(index)"
-          :style="{ animationDelay: index * 0.2 + 's' }"
-        >
+        <div v-for="(stage, index) in stages" :key="index" class="flat-step" :class="stage.class" tabindex="0"
+          :ref="'stage_' + index" @click="flipCard(index)" :style="{ animationDelay: index * 0.2 + 's' }">
           <div class="step-number">{{ index + 1 }}</div>
           <div class="card-container" :class="{ 'flipped': flippedCards[index] }">
             <!-- 卡片正面 -->
@@ -88,17 +54,17 @@
               <div class="flat-age">{{ translations[currentLanguage][stage.ageKey] }}</div>
               <div class="flat-type">{{ translations[currentLanguage][stage.typeKey] }}</div>
               <div class="flat-desc">{{ translations[currentLanguage][stage.descKey] }}</div>
-              
+
               <!-- 问题按钮 -->
               <button class="question-button" @click.stop="openQuestionModal(index)">
                 <i class="material-icons">help_outline</i>{{ translations[currentLanguage].questions }}
               </button>
             </div>
-            
+
             <!-- 卡片背面 -->
             <div class="card-back">
               <div class="flat-title">{{ translations[currentLanguage][stage.detailTitleKey] }}</div>
-              
+
               <div class="detail-section">
                 <div v-for="(detail, detailIndex) in stage.details" :key="detailIndex">
                   <div class="detail-title">
@@ -108,7 +74,7 @@
                   <div class="detail-content" v-html="translations[currentLanguage][detail.contentKey]"></div>
                 </div>
               </div>
-              
+
               <button class="back-button" @click.stop="flipCard(index)">
                 <i class="material-icons">arrow_back</i>{{ translations[currentLanguage].back }}
               </button>
@@ -117,7 +83,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- 问题模态框 -->
     <div class="question-modal" :class="{ 'active': modalActive }">
       <div class="question-modal-content">
@@ -125,25 +91,17 @@
           <i class="material-icons">help</i>
           <span ref="modalTitle">{{ currentModalTitle }}</span>
         </div>
-        
+
         <div class="quick-questions">
-          <div 
-            v-for="(question, index) in currentQuestions" 
-            :key="index"
-            class="question-item"
-            @click="showAnswer(question.answer)"
-          >
+          <div v-for="(question, index) in currentQuestions" :key="index" class="question-item"
+            @click="showAnswer(question.answer)">
             <div class="question-item-text">{{ question.question }}</div>
           </div>
         </div>
-        
-        <div 
-          class="question-answer"
-          :class="{ 'active': answerActive }"
-          ref="answerContainer"
-          v-html="currentAnswer"
-        ></div>
-        
+
+        <div class="question-answer" :class="{ 'active': answerActive }" ref="answerContainer" v-html="currentAnswer">
+        </div>
+
         <button class="modal-close" @click="closeQuestionModal">×</button>
       </div>
     </div>
@@ -168,7 +126,7 @@ export default {
       isScrollEnd: false,
       currentSpeech: '',
       currentModalIndex: 0,
-      
+
       // 教育阶段定义
       stages: [
         {
@@ -280,7 +238,7 @@ export default {
           ]
         }
       ],
-      
+
       // 中英文翻译内容
       translations: {
         en: {
@@ -318,7 +276,7 @@ export default {
           earlyKeyTimesContent: "Ages 3-4: Kindergarten, 15 hours of free programs per week<br>Ages 4-5: Pre-school, preparation for primary school",
           earlyNeedToKnow: "Need to Know",
           earlyNeedToKnowContent: "Government subsidies available to reduce costs<br>Some areas require kindergarten registration 1 year in advance",
-          
+
           primaryDetailTitle: "Primary Education Details",
           primaryCurriculum: "Curriculum",
           primaryCurriculumContent: "Victorian Curriculum includes English, Mathematics, Science, Arts, Physical Education, Humanities and Social Sciences, providing a solid foundation for students.",
@@ -326,7 +284,7 @@ export default {
           primarySchoolTypesContent: "Public Schools: Free, enrollment based on zones<br>Private Schools: Fee-paying, requires application<br>Catholic Schools: Moderate fees",
           primaryKeyInfo: "Important Information",
           primaryKeyInfoContent: "Start date: Late January/Early February<br>School year divided into 4 terms<br>Public schools require proof of residence",
-          
+
           secondaryDetailTitle: "Secondary Education Details",
           secondaryStages: "Stage Division",
           secondaryStagesContent: "Junior Secondary (Years 7-10): Broad subject-based education<br>Senior Secondary (Years 11-12): VCE/VCAL courses, preparation for university or workplace",
@@ -334,7 +292,7 @@ export default {
           secondaryVCEContent: "VCE: Victorian Certificate of Education, high school diploma<br>ATAR: Australian Tertiary Admission Rank, used for university applications, maximum score 99.95",
           secondarySchoolChoice: "School Selection Considerations",
           secondarySchoolChoiceContent: "Selective schools: Require entrance exams<br>School choice: May need to apply 1-2 years in advance<br>Private schools: Require interviews and entrance exams",
-          
+
           tertiaryDetailTitle: "Higher Education Details",
           tertiaryEducationTypes: "Education Types",
           tertiaryEducationTypesContent: "Universities: Theory and research oriented, offering Bachelor's, Master's, and Doctoral degrees<br>TAFE: Vocational education and training, offering certificates, diplomas, and advanced diplomas",
@@ -342,13 +300,13 @@ export default {
           tertiaryFeesContent: "HECS-HELP: Australian citizens' deferred payment plan<br>International students: Need to pay full tuition<br>Scholarships: Financial aid based on merit or need",
           tertiaryUniversities: "Major Universities in Victoria",
           tertiaryUniversitiesContent: "Monash University, University of Melbourne, Deakin University, Swinburne University of Technology, La Trobe University, RMIT University, etc.",
-          
+
           // 模态框部分
           modalTitleEarly: "Early Childhood Education FAQs",
           modalTitlePrimary: "Primary Education FAQs",
           modalTitleSecondary: "Secondary Education FAQs",
           modalTitleTertiary: "Higher Education FAQs",
-          
+
           // 其他文本
           clickForDetails: "Click for details",
           cardClickAction: "Click to flip"
@@ -388,7 +346,7 @@ export default {
           earlyKeyTimesContent: "3-4岁：幼儿园，每周15小时免费课程<br>4-5岁：学前班，为小学做准备",
           earlyNeedToKnow: "需要了解",
           earlyNeedToKnowContent: "可申请政府补贴减轻费用<br>部分区域幼儿园需提前1年登记",
-          
+
           primaryDetailTitle: "小学阶段详情",
           primaryCurriculum: "课程内容",
           primaryCurriculumContent: "维州课程包括英语、数学、科学、艺术、体育、人文与社会科学等核心学科，为学生打下坚实基础。",
@@ -396,7 +354,7 @@ export default {
           primarySchoolTypesContent: "公立学校：免费，按学区招生<br>私立学校：收费，需申请入学<br>天主教学校：中等收费",
           primaryKeyInfo: "重要信息",
           primaryKeyInfoContent: "入学时间：1月底/2月初<br>学年分为4个学期<br>公立学校需提供居住证明",
-          
+
           secondaryDetailTitle: "中学阶段详情",
           secondaryStages: "阶段划分",
           secondaryStagesContent: "初中(7-10年级)：广泛学科基础教育<br>高中(11-12年级)：VCE/VCAL课程，为大学或职场做准备",
@@ -404,7 +362,7 @@ export default {
           secondaryVCEContent: "VCE：维多利亚教育证书，高中文凭<br>ATAR：澳大利亚高等教育排名，用于大学申请，满分99.95",
           secondarySchoolChoice: "选校考虑",
           secondarySchoolChoiceContent: "特长学校：需通过考试<br>择校：可能需提前1-2年申请<br>私立学校：需面试和入学考试",
-          
+
           tertiaryDetailTitle: "高等教育详情",
           tertiaryEducationTypes: "教育类型",
           tertiaryEducationTypesContent: "大学：理论与研究导向，提供学士、硕士、博士学位<br>TAFE：职业教育与培训，提供证书、文凭和高级文凭",
@@ -412,19 +370,19 @@ export default {
           tertiaryFeesContent: "HECS-HELP：澳洲公民学费延迟支付计划<br>国际学生：需支付全额学费<br>奖学金：基于成绩或需求的资助",
           tertiaryUniversities: "维州主要大学",
           tertiaryUniversitiesContent: "蒙纳士大学、墨尔本大学、迪肯大学、斯威本科技大学、拉筹伯大学、皇家墨尔本理工大学等",
-          
+
           // 模态框部分
           modalTitleEarly: "幼儿教育常见问题",
           modalTitlePrimary: "小学阶段常见问题",
           modalTitleSecondary: "中学阶段常见问题",
           modalTitleTertiary: "高等教育常见问题",
-          
+
           // 其他文本
           clickForDetails: "点击查看详情",
           cardClickAction: "点击翻转"
         }
       },
-      
+
       // 各阶段的问题
       stageQuestions: [
         // 幼儿教育问题
@@ -519,14 +477,14 @@ export default {
       this.currentLanguage = language;
       this.updateSpeechBubble();
     },
-    
+
     toggleSpeech() {
       this.speechActive = !this.speechActive;
       if (this.speechActive) {
         this.currentSpeech = this.translations[this.currentLanguage].kangarooDefault;
       }
     },
-    
+
     updateSpeechBubble(stageIndex) {
       if (stageIndex !== undefined) {
         this.currentSpeech = this.translations[this.currentLanguage][this.stages[stageIndex].kangarooTipKey];
@@ -534,127 +492,127 @@ export default {
         this.currentSpeech = this.translations[this.currentLanguage].kangarooDefault;
       }
       this.speechActive = true;
-      
+
       // 5秒后自动隐藏
       setTimeout(() => {
         this.speechActive = false;
       }, 5000);
     },
-    
+
     flipCard(index) {
       if (!this.flippedCards[index]) {
         this.updateSpeechBubble(index);
       }
       this.flippedCards = this.flippedCards.map((value, i) => i === index ? !value : value);
     },
-    
+
     openQuestionModal(index) {
       this.currentModalIndex = index;
       this.modalActive = true;
       this.answerActive = false;
-      
+
       // 更新模态框的问题
       const modalTitleKeys = ['modalTitleEarly', 'modalTitlePrimary', 'modalTitleSecondary', 'modalTitleTertiary'];
       this.currentModalTitle = this.translations[this.currentLanguage][modalTitleKeys[index]];
-      
+
       // 获取当前阶段的问题
       this.currentQuestions = this.stageQuestions[index].map(q => ({
         question: this.currentLanguage === 'en' ? q.question : q.questionZh,
         answer: this.currentLanguage === 'en' ? q.answer : q.answerZh
       }));
     },
-    
+
     showAnswer(answer) {
       this.currentAnswer = answer;
       this.answerActive = true;
     },
-    
+
     closeQuestionModal() {
       this.modalActive = false;
       this.answerActive = false;
       this.currentAnswer = '';
     },
-    
+
     scrollTimeline(direction) {
       const timeline = this.$refs.timeline;
       if (!timeline) return;
-      
+
       const cardWidth = 260 + 32; // 卡片宽度 + 间距
       const scrollAmount = direction * cardWidth * 2;
-      
+
       timeline.scrollLeft += scrollAmount;
       this.checkScrollPosition();
     },
-    
+
     checkScrollPosition() {
       const timeline = this.$refs.timeline;
       if (!timeline) return;
-      
+
       this.isScrollStart = timeline.scrollLeft <= 10;
       this.isScrollEnd = timeline.scrollLeft + timeline.clientWidth >= timeline.scrollWidth - 10;
     },
-    
+
     startDrag(event) {
       this.isDragging = true;
       this.startX = event.type === 'mousedown' ? event.pageX : event.touches[0].pageX;
       this.scrollLeft = this.$refs.timeline.scrollLeft;
     },
-    
+
     onDrag(event) {
       if (!this.isDragging) return;
       event.preventDefault();
-      
+
       const x = event.type === 'mousemove' ? event.pageX : event.touches[0].pageX;
       const walk = (x - this.startX) * 2; // 滚动速度倍增器
       this.$refs.timeline.scrollLeft = this.scrollLeft - walk;
-      
+
       this.checkScrollPosition();
     },
-    
+
     endDrag() {
       this.isDragging = false;
     }
   },
-  
+
   computed: {
     currentModalTitle() {
       if (this.currentModalIndex < 0) return '';
-      
+
       const modalTitleKeys = ['modalTitleEarly', 'modalTitlePrimary', 'modalTitleSecondary', 'modalTitleTertiary'];
       return this.translations[this.currentLanguage][modalTitleKeys[this.currentModalIndex]];
     },
-    
+
     currentQuestions() {
       if (this.currentModalIndex < 0 || !this.stageQuestions[this.currentModalIndex]) {
         return [];
       }
-      
+
       return this.stageQuestions[this.currentModalIndex].map(q => ({
         question: this.currentLanguage === 'en' ? q.question : q.questionZh,
         answer: this.currentLanguage === 'en' ? q.answer : q.answerZh
       }));
     }
   },
-  
+
   mounted() {
     // 设置默认语言
     const browserLang = navigator.language || navigator.userLanguage;
     if (browserLang.startsWith('en')) {
       this.currentLanguage = 'en';
     }
-    
+
     // 设置默认提示语
     this.currentSpeech = this.translations[this.currentLanguage].kangarooDefault;
-    
+
     // 监听窗口大小变化，更新卡片位置
     window.addEventListener('resize', this.checkScrollPosition);
-    
+
     // 初始化滚动位置检查
     this.$nextTick(() => {
       this.checkScrollPosition();
     });
   },
-  
+
   beforeUnmount() {
     // 移除事件监听
     window.removeEventListener('resize', this.checkScrollPosition);
@@ -760,7 +718,7 @@ export default {
   padding: 10px 15px;
   font-size: 0.9rem;
   color: #334155;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   opacity: 0;
   transform: translateY(10px);
   transition: all 0.3s ease;
@@ -780,7 +738,7 @@ export default {
   border-right: 10px solid #2563eb;
 }
 
-.kangaroo-guide:hover + .speech-bubble,
+.kangaroo-guide:hover+.speech-bubble,
 .speech-bubble.active {
   opacity: 1;
   transform: translateY(0);
@@ -798,7 +756,7 @@ export default {
   max-width: 400px;
   color: #64748b;
   font-size: 0.9rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   animation: pulse 2s infinite;
 }
 
@@ -808,9 +766,20 @@ export default {
 }
 
 @keyframes pulse {
-  0% { opacity: 0.8; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.02); }
-  100% { opacity: 0.8; transform: scale(1); }
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
 }
 
 /* 时间轴容器和导航控制 */
@@ -839,7 +808,7 @@ export default {
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   z-index: 5;
 }
 
@@ -867,20 +836,24 @@ export default {
   overflow-x: auto;
   padding: 1rem 0.5rem;
   scroll-behavior: smooth;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
   transition: all 0.5s ease;
 }
 
 .flat-timeline::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
+  /* Chrome, Safari, Opera */
 }
 
 /* 连接线 */
 .flat-timeline::before {
   content: '';
   position: absolute;
-  left: 0; right: 0;
+  left: 0;
+  right: 0;
   top: 50px;
   height: 4px;
   background: #e2e8f0;
@@ -892,7 +865,8 @@ export default {
 .flat-step {
   flex: 0 0 260px;
   width: 260px;
-  height: 400px; /* 增加一点高度 */
+  height: 400px;
+  /* 增加一点高度 */
   border-radius: 16px;
   display: flex;
   align-items: stretch;
@@ -909,19 +883,38 @@ export default {
 }
 
 @keyframes cardFadeIn {
-  0% { opacity: 0; transform: translateY(30px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.flat-step:nth-child(1) { animation-delay: 0.1s; }
-.flat-step:nth-child(2) { animation-delay: 0.3s; }
-.flat-step:nth-child(3) { animation-delay: 0.5s; }
-.flat-step:nth-child(4) { animation-delay: 0.7s; }
+.flat-step:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.flat-step:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.flat-step:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+.flat-step:nth-child(4) {
+  animation-delay: 0.7s;
+}
 
 .flat-step::after {
   content: attr(data-after, "点击查看详情");
   position: absolute;
-  bottom: 40px; /* 调整位置，为问题按钮腾出空间 */
+  bottom: 40px;
+  /* 调整位置，为问题按钮腾出空间 */
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.8rem;
@@ -934,7 +927,8 @@ export default {
   opacity: 1;
 }
 
-.flat-step:hover, .flat-step:focus {
+.flat-step:hover,
+.flat-step:focus {
   box-shadow: 0 8px 24px 0 rgba(37, 99, 235, 0.15);
   border-color: #2563eb;
   z-index: 2;
@@ -954,7 +948,8 @@ export default {
   transform: rotateY(180deg);
 }
 
-.card-front, .card-back {
+.card-front,
+.card-back {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -987,7 +982,7 @@ export default {
   justify-content: center;
   border-radius: 50%;
   background: white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   z-index: 2;
 }
 
@@ -1005,7 +1000,7 @@ export default {
   justify-content: center;
   font-weight: bold;
   font-size: 0.9rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 2;
 }
 
@@ -1046,7 +1041,7 @@ export default {
 .flat-desc {
   font-size: 0.9rem;
   color: #334155;
-  background: rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 8px;
   padding: 0.7em 1em;
   margin: 0.6em auto 0;
@@ -1078,7 +1073,7 @@ export default {
   display: flex;
   align-items: center;
   white-space: nowrap;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   z-index: 5;
 }
 
@@ -1120,7 +1115,7 @@ export default {
   padding: 1.5rem;
   width: 90%;
   max-width: 500px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   position: relative;
   transform: translateY(20px);
   transition: transform 0.3s ease;
@@ -1188,8 +1183,13 @@ export default {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-close {
@@ -1273,54 +1273,74 @@ export default {
 }
 
 /* 扁平色块 */
-.early   { background: #e0f2fe; }
-.primary { background: #fef9c3; }
-.secondary { background: #fce7f3; }
-.tertiary { background: #e0e7ff; }
+.early {
+  background: #e0f2fe;
+}
+
+.primary {
+  background: #fef9c3;
+}
+
+.secondary {
+  background: #fce7f3;
+}
+
+.tertiary {
+  background: #e0e7ff;
+}
 
 /* 响应式 */
 @media (max-width: 1100px) {
   .timeline-container {
     padding: 1rem 0;
   }
-  .flat-timeline { 
+
+  .flat-timeline {
     justify-content: flex-start;
     padding-bottom: 1rem;
   }
 }
 
 @media (max-width: 900px) {
-  .flat-timeline { 
-    gap: 1.5rem; 
+  .flat-timeline {
+    gap: 1.5rem;
     padding-bottom: 1.5rem;
   }
+
   .flat-step {
     flex: 0 0 240px;
     width: 240px;
     height: 390px;
   }
+
   .kangaroo-guide {
     width: 60px;
     height: 90px;
   }
+
   .speech-bubble {
     left: 80px;
     max-width: 180px;
     font-size: 0.85rem;
   }
+
   .flat-desc {
     font-size: 0.85rem;
     height: 75px;
   }
+
   .detail-content {
     font-size: 0.9rem;
   }
+
   .flat-title {
     font-size: 1.1rem;
   }
+
   .flat-age {
     font-size: 0.95rem;
   }
+
   .flat-type {
     font-size: 0.9rem;
   }
@@ -1330,38 +1350,47 @@ export default {
   .journey-container {
     padding: 1.5rem 0.5rem;
   }
+
   .timeline-container {
     margin: 1rem 0;
   }
-  .flat-timeline { 
-    flex-direction: column; 
-    gap: 2rem; 
+
+  .flat-timeline {
+    flex-direction: column;
+    gap: 2rem;
     align-items: center;
     overflow-x: visible;
   }
+
   .flat-timeline::before {
     display: none;
   }
-  .flat-step { 
+
+  .flat-step {
     width: 90%;
     max-width: 320px;
     flex: none;
     height: 370px;
   }
+
   .flat-desc {
     width: 95%;
     height: 70px;
     margin-top: 0.5em;
   }
+
   .timeline-nav {
     display: none;
   }
+
   .speech-bubble {
     left: 70px;
     bottom: 50px;
     max-width: 160px;
   }
-  .card-front, .card-back {
+
+  .card-front,
+  .card-back {
     padding: 1.2rem 0.8rem 1rem 0.8rem;
   }
 }
