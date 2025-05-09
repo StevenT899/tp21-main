@@ -1,9 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import CompareView from '../views/CompareView.vue';
-import LoginView from '../views/LoginView.vue';
-import SchoolDetailView from '@/views/SchoolDetailView.vue';
-import JourneyView from '@/views/JourneyView.vue';
 
 const routes = [
   {
@@ -13,24 +8,30 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: LoginView
+    component: () => import('../views/LoginView.vue')
   },
   {
     path: '/home',
     name: 'Home',
-    component: HomeView,
+    component: () => import('../views/HomeView.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/compare',
     name: 'Compare',
-    component: CompareView,
+    component: () => import('../views/CompareView.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/journey',
     name: 'Journey',
-    component: JourneyView,
+    component: () => import('../views/JourneyView.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/support',
+    name: 'Support',
+    component: () => import('../views/SupportView.vue'),
     meta: { requiresAuth: true }
   },
   {
