@@ -28,9 +28,14 @@
                 active-class="underline" exact>
                 {{ $t('nav.compare') }}
             </router-link>
-            <router-link to="/journey" class="hover:underline"
-                active-class="underline" exact>{{ $t('nav.journey') }}</router-link>
+
+            <a href="#" class="hover:underline">{{ $t('nav.journey') }}</a>
+
+            <router-link to="/support" class="hover:underline" 
+                active-class="underline" exact>
+
             <a href="#" class="hover:underline">{{ $t('nav.support') }}</a>
+            </router-link>
         </div>
         <div class="flex items-center space-x-2 md:space-x-4">
             <button @click="changeLocale('en')" class="hover:underline">{{ $t('nav.english') }}</button>

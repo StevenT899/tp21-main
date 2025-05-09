@@ -3,6 +3,7 @@ import { watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import NavBar from './components/NavBar.vue';
 import Footer from './components/FooterTeam.vue';
+import FrequentAsk from './components/FrequentAsk.vue';
 import { isLoggedIn } from './auth';
 
 const router = useRouter();
@@ -28,5 +29,5 @@ watch(isLoggedIn, (val) => {
 </template>
 
 <style scoped>
-/* ... */
+
 </style>
