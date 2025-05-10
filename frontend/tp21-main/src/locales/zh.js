@@ -277,5 +277,145 @@ export default {
         },
         icseaTitle: "社区社会教育优势指数 (ICSEA)",
         icseaInfo: '高于维多利亚州 {percentile}% 的小学',
-    }
+    },
+    journeyView: {
+        pageHeader: {
+            title: '孩子在维州的教育旅程图',
+            description: 'Not sure what lies ahead in your child\'s school years? This page shows you the key stages in Victoria\'s education system — from Prep to primary and beyond — so you can feel more prepared to support your child every step of the way.',
+        }
+    },
+    journeyMap: {
+        journey: {
+            title: "Victorian Education Journey Map",
+            subtitle: "A Complete Education Journey from Kindergarten to University",
+            kangarooGuide: "Hello! I'm the Victorian Education Kangaroo. Click each card for details, or ask me any questions!",
+            tutorialHint: "Click on each stage card for details, swipe to see more"
+        },
+        stages: {
+            early: {
+                title: "Early Childhood Education",
+                age: "Ages 0-5",
+                type: "Childcare, Kindergarten",
+                desc: "Early learning and care for children aged 0-5, including childcare and kindergarten. Usually non-compulsory, but helps children adapt to school life.",
+                detailTitle: "Early Childhood Education Details",
+                details: [
+                    {
+                        icon: "school",
+                        title: "Education Types",
+                        content: "Includes Childcare Centers, Kindergartens, and Pre-schools, providing care and early learning for children."
+                    },
+                    {
+                        icon: "schedule",
+                        title: "Key Timelines",
+                        content: "Ages 3-4: Kindergarten, 15 hours of free programs per week; Ages 4-5: Pre-school, preparation for primary school"
+                    },
+                    {
+                        icon: "check_circle",
+                        title: "Need to Know",
+                        content: "Government subsidies available to reduce costs; Some areas require kindergarten registration 1 year in advance"
+                    }
+                ]
+            },
+            primary: {
+                title: "Primary Education",
+                age: "Ages 5-12",
+                type: "Primary School (Prep-Year 6)",
+                desc: "Primary education usually starts at age 5 (Prep) and ends at age 12 (Year 6). It is compulsory education.",
+                detailTitle: "Primary Education Details",
+                details: [
+                    {
+                        icon: "book",
+                        title: "Curriculum",
+                        content: "Victorian Curriculum includes English, Mathematics, Science, Arts, Physical Education, Humanities and Social Sciences."
+                    },
+                    {
+                        icon: "home",
+                        title: "School Types",
+                        content: "Public: Free zonal enrollment; Private: Fee-paying; Catholic: Moderate fees."
+                    },
+                    {
+                        icon: "event",
+                        title: "Important Information",
+                        content: "Start: Late Jan/Early Feb; Year divided into 4 terms; Proof of residence required for public schools."
+                    }
+                ]
+            },
+            secondary: {
+                title: "Secondary Education",
+                age: "Ages 12-18",
+                type: "Secondary School (Years 7-12)",
+                desc: "Divided into junior (7-10) and senior (11-12) stages, preparing for higher education or employment.",
+                detailTitle: "Secondary Education Details",
+                details: [
+                    {
+                        icon: "layers",
+                        title: "Stage Division",
+                        content: "Junior (7-10): Broad subjects; Senior (11-12): VCE/VCAL courses."
+                    },
+                    {
+                        icon: "grade",
+                        title: "VCE & ATAR",
+                        content: "VCE: Victorian Certificate of Education; ATAR: Australian Tertiary Admission Rank (max 99.95)"
+                    },
+                    {
+                        icon: "school",
+                        title: "Selection Considerations",
+                        content: "Selective schools need exams; Apply 1-2 years ahead; Private requires interviews."
+                    }
+                ]
+            },
+            tertiary: {
+                title: "Higher/Vocational Education",
+                age: "18+ years",
+                type: "TAFE, University, Vocational Training",
+                desc: "TAFE, university or vocational training for degrees or certificates.",
+                detailTitle: "Higher Education Details",
+                details: [
+                    {
+                        icon: "account_balance",
+                        title: "Education Types",
+                        content: "Universities: Degrees; TAFE: Certificates & diplomas."
+                    },
+                    {
+                        icon: "monetization_on",
+                        title: "Tuition Fees",
+                        content: "HECS-HELP for citizens; Full fee for internationals; Scholarships available."
+                    },
+                    {
+                        icon: "explore",
+                        title: "Major Universities",
+                        content: "Monash, Melbourne, Deakin, Swinburne, La Trobe, RMIT, etc."
+                    }
+                ]
+            }
+        },
+        questions: {
+            modalTitles: [
+                "Early Childhood Education FAQs",
+                "Primary Education FAQs",
+                "Secondary Education FAQs",
+                "Higher Education FAQs"
+            ],
+            early: [
+                { question: "What type of education should my 3-year-old child attend?", answer: "3-year-olds can begin Kindergarten with 15 free hours/week; Childcare centers also an option." },
+                { question: "How do I apply for kindergarten subsidies?", answer: "Apply via Centrelink for CCS; amount based on income, service type, hours." },
+                { question: "How do I choose the right kindergarten?", answer: "Consider location, pedagogies, ratios, fees; visit and read reviews." }
+            ],
+            primary: [
+                { question: "My child is 6 years old, what should I prepare now?", answer: "Enroll in Prep, get uniforms, supplies, attend orientation, build self-care skills." },
+                { question: "How do I choose a primary school?", answer: "Public uses zonal enrolment; private requires applications and interviews; consider reputation and programs." },
+                { question: "What is assessment/reporting?", answer: "Continuous assessments; two reports/year; NAPLAN in Years 3 & 5; parent-teacher meetings." }
+            ],
+            secondary: [
+                { question: "Transition tips primary to secondary?", answer: "Apply early, attend transition events, develop organization and emotional support." },
+                { question: "Differences between VCE and VCAL?", answer: "VCE for uni (ATAR); VCAL vocational focus; integrated into flexible VCE from 2023." },
+                { question: "How to prepare for VCE exams?", answer: "Study plans, past papers, health support, tutoring, workshops." }
+            ],
+            tertiary: [
+                { question: "How to apply to universities?", answer: "Use VTAC, submit up to 8 preferences, pay fee, accept offer; internationals via agents or direct." },
+                { question: "TAFE vs university?", answer: "TAFE vocational certificates diplomas; uni degrees; shorter TAFE courses; credit pathways." },
+                { question: "Financial assistance?", answer: "HECS-HELP, FEE-HELP, scholarships, Austudy, part-time work, budget plans." }
+            ]
+        }
+    },
 };

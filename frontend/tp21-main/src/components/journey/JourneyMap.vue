@@ -1,8 +1,8 @@
 <template>
   <div class="journey-container">
     <div class="journey-intro">
-      <h2 class="journey-title">Victorian Education Journey Map</h2>
-      <p class="journey-subtitle">A Complete Education Journey from Kindergarten to University</p>
+      <h2 class="journey-title">{{ $t('journeyMap.journey.title') }}</h2>
+      <p class="journey-subtitle">{{ $t('journeyMap.journey.subtitle') }}</p>
 
       <!-- Kangaroo guide -->
       <div class="kangaroo-guide" @click="toggleSpeech">
@@ -13,19 +13,23 @@
       </div>
 
       <div class="tutorial-hint">
-        <i class="material-icons">touch_app</i>
-        <span>Click on each stage card for details, swipe to see more</span>
+        <img src="@/assets/images/tap.png" alt="tap icon" class="w-half h-auto" />
+        <span>{{ $t('journeyMap.journey.tutorialHint') }}</span>
       </div>
     </div>
 
     <!-- Timeline with navigation -->
     <div class="timeline-container">
-      <div class="timeline-nav">
-        <button class="nav-button" :disabled="isScrollStart" @click="scrollTimeline(-1)">
-          <i class="material-icons">chevron_left</i>
+      <div class="timeline-nav flex space-x-2">
+        <button
+          class="nav-button w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          :disabled="isScrollStart" @click="scrollTimeline(-1)">
+          <span class="w-2 h-2 border-t-2 border-l-2 border-gray-500 rotate-[-45deg]"></span>
         </button>
-        <button class="nav-button" :disabled="isScrollEnd" @click="scrollTimeline(1)">
-          <i class="material-icons">chevron_right</i>
+        <button
+          class="nav-button w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          :disabled="isScrollEnd" @click="scrollTimeline(1)">
+          <span class="w-2 h-2 border-t-2 border-l-2 border-gray-500 rotate-[135deg]"></span>
         </button>
       </div>
 
@@ -33,218 +37,212 @@
         @mouseup="endDrag" @mouseleave="endDrag" @touchstart="startDrag" @touchmove="onDrag" @touchend="endDrag">
         <div v-for="(stage, index) in stages" :key="index" class="flat-step" :class="stage.class" tabindex="0"
           @click="flipCard(index)" :style="{ animationDelay: index * 0.2 + 's' }">
+
           <div class="step-number">{{ index + 1 }}</div>
           <div class="card-container" :class="{ 'flipped': flippedCards[index] }">
             <div class="card-front">
-              <div class="flat-icon" v-html="stage.icon"></div>
+              <img :src="stage.icon" :alt="stage.title + ' icon'" class="flat-icon" />
               <div class="flat-title">{{ stage.title }}</div>
               <div class="flat-age">{{ stage.age }}</div>
-              <div class="flat-type">{{ stage.type }}</div>
               <div class="flat-desc">{{ stage.desc }}</div>
-
-              <button class="question-button" @click.stop="openQuestionModal(index)">
-                <i class="material-icons">help_outline</i> I have questions
-              </button>
+              <button class="question-button">Enrolment Checklist</button>
             </div>
 
             <div class="card-back">
-              <div class="flat-title">{{ stage.detailTitle }}</div>
-              <div class="detail-section">
-                <div v-for="(detail, dIdx) in stage.details" :key="dIdx">
-                  <div class="detail-title">
-                    <i class="material-icons">{{ detail.icon }}</i>
-                    {{ detail.title }}
-                  </div>
-                  <div class="detail-content" v-html="detail.content"></div>
-                </div>
+              <div>
+                <strong>What they learn:</strong>
+                <ul>
+                  <li v-for="(detail, idx) in stage.whatTheyLearn" :key="idx">
+                    {{ detail }}
+                  </li>
+                </ul>
+                <strong>Key timing:</strong>
+                <ul>
+                  <li v-for="(detail, idx) in stage.keyTiming" :key="idx">
+                    {{ detail }}
+                  </li>
+                </ul>
               </div>
               <button class="back-button" @click.stop="flipCard(index)">
-                <i class="material-icons">arrow_back</i> Back
+                Related questions
               </button>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Question modal -->
-    <div class="question-modal" :class="{ 'active': modalActive }">
-      <div class="question-modal-content">
-        <div class="question-modal-title">
-          <i class="material-icons">help</i>
-          <span>{{ modalTitles[currentModalIndex] }}</span>
-        </div>
-        <div class="quick-questions">
-          <div v-for="(q, qIdx) in currentQuestions" :key="qIdx" class="question-item" @click="showAnswer(q.answer)">
-            <div class="question-item-text">{{ q.question }}</div>
-          </div>
-        </div>
-        <div class="question-answer" :class="{ 'active': answerActive }">
-          {{ currentAnswer }}
-        </div>
-        <button class="modal-close" @click="closeQuestionModal">×</button>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'VictorianEducationJourneyMap',
-  data() {
-    return {
-      // Kangaroo speech defaults
-      kangarooDefault: "Hello! I'm the Victorian Education Kangaroo. Click each card for details, or ask me any questions!",
-      modalTitles: [
-        'Early Childhood Education FAQs',
-        'Primary Education FAQs',
-        'Secondary Education FAQs',
-        'Higher Education FAQs'
-      ],
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import kinderIcon from '@/assets/images/kinder.svg'
+import primaryIcon from '@/assets/images/primary.svg'
+import secondaryIcon from '@/assets/images/secondary.svg'
+import vocationalIcon from '@/assets/images/vocational.svg'
+import { useI18n } from 'vue-i18n'
 
-      // Education stages
-      stages: [
-        {
-          class: 'early',
-          title: 'Early Childhood Education',
-          age: 'Ages 0-5',
-          type: 'Childcare, Kindergarten',
-          desc: 'Early learning and care for children aged 0-5, including childcare and kindergarten. Usually non-compulsory, but helps children adapt to school life.',
-          detailTitle: 'Early Childhood Education Details',
-          icon: '<svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" fill="#38bdf8"/><rect x="12" y="20" width="16" height="10" rx="2" fill="#fff"/><rect x="16" y="24" width="4" height="6" rx="1" fill="#bae6fd"/><rect x="20" y="24" width="4" height="6" rx="1" fill="#bae6fd"/></svg>',
-          details: [
-            { icon: 'school', title: 'Education Types', content: 'Includes Childcare Centers, Kindergartens, and Pre-schools, providing care and early learning for children.' },
-            { icon: 'schedule', title: 'Key Timelines', content: 'Ages 3-4: Kindergarten, 15 hours of free programs per week; Ages 4-5: Pre-school, preparation for primary school' },
-            { icon: 'check_circle', title: 'Need to Know', content: 'Government subsidies available to reduce costs; Some areas require kindergarten registration 1 year in advance' }
-          ]
-        },
-        {
-          class: 'primary',
-          title: 'Primary Education',
-          age: 'Ages 5-12',
-          type: 'Primary School (Prep-Year 6)',
-          desc: 'Primary education usually starts at age 5 (Prep) and ends at age 12 (Year 6). It is compulsory education.',
-          detailTitle: 'Primary Education Details',
-          icon: '<svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" fill="#fde047"/><rect x="12" y="18" width="16" height="12" rx="2" fill="#fff"/><rect x="16" y="22" width="8" height="4" rx="1" fill="#fef9c3"/></svg>',
-          details: [
-            { icon: 'book', title: 'Curriculum', content: 'Victorian Curriculum includes English, Mathematics, Science, Arts, Physical Education, Humanities and Social Sciences.' },
-            { icon: 'home', title: 'School Types', content: 'Public: Free zonal enrollment; Private: Fee-paying; Catholic: Moderate fees.' },
-            { icon: 'event', title: 'Important Information', content: 'Start: Late Jan/Early Feb; Year divided into 4 terms; Proof of residence required for public schools.' }
-          ]
-        },
-        {
-          class: 'secondary',
-          title: 'Secondary Education',
-          age: 'Ages 12-18',
-          type: 'Secondary School (Years 7-12)',
-          desc: 'Divided into junior (7-10) and senior (11-12) stages, preparing for higher education or employment.',
-          detailTitle: 'Secondary Education Details',
-          icon: '<svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" fill="#f472b6"/><rect x="12" y="16" width="16" height="14" rx="2" fill="#fff"/><rect x="16" y="22" width="8" height="6" rx="1" fill="#fce7f3"/></svg>',
-          details: [
-            { icon: 'layers', title: 'Stage Division', content: 'Junior (7-10): Broad subjects; Senior (11-12): VCE/VCAL courses.' },
-            { icon: 'grade', title: 'VCE & ATAR', content: 'VCE: Victorian Certificate of Education; ATAR: Australian Tertiary Admission Rank (max 99.95)' },
-            { icon: 'school', title: 'Selection Considerations', content: 'Selective schools need exams; Apply 1-2 years ahead; Private requires interviews.' }
-          ]
-        },
-        {
-          class: 'tertiary',
-          title: 'Higher/Vocational Education',
-          age: '18+ years',
-          type: 'TAFE, University, Vocational Training',
-          desc: 'TAFE, university or vocational training for degrees or certificates.',
-          detailTitle: 'Higher Education Details',
-          icon: '<svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" fill="#818cf8"/><rect x="12" y="18" width="16" height="10" rx="2" fill="#fff"/><rect x="16" y="22" width="8" height="4" rx="1" fill="#e0e7ff"/></svg>',
-          details: [
-            { icon: 'account_balance', title: 'Education Types', content: 'Universities: Degrees; TAFE: Certificates & diplomas.' },
-            { icon: 'monetization_on', title: 'Tuition Fees', content: 'HECS-HELP for citizens; Full fee for internationals; Scholarships available.' },
-            { icon: 'explore', title: 'Major Universities', content: 'Monash, Melbourne, Deakin, Swinburne, La Trobe, RMIT, etc.' }
-          ]
-        }
-      ],
+const { t } = useI18n()
 
-      // Questions
-      stageQuestions: [
-        [
-          { question: 'What type of education should my 3-year-old child attend?', answer: '3-year-olds can begin Kindergarten with 15 free hours/week; Childcare centers also an option.' },
-          { question: 'How do I apply for kindergarten subsidies?', answer: 'Apply via Centrelink for CCS; amount based on income, service type, hours.' },
-          { question: 'How do I choose the right kindergarten?', answer: 'Consider location, pedagogies, ratios, fees; visit and read reviews.' }
-        ],
-        [
-          { question: 'My child is 6 years old, what should I prepare now?', answer: 'Enroll in Prep, get uniforms, supplies, attend orientation, build self-care skills.' },
-          { question: 'How do I choose a primary school?', answer: 'Public uses zonal enrolment; private requires applications and interviews; consider reputation and programs.' },
-          { question: 'What is assessment/reporting?', answer: 'Continuous assessments; two reports/year; NAPLAN in Years 3 & 5; parent-teacher meetings.' }
-        ],
-        [
-          { question: 'Transition tips primary to secondary?', answer: 'Apply early, attend transition events, develop organization and emotional support.' },
-          { question: 'Differences between VCE and VCAL?', answer: 'VCE for uni (ATAR); VCAL vocational focus; integrated into flexible VCE from 2023.' },
-          { question: 'How to prepare for VCE exams?', answer: 'Study plans, past papers, health support, tutoring, workshops.' }
-        ],
-        [
-          { question: 'How to apply to universities?', answer: 'Use VTAC, submit up to 8 preferences, pay fee, accept offer; internationals via agents or direct.' },
-          { question: 'TAFE vs university?', answer: 'TAFE vocational certificates diplomas; uni degrees; shorter TAFE courses; credit pathways.' },
-          { question: 'Financial assistance?', answer: 'HECS-HELP, FEE-HELP, scholarships, Austudy, part-time work, budget plans.' }
-        ]
-      ],
-
-      // UI state
-      flippedCards: [false, false, false, false],
-      speechActive: false,
-      modalActive: false,
-      answerActive: false,
-      currentSpeech: '',
-      currentModalIndex: 0,
-      currentQuestions: [],
-      currentAnswer: '',
-      isDragging: false,
-      startX: 0,
-      scrollLeft: 0,
-      isScrollStart: true,
-      isScrollEnd: false
-    };
+// Kangaroo speech defaults
+const kangarooDefault = t('journeyMap.journey.kangarooGuide')
+// Education stages
+const stages = [
+  {
+    class: 'early',
+    title: t('journeyMap.stages.early.title'),
+    age: t('journeyMap.stages.early.age'),
+    desc: t('journeyMap.stages.early.desc'),
+    icon: kinderIcon,
+    whatTheyLearn: [
+      t('journeyMap.stages.early.whatTheyLearn.0'),
+      t('journeyMap.stages.early.whatTheyLearn.1'),
+    ],
+    keyTiming: [
+      t('journeyMap.stages.early.keyTiming.0'),
+      t('journeyMap.stages.early.keyTiming.1'),
+      t('journeyMap.stages.early.keyTiming.2'),
+    ],
   },
-  methods: {
-    toggleSpeech() {
-      this.speechActive = !this.speechActive;
-      if (this.speechActive) {
-        this.currentSpeech = this.kangarooDefault;
-        setTimeout(() => { this.speechActive = false; }, 5000);
-      }
-    },
-    updateSpeechBubble(idx) {
-      this.currentSpeech = this.stages[idx].kangarooTip || this.kangarooDefault;
-      this.speechActive = true;
-      setTimeout(() => { this.speechActive = false; }, 5000);
-    },
-    flipCard(index) {
-      if (!this.flippedCards[index]) this.updateSpeechBubble(index);
-      this.flippedCards = this.flippedCards.map((v, i) => i === index ? !v : false);
-    },
-    openQuestionModal(index) {
-      this.currentModalIndex = index;
-      this.modalActive = true;
-      this.answerActive = false;
-      this.currentQuestions = this.stageQuestions[index];
-    },
-    showAnswer(ans) { this.currentAnswer = ans; this.answerActive = true; },
-    closeQuestionModal() { this.modalActive = false; this.answerActive = false; this.currentAnswer = ''; },
-    scrollTimeline(dir) { const t = this.$refs.timeline, w = 292; t.scrollLeft += dir * w * 2; this.checkScrollPosition(); },
-    checkScrollPosition() { const t = this.$refs.timeline; this.isScrollStart = t.scrollLeft <= 10; this.isScrollEnd = t.scrollLeft + t.clientWidth >= t.scrollWidth - 10; },
-    startDrag(e) { this.isDragging = true; this.startX = e.pageX || e.touches[0].pageX; this.scrollLeft = this.$refs.timeline.scrollLeft; },
-    onDrag(e) { if (!this.isDragging) return; e.preventDefault(); const x = e.pageX || e.touches[0].pageX; this.$refs.timeline.scrollLeft = this.scrollLeft - (x - this.startX) * 2; this.checkScrollPosition(); },
-    endDrag() { this.isDragging = false; }
+  {
+    class: 'primary',
+    title: t('journeyMap.stages.primary.title'),
+    age: t('journeyMap.stages.primary.age'),
+    desc: t('journeyMap.stages.primary.desc'),
+    icon: primaryIcon,
+    whatTheyLearn: [
+      t('journeyMap.stages.primary.whatTheyLearn.0'),
+      t('journeyMap.stages.primary.whatTheyLearn.1'),
+    ],
+    keyTiming: [
+      t('journeyMap.stages.primary.keyTiming.0'),
+      t('journeyMap.stages.primary.keyTiming.1'),
+      t('journeyMap.stages.primary.keyTiming.2'),
+      t('journeyMap.stages.primary.keyTiming.3'),
+    ],
   },
-  mounted() {
-    this.currentSpeech = this.kangarooDefault;
-    window.addEventListener('resize', this.checkScrollPosition);
-    this.$nextTick(this.checkScrollPosition);
+  {
+    class: 'secondary',
+    title: t('journeyMap.stages.secondary.title'),
+    age: t('journeyMap.stages.secondary.age'),
+    desc: t('journeyMap.stages.secondary.desc'),
+    icon: secondaryIcon,
+    whatTheyLearn: [
+      t('journeyMap.stages.secondary.whatTheyLearn.0'),
+      t('journeyMap.stages.secondary.whatTheyLearn.1'),
+      t('journeyMap.stages.secondary.whatTheyLearn.2'),
+    ],
+    keyTiming: [
+      t('journeyMap.stages.secondary.keyTiming.0'),
+      t('journeyMap.stages.secondary.keyTiming.1'),
+      t('journeyMap.stages.secondary.keyTiming.2'),
+    ],
   },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.checkScrollPosition);
+  {
+    class: 'tertiary',
+    title: t('journeyMap.stages.tertiary.title'),
+    age: t('journeyMap.stages.tertiary.age'),
+    desc: t('journeyMap.stages.tertiary.desc'),
+    icon: vocationalIcon,
+    whatTheyLearn: [
+      t('journeyMap.stages.tertiary.whatTheyLearn.0'),
+      t('journeyMap.stages.tertiary.whatTheyLearn.1'),
+    ],
+    keyTiming: [
+      t('journeyMap.stages.tertiary.keyTiming.0'),
+      t('journeyMap.stages.tertiary.keyTiming.1'),
+      t('journeyMap.stages.tertiary.keyTiming.2'),
+    ],
   }
-};
+]
+
+
+// UI state
+const flippedCards = ref([false, false, false, false])
+const speechActive = ref(false)
+const currentSpeech = ref('')
+const isDragging = ref(false)
+const startX = ref(0)
+const scrollLeft = ref(0)
+const isScrollStart = ref(true)
+const isScrollEnd = ref(false)
+const timeline = ref(null)
+
+// Methods
+const toggleSpeech = () => {
+  speechActive.value = !speechActive.value
+  if (speechActive.value) {
+    currentSpeech.value = kangarooDefault
+    setTimeout(() => { speechActive.value = false }, 5000)
+  }
+}
+
+const updateSpeechBubble = (idx) => {
+  currentSpeech.value = stages[idx].kangarooTip || kangarooDefault
+  speechActive.value = true
+  setTimeout(() => { speechActive.value = false }, 5000)
+}
+
+const flipCard = (index) => {
+  if (!flippedCards.value[index]) updateSpeechBubble(index)
+  flippedCards.value = flippedCards.value.map((v, i) => i === index ? !v : false)
+}
+
+const scrollTimeline = (dir) => {
+  const w = 292
+  timeline.value.scrollLeft += dir * w * 2
+  checkScrollPosition()
+}
+
+const checkScrollPosition = () => {
+  isScrollStart.value = timeline.value.scrollLeft <= 10
+  isScrollEnd.value = timeline.value.scrollLeft + timeline.value.clientWidth >= timeline.value.scrollWidth - 10
+}
+
+const startDrag = (e) => {
+  isDragging.value = true
+  startX.value = e.pageX || e.touches[0].pageX
+  scrollLeft.value = timeline.value.scrollLeft
+}
+
+const onDrag = (e) => {
+  if (!isDragging.value) return
+  e.preventDefault()
+  const x = e.pageX || e.touches[0].pageX
+  timeline.value.scrollLeft = scrollLeft.value - (x - startX.value) * 2
+  checkScrollPosition()
+}
+
+const endDrag = () => {
+  isDragging.value = false
+}
+
+// Lifecycle hooks
+onMounted(() => {
+  currentSpeech.value = kangarooDefault
+  window.addEventListener('resize', checkScrollPosition)
+  checkScrollPosition()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScrollPosition)
+})
 </script>
 
 <style scoped>
+ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+.w-half {
+  width: 15%;
+}
+
 /* 基本容器样式 */
 .journey-container {
   max-width: 1300px;
@@ -256,38 +254,6 @@ export default {
   position: relative;
   overflow: hidden;
   font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
-}
-
-/* 语言切换按钮 */
-.language-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  z-index: 100;
-}
-
-.lang-btn {
-  background: white;
-  border: 1px solid #e2e8f0;
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.lang-btn:first-child {
-  border-radius: 6px 0 0 6px;
-}
-
-.lang-btn:last-child {
-  border-radius: 0 6px 6px 0;
-}
-
-.lang-btn.active {
-  background: #2563eb;
-  color: white;
-  border-color: #2563eb;
 }
 
 .journey-intro {
@@ -368,18 +334,14 @@ export default {
   justify-content: center;
   background: #f8fafc;
   border-radius: 10px;
-  padding: 0.7rem 1rem;
+  padding: 0.1rem 6rem;
   margin: 1rem auto;
-  max-width: 400px;
+  max-width: 550px;
   color: #64748b;
   font-size: 0.9rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   animation: pulse 2s infinite;
-}
-
-.tutorial-hint i {
-  margin-right: 8px;
-  font-size: 1.2rem;
+  height: 60px;
 }
 
 @keyframes pulse {
@@ -399,11 +361,10 @@ export default {
   }
 }
 
-/* 时间轴容器和导航控制 */
 .timeline-container {
   position: relative;
   margin: 2rem 0 1rem 0;
-  padding: 2rem 0;
+  padding: 1rem 0;
 }
 
 .timeline-nav {
@@ -440,10 +401,6 @@ export default {
   cursor: not-allowed;
 }
 
-.nav-button i {
-  font-size: 1.5rem;
-}
-
 .flat-timeline {
   display: flex;
   flex-direction: row;
@@ -454,15 +411,12 @@ export default {
   padding: 1rem 0.5rem;
   scroll-behavior: smooth;
   -ms-overflow-style: none;
-  /* IE and Edge */
   scrollbar-width: none;
-  /* Firefox */
   transition: all 0.5s ease;
 }
 
 .flat-timeline::-webkit-scrollbar {
   display: none;
-  /* Chrome, Safari, Opera */
 }
 
 /* 连接线 */
@@ -480,10 +434,9 @@ export default {
 
 /* 卡片样式 */
 .flat-step {
-  flex: 0 0 260px;
+  flex: 0 0 300px;
   width: 260px;
-  height: 400px;
-  /* 增加一点高度 */
+  height: 550px;
   border-radius: 16px;
   display: flex;
   align-items: stretch;
@@ -511,39 +464,6 @@ export default {
   }
 }
 
-.flat-step:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.flat-step:nth-child(2) {
-  animation-delay: 0.3s;
-}
-
-.flat-step:nth-child(3) {
-  animation-delay: 0.5s;
-}
-
-.flat-step:nth-child(4) {
-  animation-delay: 0.7s;
-}
-
-.flat-step::after {
-  content: attr(data-after, "点击查看详情");
-  position: absolute;
-  bottom: 40px;
-  /* 调整位置，为问题按钮腾出空间 */
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.8rem;
-  color: #94a3b8;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.flat-step:hover::after {
-  opacity: 1;
-}
-
 .flat-step:hover,
 .flat-step:focus {
   box-shadow: 0 8px 24px 0 rgba(37, 99, 235, 0.15);
@@ -565,7 +485,6 @@ export default {
   transform: rotateY(180deg);
 }
 
-.card-front,
 .card-back {
   width: 100%;
   height: 100%;
@@ -578,16 +497,33 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.5rem 1rem 1.2rem 1rem;
+  padding: 4rem 1rem 1.2rem 1rem;
 }
 
 .card-front {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem 1.2rem 1rem;
   background: inherit;
 }
 
 .card-back {
   transform: rotateY(180deg);
   background: inherit;
+}
+
+.card-back li {
+  line-height: 1.2;
+  margin-bottom: 0.3rem;
 }
 
 .flat-icon {
@@ -598,7 +534,7 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: white;
+  background: #2563eb;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   z-index: 2;
 }
@@ -656,20 +592,19 @@ export default {
 }
 
 .flat-desc {
+  white-space: pre-line;
   font-size: 0.9rem;
   color: #334155;
   background: rgba(255, 255, 255, 0.7);
   border-radius: 8px;
   padding: 0.7em 1em;
-  margin: 0.6em auto 0;
-  height: 80px;
-  width: 90%;
-  overflow-y: auto;
-  text-align: center;
+  margin: 1em auto 0;
+  height: 260px;
+  text-align: left;
   box-shadow: 0 1px 4px 0 rgba(60, 60, 60, 0.03);
   line-height: 1.4;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
 }
 
@@ -694,135 +629,9 @@ export default {
   z-index: 5;
 }
 
-.question-button i {
-  margin-right: 5px;
-  font-size: 1rem;
-}
-
 .question-button:hover {
   background: #e2e8f0;
   color: #2563eb;
-}
-
-/* 问题模态框 */
-.question-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(15, 23, 42, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.question-modal.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.question-modal-content {
-  background: #fff;
-  border-radius: 16px;
-  padding: 1.5rem;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  position: relative;
-  transform: translateY(20px);
-  transition: transform 0.3s ease;
-}
-
-.question-modal.active .question-modal-content {
-  transform: translateY(0);
-}
-
-.question-modal-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #1e40af;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-}
-
-.question-modal-title i {
-  margin-right: 8px;
-  font-size: 1.3rem;
-}
-
-.quick-questions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  margin-bottom: 1rem;
-}
-
-.question-item {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 0.8rem 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.question-item:hover {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  transform: translateX(5px);
-}
-
-.question-item-text {
-  font-size: 0.95rem;
-  color: #334155;
-}
-
-.question-answer {
-  background: #f1f5f9;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-top: 1.5rem;
-  font-size: 0.95rem;
-  color: #334155;
-  line-height: 1.5;
-  display: none;
-}
-
-.question-answer.active {
-  display: block;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-.modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  color: #64748b;
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.modal-close:hover {
-  color: #1e40af;
 }
 
 /* 详情内容样式 */
@@ -885,10 +694,6 @@ export default {
   box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
 }
 
-.back-button i {
-  margin-right: 5px;
-}
-
 /* 扁平色块 */
 .early {
   background: #e0f2fe;
@@ -907,17 +712,6 @@ export default {
 }
 
 /* 响应式 */
-@media (max-width: 1100px) {
-  .timeline-container {
-    padding: 1rem 0;
-  }
-
-  .flat-timeline {
-    justify-content: flex-start;
-    padding-bottom: 1rem;
-  }
-}
-
 @media (max-width: 900px) {
   .flat-timeline {
     gap: 1.5rem;
