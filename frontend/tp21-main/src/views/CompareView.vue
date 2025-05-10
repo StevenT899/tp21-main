@@ -114,7 +114,7 @@
                   <p class="text-lg text-gray-700 mb-6">
                     {{ $t('compareView.languageProgram.description') }}
                   </p>
-                  <button @click="toggleModal('languageProgram')"
+                  <button @click="$router.push({ name: 'ArticleDetail', params: { id: 30 } })"
                     class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                     {{ $t('compareView.languageProgram.readMore') }}
                   </button>
@@ -181,7 +181,7 @@
                       <p class="text-lg text-gray-700 mb-6">
                         {{ $t('compareView.icseaModal.description') }}
                       </p>
-                      <button @click="toggleModal('icsea')"
+                      <button @click="$router.push({ name: 'ArticleDetail', params: { id: 23 } })"
                         class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                         {{ $t('compareView.icseaModal.readMore') }}
                       </button>

@@ -34,10 +34,25 @@ const routes = [
     component: () => import('../views/SupportView.vue'),
     meta: { requiresAuth: true }
   },
+
+  {
+    path: '/searchingSupport',
+    name: 'SearchingSupport',
+    component: () => import('../views/SearchingSupport.vue'),
+    meta: { requiresAuth: true }
+  },
+
   {
     path: '/detail/:id',
     name: 'SchoolDetail',
     component: () => import('../views/SchoolDetailView.vue'),
+    meta: { requiresAuth: true }
+  },
+
+  {
+    path: '/article/:id',
+    name: 'ArticleDetail',
+    component: () => import('../views/ArticleDetailView.vue'),
     meta: { requiresAuth: true }
   },
 ];
@@ -56,4 +71,4 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-export default router;    
+export default router;  

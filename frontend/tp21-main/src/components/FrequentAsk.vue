@@ -16,10 +16,11 @@
 >
   <!-- 左侧：图标 + 文本，都垂直居中 -->
   <span class="flex items-center text-lg font-medium leading-tight">
+
     <img
-      :src="schoolIcon"
-      alt="School Icon"
-      class="w-6 h-6 align-middle mr-2"
+            :src="item.icon"
+            alt="icon"
+            class="w-6 h-6 align-middle mr-2"
     />
     <span class="align-middle">{{ item.question }}</span>
   </span>
@@ -76,10 +77,15 @@
   <script setup>
   import { ref } from 'vue'
   import schoolIcon from '@/assets/images/school.png';
+  import q2 from '@/assets/images/q2.png';
+  import q3 from '@/assets/images/q3.png';
+  import q4 from '@/assets/images/q4.png';
   
   const faqs = ref([
     {
       question: 'What types of primary schools are available in Victoria?',
+      id: 1,
+      icon: schoolIcon,
       answer: [
         'Victoria has several types of primary schools:',
         '• Government (Public) Schools: Free to attend, open to everyone. Most students go to their local school, known as a Designated Neighbourhood School.',
@@ -91,6 +97,8 @@
     },
     {
       question: 'What is a school zone and how can I find schools within my zone?',
+      id: 7,
+      icon: q2,
       answer: [
         'A school zone is the geographic area around a school that defines which students have a guaranteed right to enrol.',
         'Every Victorian government school has a zone, and children who live in that zone are entitled to attend that school.',
@@ -100,20 +108,25 @@
     },
     {
       question: 'How do I enroll my child in school?',
+      id: 16,
+      icon: q3,
       answer: [
-        'To enrol your child, contact the school directly or visit the Department of Education website for online enrolment forms.',
-        'You’ll need to provide proof of residence, birth certificate and immunisation records.'
+        'Contact the school directly to request an enrolment form or download it from the Department of Education website.\nYou’ll need to fill out the form and provide documents like proof of address, ID, and immunisation history.'
       ],
       open: false
     },
     {
       question: 'Can I enrol my child in multiple schools simultaneously?',
+      id: 22,
+      icon: q4,
       answer: [
-        'No. Each child may only hold one active enrolment at a time. If you wish to transfer, you must complete the withdrawal process at the current school first.'
+        'No. While you can apply to multiple schools, your child can only enrol in one school at a time.\nOnce accepted and confirmed, other offers should be declined.'
       ],
       open: false
     }
   ])
+  
+
   
   function toggle(index) {
     faqs.value[index].open = !faqs.value[index].open

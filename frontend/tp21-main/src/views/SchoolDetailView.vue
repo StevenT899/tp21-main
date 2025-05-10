@@ -142,7 +142,7 @@
                     <p class="text-lg text-gray-700 mb-6">
                         {{ $t('SchoolDetail.languageProgram.modal.description') }}
                     </p>
-                    <button @click="toggleModal('languageProgram')"
+                    <button @click="$router.push({ name: 'ArticleDetail', params: { id: 30 } })"
                         class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                         {{ $t('SchoolDetail.languageProgram.modal.readMore') }}
                     </button>
@@ -226,7 +226,7 @@
                         <p class="text-lg text-gray-700 mb-6">
                             {{ $t('SchoolDetail.icseaModal.description') }}
                         </p>
-                        <button @click="toggleModal('icsea')"
+                        <button @click="$router.push({ name: 'ArticleDetail', params: { id: 23 } })"
                             class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                             {{ $t('SchoolDetail.icseaModal.readMore') }}
                         </button>
