@@ -31,6 +31,7 @@ export default defineConfig(({ mode }) => {
       outDir: env.VITE_BASE
         ? `dist/${env.VITE_BASE.replace(/^\/|\/$/g, '')}`
         : 'dist'
-    }
+    },
+    assetsInclude: ['**/*.docx']
   }
 })

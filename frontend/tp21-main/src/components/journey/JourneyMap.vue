@@ -20,18 +20,17 @@
 
     <!-- Timeline with navigation -->
     <div class="timeline-container">
-      <div class="timeline-nav flex space-x-2">
-        <button
-          class="nav-button w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          :disabled="isScrollStart" @click="scrollTimeline(-1)">
-          <span class="w-2 h-2 border-t-2 border-l-2 border-gray-500 rotate-[-45deg]"></span>
-        </button>
-        <button
-          class="nav-button w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          :disabled="isScrollEnd" @click="scrollTimeline(1)">
-          <span class="w-2 h-2 border-t-2 border-l-2 border-gray-500 rotate-[135deg]"></span>
-        </button>
-      </div>
+
+      <button
+        class="nav-button absolute left-0 top-1/3 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        :disabled="isScrollStart" @click="scrollTimeline(-1)">
+        <span class="w-2 h-2 border-t-2 border-l-2 border-gray-500 rotate-[-45deg]"></span>
+      </button>
+      <button
+        class="nav-button absolute right-0 top-1/3 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        :disabled="isScrollEnd" @click="scrollTimeline(1)">
+        <span class="w-2 h-2 border-t-2 border-l-2 border-gray-500 rotate-[135deg]"></span>
+      </button>
 
       <div class="flat-timeline" ref="timeline" @scroll="checkScrollPosition" @mousedown="startDrag" @mousemove="onDrag"
         @mouseup="endDrag" @mouseleave="endDrag" @touchstart="startDrag" @touchmove="onDrag" @touchend="endDrag">
@@ -51,7 +50,8 @@
               <div class="flat-age">{{ stage.age }}</div>
               <div class="flat-desc" v-html="stage.desc"></div>
               <!-- Checklist -->
-              <button class="question-button" @click="openChecklist(stage.class); $event.stopPropagation()">Enrolment Checklist</button>
+              <button class="question-button" @click="openChecklist(stage.class); $event.stopPropagation()">Enrolment
+                Checklist</button>
             </div>
 
             <!-- card back -->
@@ -74,6 +74,9 @@
           </div>
         </div>
       </div>
+
+
+
     </div>
   </div>
   <CheckList :visible="showChecklist" :title="currentTitle" :checklist="currentChecklist" @close="closeChecklist" />
@@ -92,11 +95,9 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-function openRelatedQuestions(index) {
-  // 这里可以添加逻辑来设置与相关问题相关的数据
-  // 例如，设置一个新的弹窗内容
-  // 目前仅做示例，弹出一个简单的提示
-  console.log(`打开与第 ${index + 1} 个阶段相关的问题`);
+function openRelatedQuestions() {
+  console.log(`打开与第个阶段相关的问题`);
+
 }
 
 // CheckList
@@ -106,37 +107,48 @@ const currentTitle = ref('');
 
 function openChecklist(type) {
   if (type === 'early') {
-    currentTitle.value = 'University';
+    currentTitle.value = 'For kinder/childcare';
     currentChecklist.value = [
-      'Application form',
-      'Academic transcripts',
-      'ID/passport',
-      'Personal statement',
-      'Letters of recommendation',
+      'Parent ID or Medicare card',
+      'Child\'s Birth certificate or other identity documents',
+      'Child\'s Medical health and immunisation status',
+      'Proof of address',
+      'Information about yourself and any other parents, carers or guardians',
+      'Details of people who can collect your child',
+      'Details of any parenting orders or legal matters to do with the care or safety of your child.',
+      'Child Care Subsidy application (if eligible)',
     ];
   } else if (type === 'primary') {
-    currentTitle.value = 'TAFE';
+    currentTitle.value = 'Government primary school';
     currentChecklist.value = [
+      'Parent ID or Medicare card',
+      'Parent and emergency contact details',
+      'Child\'s birth certificate or passport',
+      'Child\'s immunisation history statement',
+      'Child\'s health information (allergies or illnesses)',
+      'Details of any parenting orders or legal matters to do with the care or safety of your child',
+      'Proof of address',
       'Application form',
-      'Proof of age',
-      'Resume (if needed)',
-      'Previous qualifications',
     ];
   } else if (type === 'secondary') {
-    currentTitle.value = 'TAFE';
+    currentTitle.value = 'Government secondary school';
     currentChecklist.value = [
+      'Parent ID or Medicare card',
+      'Parent and emergency contact details',
+      'Child\'s birth certificate or passport',
+      'Child\'s immunisation history statement',
+      'Child\'s health information (allergies or illnesses)',
+      'Details of any parenting orders or legal matters to do with the care or safety of your child',
+      'Proof of address',
       'Application form',
-      'Proof of age',
-      'Resume (if needed)',
-      'Previous qualifications',
     ];
   } else if (type === 'tertiary') {
     currentTitle.value = 'TAFE';
     currentChecklist.value = [
-      'Application form',
-      'Proof of age',
-      'Resume (if needed)',
-      'Previous qualifications',
+      'Unique Student Identifier',
+      'Birth certificate or passport',
+      'Online assessment*',
+      'Application form*',
     ];
   }
   showChecklist.value = true;
