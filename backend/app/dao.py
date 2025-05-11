@@ -2,6 +2,9 @@
 from .models import School, Language, LanguageProgram, Article, db
 from sqlalchemy.orm import joinedload, selectinload, load_only
 
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 def fetch_all_schools():
     """
     Retrieve all schools with their associated languages.
@@ -199,3 +202,23 @@ def fetch_article_by_id(article_id):
             Article.licence
         )
     ).get(article_id)
+
+
+# def fetch_search_result():
+#     articles = fetch_all_articles()
+
+
+def fetch_search_result(search_term):
+    df = fetch_all_articles()
+    
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = vectorizer.fit_transform(df['Content'])
+    query_vec = vectorizer.transform([search_term])
+
+    similarities = cosine_similarity(query_vec, tfidf_matrix)[0]
+    top_indices = similarities.argsort()[::-1]
+
+    results = df.iloc[top_indices][['ID', 'Topic']].copy()
+    results['similarity_score'] = similarities[top_indices]
+
+    return results.to_dict(orient='records') 

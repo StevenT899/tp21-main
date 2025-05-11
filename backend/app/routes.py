@@ -1,7 +1,7 @@
 # app/routes.py
 from flask import Blueprint, jsonify, request
 import requests
-from .dao import fetch_all_schools, fetch_all_zone_schools, fetch_zone_schools_by_name, fetch_school_by_id,fetch_all_articles,fetch_article_by_id
+from .dao import fetch_all_schools, fetch_all_zone_schools, fetch_zone_schools_by_name, fetch_school_by_id,fetch_all_articles,fetch_article_by_id, fetch_search_result
 from .config import VALID_USERNAME, VALID_PASSWORD
 
 bp = Blueprint('api', __name__)
@@ -76,3 +76,13 @@ def get_article(article_id):
         'reference': article.reference,
         'licence':   article.licence
     })
+
+
+@bp.route('/search', methods=['GET'])
+def search():
+    try:
+        articles = fetch_all_articles()
+        return jsonify(articles)
+    except Exception as e:
+        print(f"Error occurred: {str(e)}")
+        return jsonify({'error': 'Internal Server Error'}), 500
