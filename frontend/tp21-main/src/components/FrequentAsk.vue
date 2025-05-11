@@ -1,20 +1,20 @@
 <template>
     <section class="max-w-3xl mx-auto py-8 px-4">
-      <!-- 标题 -->
+   
       <h2 class="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
   
-      <!-- FAQ 列表 -->
+  
       <div
         v-for="(item, idx) in faqs"
         :key="idx"
         class="border-b last:border-b-0"
       >
-        <!-- 问题标题行：文本在左，图标在右 -->
+    
         <button
   @click="toggle(idx)"
   class="w-full flex items-center justify-between py-4 focus:outline-none"
 >
-  <!-- 左侧：图标 + 文本，都垂直居中 -->
+
   <span class="flex items-center text-lg font-medium leading-tight">
 
     <img
@@ -25,7 +25,7 @@
     <span class="align-middle">{{ item.question }}</span>
   </span>
 
-  <!-- 右侧：+ / – 图标 -->
+
   <svg
     v-if="item.open"
     xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,7 @@
 </button>
 
   
-        <!-- 回答内容 -->
+     
         <transition name="fade">
           <div
             v-if="item.open"
