@@ -342,7 +342,7 @@ export default {
             tertiary: {
                 title: "Teriary Education",
                 age: "18+ years",
-                desc: "After secondary school, students can continue their education through university or vocational training (TAFE).\n University focuses on theory and degrees \n TAFE is more practical and job-oriented.\n Both paths can lead to careers or further study.",
+                desc: "After secondary school, students can continue their education through university or vocational training (TAFE).<br><strong>University</strong> focuses on theory and degrees <br><strong>TAFE</strong> is more practical and job-oriented.<br> Both paths can lead to careers or further study.",
                 whatTheyLearn: {
                     0:'University: Academic knowledge, research, professional qualifications',
                     1:'TAFE: Practical skills, apprenticeships, industry certificates',
