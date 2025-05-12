@@ -4,6 +4,7 @@ import requests
 from .dao import fetch_all_schools, fetch_all_zone_schools, fetch_zone_schools_by_name, fetch_school_by_id,fetch_all_articles,fetch_article_by_id, fetch_search_result
 from .config import VALID_USERNAME, VALID_PASSWORD
 
+
 bp = Blueprint('api', __name__)
 
 @bp.route('/login', methods=['POST'])
@@ -77,12 +78,14 @@ def get_article(article_id):
         'licence':   article.licence
     })
 
+@bp.route('/return-articles', methods=['POST'])
+def filter_articles():
+    data = request.get_json()
+    query = data.get('query', '').lower()
+    articles = data.get('articles', [])
+    result = fetch_search_result(query, articles)
+    return jsonify(result), 200
 
-@bp.route('/search', methods=['GET'])
-def search():
-    try:
-        articles = fetch_all_articles()
-        return jsonify(articles)
-    except Exception as e:
-        print(f"Error occurred: {str(e)}")
-        return jsonify({'error': 'Internal Server Error'}), 500
+
+
+

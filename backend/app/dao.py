@@ -2,8 +2,11 @@
 from .models import School, Language, LanguageProgram, Article, db
 from sqlalchemy.orm import joinedload, selectinload, load_only
 
-from sklearn.feature_extraction.text import TfidfVectorizer
+from flask import jsonify
+from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
+import pandas as pd
+import numpy as np
 
 def fetch_all_schools():
     """
@@ -204,21 +207,30 @@ def fetch_article_by_id(article_id):
     ).get(article_id)
 
 
-# def fetch_search_result():
-#     articles = fetch_all_articles()
 
 
-def fetch_search_result(search_term):
-    df = fetch_all_articles()
+model = SentenceTransformer('paraphrase-MiniLM-L3-v2')
+
+def fetch_search_result(query, articles):
+    if not query or not articles:
+        return jsonify({"error": "Missing query or articles"}), 400
     
-    vectorizer = TfidfVectorizer(stop_words='english')
-    tfidf_matrix = vectorizer.fit_transform(df['Content'])
-    query_vec = vectorizer.transform([search_term])
+    df = pd.DataFrame(articles)
+    if df.empty or 'content' not in df.columns:
+        return jsonify({"error": "Invalid article data"}), 400
+    df['content'] = df['content'].fillna("")
 
-    similarities = cosine_similarity(query_vec, tfidf_matrix)[0]
-    top_indices = similarities.argsort()[::-1]
+    article_embeddings = model.encode(df['content'].tolist(), show_progress_bar=False)
+    query_embedding = model.encode([query])
 
-    results = df.iloc[top_indices][['ID', 'Topic']].copy()
-    results['similarity_score'] = similarities[top_indices]
+    
+    similarities = cosine_similarity(query_embedding, article_embeddings)[0]
+    top_indices = np.argsort(similarities)[::-1]
 
-    return results.to_dict(orient='records') 
+   
+    df_result = df.iloc[top_indices].copy()
+    df_result['similarity_score'] = similarities[top_indices]
+
+    result = df_result.to_dict(orient='records')
+
+    return result
