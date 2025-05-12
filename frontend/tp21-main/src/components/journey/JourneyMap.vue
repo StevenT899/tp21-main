@@ -3,15 +3,12 @@
     <div class="journey-intro">
       <h2 class="journey-title">{{ $t('journeyMap.journey.title') }}</h2>
       <p class="journey-subtitle">{{ $t('journeyMap.journey.subtitle') }}</p>
-
       <!-- Kangaroo guide -->
       <div class="kangaroo-guide" @click="toggleSpeech">
         <img src="@/assets/images/kangaroo.png" alt="kangaroo photo" class="w-full h-auto" />
       </div>
-      <div class="speech-bubble" :class="{ 'active': speechActive }">
-        {{ currentSpeech }}
-      </div>
-
+      <div class="speech-bubble" :class="{ 'active': speechActive }">{{ currentSpeech }}</div>
+      <!-- tap hint -->
       <div class="tutorial-hint">
         <img src="@/assets/images/tap.png" alt="tap icon" class="w-half h-auto" />
         <span>{{ $t('journeyMap.journey.tutorialHint') }}</span>
@@ -20,7 +17,7 @@
 
     <!-- Timeline with navigation -->
     <div class="timeline-container">
-
+      <!-- nav-button -->
       <button
         class="nav-button absolute left-0 top-1/3 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         :disabled="isScrollStart" @click="scrollTimeline(-1)">
@@ -41,12 +38,16 @@
           <div class="card-container" :class="{ 'flipped': flippedCards[index] }">
 
             <!-- card front -->
-            <div class="card-front">
+            <div class="card-front" :class="{ 'non-interactive': flippedCards[index] }">
               <div class="icons-container">
-                <img v-for="(icon, i) in (Array.isArray(stage.icon) ? stage.icon : [stage.icon])" :key="i" :src="icon"
-                  :alt="stage.title + ' icon'" class="flat-icon" />
+                <div class="icon-wrapper" v-for="(icon, i) in (Array.isArray(stage.icon) ? stage.icon : [stage.icon])"
+                  :key="i">
+                  <div class="flat-icon" :class="stage.class">
+                    <img :src="icon" :alt="stage.title + ' icon'" class="svg-icon" />
+                  </div>
+                </div>
               </div>
-              <div class="flat-title">{{ stage.title }}</div>
+              <div class="flat-title mt-1">{{ stage.title }}</div>
               <div class="flat-age">{{ stage.age }}</div>
               <div class="flat-desc" v-html="stage.desc"></div>
               <!-- Checklist -->
@@ -57,33 +58,33 @@
             <!-- card back -->
             <div class="card-back">
               <div>
-                <strong>What they learn:</strong>
+                <strong>{{ $t('journeyMap.cardBack.whatTheyLearn') }}</strong>
                 <ul>
                   <li v-for="(detail, idx) in stage.whatTheyLearn" :key="idx">{{ detail }}</li>
                 </ul>
 
-                <strong>Key timing:</strong>
+                <strong>{{ $t('journeyMap.cardBack.keyTiming') }}</strong>
                 <ul>
                   <li v-for="(detail, idx) in stage.keyTiming" :key="idx">{{ detail }}</li>
                 </ul>
               </div>
-              <button class="back-button" @click="openRelatedQuestions(index); $event.stopPropagation()">
+              <button class="back-button" @click.stop="openRelatedQuestions(index)">
                 Related questions
               </button>
             </div>
           </div>
         </div>
       </div>
-
-
-
     </div>
   </div>
+
   <CheckList :visible="showChecklist" :title="currentTitle" :checklist="currentChecklist" @close="closeChecklist" />
+  <QuestionList :visible="showQuestionList" :title="questionTitle" :questions="questionList"
+    @close="showQuestionList = false" />
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import kinderIcon from '@/assets/images/kinder.svg'
 import primaryIcon from '@/assets/images/primary.svg'
 import secondaryIcon from '@/assets/images/secondary.svg'
@@ -91,14 +92,53 @@ import vocationalIcon from '@/assets/images/vocational.svg'
 import higherIcon from '@/assets/images/higher.svg'
 import '../../assets/journey.css'
 import CheckList from './CheckList.vue'
+import QuestionList from './QuestionList.vue'
 import { useI18n } from 'vue-i18n'
+
 
 const { t } = useI18n()
 
-function openRelatedQuestions() {
-  console.log(`打开与第个阶段相关的问题`);
+// QuestionList
+const showQuestionList = ref(false)
+const questionList = ref([])
+const questionTitle = ref('')
 
+function openRelatedQuestions(index) {
+  const stage = stages.value[index]
+  if (!stage) return
+  const type = stage.class
+
+  if (type === 'early') {
+    questionTitle.value = 'Early Childhood';
+    questionList.value = [
+      { title: 'What types of kindergarten programs are available?', id: 35 },
+      { title: 'Is my child eligible for 15 hours of free Three-Year-Old Kinder per week?', id: 36 }
+    ];
+  } else if (type === 'primary') {
+    questionTitle.value = 'Primary School';
+    questionList.value = [
+      { title: 'What is a school zone and how can I find schools within my zone?', id: 7 },
+      { title: 'What is NAPLAN?', id: 25 },
+      { title: 'What is a language program?', id: 30 }
+    ];
+  } else if (type === 'secondary') {
+    questionTitle.value = 'Secondary School';
+    questionList.value = [
+      { title: 'What is the VCE (Victorian Certificate of Education)?', id: 26 },
+      { title: 'What is the ATAR?', id: 27 }
+    ];
+  } else if (type === 'tertiary') {
+    questionTitle.value = 'Tertiary Education';
+    questionList.value = [
+      { title: 'When should I decide whether to go to TAFE or university?', id: 37 },
+      { title: 'Can I use a VET course as a pathway to university?', id: 38 }
+    ];
+  }
+
+  showQuestionList.value = true;
 }
+
+
 
 // CheckList
 const showChecklist = ref(false);
@@ -158,12 +198,8 @@ function closeChecklist() {
   showChecklist.value = false;
 }
 
-
-// Kangaroo speech defaults
-const kangarooDefault = t('journeyMap.journey.kangarooGuide')
-
 // Education stages
-const stages = [
+const stages = computed(() => [
   {
     class: 'early',
     title: t('journeyMap.stages.early.title'),
@@ -179,6 +215,7 @@ const stages = [
       t('journeyMap.stages.early.keyTiming.1'),
       t('journeyMap.stages.early.keyTiming.2'),
     ],
+    kangarooTip: t('journeyMap.stages.early.kangarooTip'),
   },
   {
     class: 'primary',
@@ -196,6 +233,7 @@ const stages = [
       t('journeyMap.stages.primary.keyTiming.2'),
       t('journeyMap.stages.primary.keyTiming.3'),
     ],
+    kangarooTip: t('journeyMap.stages.early.kangarooTip'),
   },
   {
     class: 'secondary',
@@ -213,6 +251,7 @@ const stages = [
       t('journeyMap.stages.secondary.keyTiming.1'),
       t('journeyMap.stages.secondary.keyTiming.2'),
     ],
+    kangarooTip: t('journeyMap.stages.early.kangarooTip'),
   },
   {
     class: 'tertiary',
@@ -229,8 +268,9 @@ const stages = [
       t('journeyMap.stages.tertiary.keyTiming.1'),
       t('journeyMap.stages.tertiary.keyTiming.2'),
     ],
+    kangarooTip: t('journeyMap.stages.early.kangarooTip'),
   }
-]
+])
 
 // UI state
 const flippedCards = ref([false, false, false, false])
@@ -243,6 +283,9 @@ const isScrollStart = ref(true)
 const isScrollEnd = ref(false)
 const timeline = ref(null)
 
+// Kangaroo speech defaults
+const kangarooDefault = computed(() => t('journeyMap.journey.kangarooGuide'))
+
 // Methods
 const toggleSpeech = () => {
   speechActive.value = !speechActive.value
@@ -252,8 +295,9 @@ const toggleSpeech = () => {
   }
 }
 
-const updateSpeechBubble = (idx) => {
-  currentSpeech.value = stages[idx].kangarooTip || kangarooDefault
+function updateSpeechBubble(idx) {
+  const tip = stages[idx]?.kangarooTip
+  currentSpeech.value = tip || kangarooDefault
   speechActive.value = true
   setTimeout(() => { speechActive.value = false }, 5000)
 }

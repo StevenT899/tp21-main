@@ -293,94 +293,74 @@ export default {
             kangarooGuide: "Hello! I'm the Victorian Education Kangaroo. Click each card for details, or ask me any questions!",
             tutorialHint: "Click on each stage card for details, swipe to see more"
         },
+        cardBack: {
+            whatTheyLearn: "What they learn:",
+            keyTiming: "Key timing:"
+        },
         stages: {
             early: {
                 title: "Early Childhood Care",
                 age: "Ages 0-5",
                 desc: "Early childhood education supports your child's development before formal school begins.\n It includes childcare, kindergarten and play-based learning programs-often the first step in settling into Australian life.\n Starting early can help your child build confidence, social skills, and get ready for primary school.",
-                
+
                 whatTheyLearn: {
-                    0:'Play-based learning, communication, early literacy and numeracy',
-                    1:'Social development, emotional regulation, independence',
+                    0: 'Play-based learning, communication, early literacy and numeracy',
+                    1: 'Social development, emotional regulation, independence',
                 },
                 keyTiming: {
-                    0:'Age 3-4: Enrol in funded kindergarten (15 hours/week)',
-                    1:'Age 4-5: Attend preschool (Prep readiness)',
-                    2:'Some kindergartens require registration 1 year in advance'
+                    0: 'Age 3-4: Enrol in funded kindergarten (15 hours/week)',
+                    1: 'Age 4-5: Attend preschool (Prep readiness)',
+                    2: 'Some kindergartens require registration 1 year in advance'
                 },
+                kangarooTip: "Click to explore early childhood learning!"
             },
             primary: {
                 title: "Primary School",
                 age: "Ages 5-12",
                 desc: "Primary school marks the start of formal education in Victoria.\n Children usually begin at age 5 (in Prep) and continue to Year 6.\n Government schools are free for local students and zoned by address.\n This stage lays the foundation for academic skills, social learning and emotional wellbeing.",
                 whatTheyLearn: {
-                    0:'English, Mathematics, Science, Humanities, Arts, Health & PE',
-                    1:'Communication, teamwork, responsibility',
+                    0: 'English, Mathematics, Science, Humanities, Arts, Health & PE',
+                    1: 'Communication, teamwork, responsibility',
                 },
                 keyTiming: {
-                    0:'Prep enrolment: Apply the year before (by August)',
-                    1:'School year divided into 4 terms',
-                    2:'NAPLAN: Conducted in Years 3 and 5, assessing reading, writing, spelling and numeracy',
-                    3:'Grade 6: Transition information for secondary school usually begins mid-year'
+                    0: 'Prep enrolment: Apply the year before (by August)',
+                    1: 'School year divided into 4 terms',
+                    2: 'NAPLAN: Conducted in Years 3 and 5, assessing reading, writing, spelling and numeracy',
+                    3: 'Grade 6: Transition information for secondary school usually begins mid-year'
                 },
+                kangarooTip: "Click to explore early childhood learning!"
             },
             secondary: {
                 title: "Secondary School",
                 age: "Ages 12-18",
                 desc: "Secondary school prepares students for life after school-whether that's further study, training, or work.\n It begins in Year 7 (around age 12) and continues to Year 12.\n Students can attend local schools, selective schools or schools with specific programs.",
                 whatTheyLearn: {
-                    0:'Years 7-10: Broad subjects, critical thinking, digital skills',
-                    1:'Years 11-12: VCE or VCE VM (focus on exams or practical skills)',
-                    2:'Students may sit the ATAR for university entry',
+                    0: 'Years 7-10: Broad subjects, critical thinking, digital skills',
+                    1: 'Years 11-12: VCE or VCE VM (focus on exams or practical skills)',
+                    2: 'Students may sit the ATAR for university entry',
                 },
                 keyTiming: {
-                    0:'Applications for selective schools usually open in Year 6',
-                    1:'Year 10: Career planning and subject selection for VCE',
-                    2:'Year 12: Apply for university via VTAC (July-September)',
+                    0: 'Applications for selective schools usually open in Year 6',
+                    1: 'Year 10: Career planning and subject selection for VCE',
+                    2: 'Year 12: Apply for university via VTAC (July-September)',
                 },
+                kangarooTip: "Click to explore early childhood learning!"
             },
             tertiary: {
                 title: "Teriary Education",
                 age: "18+ years",
                 desc: "After secondary school, students can continue their education through university or vocational training (TAFE).<br><strong>University</strong> focuses on theory and degrees <br><strong>TAFE</strong> is more practical and job-oriented.<br> Both paths can lead to careers or further study.",
                 whatTheyLearn: {
-                    0:'University: Academic knowledge, research, professional qualifications',
-                    1:'TAFE: Practical skills, apprenticeships, industry certificates',
+                    0: 'University: Academic knowledge, research, professional qualifications',
+                    1: 'TAFE: Practical skills, apprenticeships, industry certificates',
                 },
                 keyTiming: {
-                    0:'Year 12: Apply via VTAC for most university and TAFE courses',
-                    1:'Some courses require early preparation (e.g., art, medicine)',
-                    2:'Study starts early in the year (Feb-March)',
+                    0: 'Year 12: Apply via VTAC for most university and TAFE courses',
+                    1: 'Some courses require early preparation (e.g., art, medicine)',
+                    2: 'Study starts early in the year (Feb-March)',
                 },
+                kangarooTip: "Click to explore early childhood learning!"
             }
-        },
-        questions: {
-            modalTitles: [
-                "Early Childhood Education FAQs",
-                "Primary Education FAQs",
-                "Secondary Education FAQs",
-                "Higher Education FAQs"
-            ],
-            early: [
-                { question: "What type of education should my 3-year-old child attend?", answer: "3-year-olds can begin Kindergarten with 15 free hours/week; Childcare centers also an option." },
-                { question: "How do I apply for kindergarten subsidies?", answer: "Apply via Centrelink for CCS; amount based on income, service type, hours." },
-                { question: "How do I choose the right kindergarten?", answer: "Consider location, pedagogies, ratios, fees; visit and read reviews." }
-            ],
-            primary: [
-                { question: "My child is 6 years old, what should I prepare now?", answer: "Enroll in Prep, get uniforms, supplies, attend orientation, build self-care skills." },
-                { question: "How do I choose a primary school?", answer: "Public uses zonal enrolment; private requires applications and interviews; consider reputation and programs." },
-                { question: "What is assessment/reporting?", answer: "Continuous assessments; two reports/year; NAPLAN in Years 3 & 5; parent-teacher meetings." }
-            ],
-            secondary: [
-                { question: "Transition tips primary to secondary?", answer: "Apply early, attend transition events, develop organization and emotional support." },
-                { question: "Differences between VCE and VCAL?", answer: "VCE for uni (ATAR); VCAL vocational focus; integrated into flexible VCE from 2023." },
-                { question: "How to prepare for VCE exams?", answer: "Study plans, past papers, health support, tutoring, workshops." }
-            ],
-            tertiary: [
-                { question: "How to apply to universities?", answer: "Use VTAC, submit up to 8 preferences, pay fee, accept offer; internationals via agents or direct." },
-                { question: "TAFE vs university?", answer: "TAFE vocational certificates diplomas; uni degrees; shorter TAFE courses; credit pathways." },
-                { question: "Financial assistance?", answer: "HECS-HELP, FEE-HELP, scholarships, Austudy, part-time work, budget plans." }
-            ]
         }
     },
 
