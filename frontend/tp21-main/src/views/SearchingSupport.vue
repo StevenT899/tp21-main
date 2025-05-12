@@ -145,8 +145,19 @@ async function fetchResults() {
     searchTerm.value = route.query.q || ''
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/articles`)
     results.value = response.data
-    
     totalResults.value = response.data.length
+
+    searchTerm.value = route.query.q || ''
+
+    const returnList = await axios.post(`${import.meta.env.VITE_API_URL}/return-articles`, {
+      query: searchTerm.value,
+      articles: results.value
+    })
+
+     results.value = returnList.data
+     totalResults.value = returnList.data.length
+
+
   } catch (error) {
     console.error('Error fetching or searching articles:', error)
   }
