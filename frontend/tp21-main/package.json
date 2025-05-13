@@ -7,6 +7,7 @@
     "dev": "vite",
     "build:iter1": "vite build --mode iter1",
     "build:iter2": "vite build --mode iter2",
+    "build:iter3": "vite build --mode iter3",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix"
