@@ -1,15 +1,15 @@
 <template>
   <div class="journey-container">
     <div class="journey-intro">
-      <!-- Kangaroo guide -->
-      <div class="kangaroo-guide" @click="toggleSpeech">
-        <img src="@/assets/images/kangaroo.png" alt="kangaroo photo" class="w-full h-auto" />
-      </div>
-      <div class="speech-bubble" :class="{ 'active': speechActive }">{{ currentSpeech }}</div>
       <!-- tap hint -->
       <div class="tutorial-hint">
         <img src="@/assets/images/tap.png" alt="tap icon" class="w-half h-auto" />
         <span>{{ $t('journeyMap.journey.tutorialHint') }}</span>
+      </div>
+      <!-- Kangaroo guide -->
+      <div class="kangaroo-guide" @click="toggleSpeech">
+        <img src="@/assets/images/kangaroo.png" alt="kangaroo photo" class="width: 110px; height: 100px;" />
+        <div class="speech-bubble" :class="{ 'active': speechActive }">{{ currentSpeech }}</div>
       </div>
     </div>
 
@@ -119,14 +119,14 @@ const toggleSpeech = () => {
 }
 
 function updateSpeechBubble(idx) {
-  const tip = stages[idx]?.kangarooTip
+  const tip = stages.value[idx]?.kangarooTip
   currentSpeech.value = tip || kangarooDefault
   speechActive.value = true
   setTimeout(() => { speechActive.value = false }, 5000)
 }
 
 const flipCard = (index) => {
-  if (!flippedCards.value[index]) updateSpeechBubble(index)
+  updateSpeechBubble(index)
   flippedCards.value[index] = !flippedCards.value[index]
 }
 
@@ -168,8 +168,6 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', checkScrollPosition)
 })
 
-
-
 // Education stages
 const stages = computed(() => [
   {
@@ -206,7 +204,7 @@ const stages = computed(() => [
       t('journeyMap.stages.primary.keyTiming.2'),
       t('journeyMap.stages.primary.keyTiming.3'),
     ],
-    kangarooTip: t('journeyMap.stages.early.kangarooTip'),
+    kangarooTip: t('journeyMap.stages.primary.kangarooTip'),
   },
   {
     class: 'secondary',
@@ -224,7 +222,7 @@ const stages = computed(() => [
       t('journeyMap.stages.secondary.keyTiming.1'),
       t('journeyMap.stages.secondary.keyTiming.2'),
     ],
-    kangarooTip: t('journeyMap.stages.early.kangarooTip'),
+    kangarooTip: t('journeyMap.stages.secondary.kangarooTip'),
   },
   {
     class: 'tertiary',
@@ -241,7 +239,7 @@ const stages = computed(() => [
       t('journeyMap.stages.tertiary.keyTiming.1'),
       t('journeyMap.stages.tertiary.keyTiming.2'),
     ],
-    kangarooTip: t('journeyMap.stages.early.kangarooTip'),
+    kangarooTip: t('journeyMap.stages.tertiary.kangarooTip'),
   }
 ])
 

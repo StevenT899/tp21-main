@@ -97,8 +97,8 @@ export default {
     },
     helpSection: {
         title: 'WE ARE HERE TO HELP',
-        paragraph1: 'School is more than academics — it’s where children grow and belong. Every child deserves to feel safe, seen, and supported at school. We hope this tool makes it just a little easier — for you, and for them.',
-        signature: '—NewBee Edu Team'
+        paragraph1: "School is more than academics — it's where children grow and belong. Every child deserves to feel safe, seen, and supported at school. We hope this tool makes it just a little easier — for you, and for them.",
+        signature: '— NewBee Edu Team'
     },
     MapShow: {
         filterSection: {
@@ -211,7 +211,7 @@ export default {
         },
         icseaModal: {
             title: 'What is an ICSEA?',
-            description: 'ICSEA is a number that shows the average education and income background of families at a school. It helps give context, but it’s not a score of how “good” a school is.',
+            description: "ICSEA is a number that shows the average education and income background of families at a school. It helps give context, but it's not a score of how “good” a school is.",
             readMore: 'Read More'
         },
     },
@@ -233,7 +233,7 @@ export default {
         },
         icseaModal: {
             title: 'What is an ICSEA?',
-            description: 'ICSEA is a number that shows the average education and income background of families at a school. It helps give context, but it’s not a score of how “good” a school is.',
+            description: "ICSEA is a number that shows the average education and income background of families at a school. It helps give context, but it's not a score of how “good” a school is.",
             readMore: 'Read More'
         },
         schoolZone: {
@@ -274,7 +274,7 @@ export default {
         },
         icseaModal: {
             title: 'What is an ICSEA?',
-            description: 'ICSEA is a number that shows the average education and income background of families at a school. It helps give context, but it’s not a score of how “good” a school is.',
+            description: "ICSEA is a number that shows the average education and income background of families at a school. It helps give context, but it's not a score of how “good” a school is.",
             readMore: 'Read More'
         },
         icseaTitle: "Index of Community Socio-Educational Advantage (ICSEA)",
@@ -288,7 +288,7 @@ export default {
     },
     journeyMap: {
         journey: {
-            kangarooGuide: "Hello! I'm the Victorian Education Kangaroo. Click each card for details, or ask me any questions!",
+            kangarooGuide: "G'day! I'm your SchoolMate Kangaroo. Let's hop through the stages of school life in Victoria, one step at a time. Now try clicking a card for more details.",
             tutorialHint: "Click on each stage card for details, swipe to see more"
         },
         cardFront: {
@@ -315,7 +315,7 @@ export default {
                     1: 'Age 4-5: Attend preschool (Prep readiness)',
                     2: 'Some kindergartens require registration 1 year in advance'
                 },
-                kangarooTip: "Click to explore early childhood learning!"
+                kangarooTip: "Big journeys start small — play, explore, and grow with every step."
             },
             primary: {
                 title: "Primary School",
@@ -331,7 +331,7 @@ export default {
                     2: 'NAPLAN: Conducted in Years 3 and 5, assessing reading, writing, spelling and numeracy',
                     3: 'Grade 6: Transition information for secondary school usually begins mid-year'
                 },
-                kangarooTip: "Click to explore early childhood learning!"
+                kangarooTip: "It's time for big backpacks and even bigger curiosity!"
             },
             secondary: {
                 title: "Secondary School",
@@ -347,7 +347,7 @@ export default {
                     1: 'Year 10: Career planning and subject selection for VCE',
                     2: 'Year 12: Apply for university via VTAC (July-September)',
                 },
-                kangarooTip: "Click to explore early childhood learning!"
+                kangarooTip: "Lots to learn, lots to dream — I'll hop beside you."
             },
             tertiary: {
                 title: "Teriary Education",
@@ -362,7 +362,7 @@ export default {
                     1: 'Some courses require early preparation (e.g., art, medicine)',
                     2: 'Study starts early in the year (Feb-March)',
                 },
-                kangarooTip: "Click to explore early childhood learning!"
+                kangarooTip: "The future's wide open — take the leap that's right for you."
             }
         },
         checklist: {

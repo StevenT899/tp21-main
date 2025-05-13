@@ -286,7 +286,7 @@ export default {
     },
     journeyMap: {
         journey: {
-            kangarooGuide: "你好！我是维州教育袋鼠。点击每张卡片查看详情，有任何问题也可以问我哦！",
+            kangarooGuide: "你好！我是你的 SchoolMate 袋鼠，准备好了吗？我们一起探索孩子在维州的学习旅程吧！点击卡片可以看到更多信息。",
             tutorialHint: "点击每个阶段卡片查看详情，左右滑动查看更多"
         },
         cardFront: {
@@ -312,7 +312,7 @@ export default {
                     1: "4–5 岁：参加学前班（为Prep做准备）",
                     2: "某些幼儿园需提前1年注册"
                 },
-                kangarooTip: "Click to explore early childhood learning!"
+                kangarooTip: "每一次玩耍与探索，都是成长的第一步。伟大的旅程，就从这里悄悄开始。"
             },
             primary: {
                 title: "小学阶段",
@@ -328,7 +328,7 @@ export default {
                     2: "NAPLAN 全国统一评测：在3年级与5年级进行，评估阅读、写作、拼写与数学能力",
                     3: "6年级：开始接受中学过渡信息和升学建议"
                 },
-                kangarooTip: "Click to explore early childhood learning!"
+                kangarooTip: "背上书包，带着满满的好奇心，出发去发现更大的世界吧！"
             },
             secondary: {
                 title: "中学阶段",
@@ -344,7 +344,7 @@ export default {
                     1: '10年级：开始职业规划与VCE课程选择',
                     2: '12年级：通过 VTAC 提交大学志愿（7月至9月）',
                 },
-                kangarooTip: "Click to explore early childhood learning!"
+                kangarooTip: "知识在前，梦想在心，我会一路陪你走向未来。"
             },
             tertiary: {
                 title: "高等/职业教育阶段",
@@ -359,7 +359,7 @@ export default {
                     1: "某些专业（如艺术、护理、教育）需提前准备面试、作品集或额外测试",
                     2: "大部分课程在次年2–3月开学"
                 },
-                kangarooTip: "Click to explore early childhood learning!"
+                kangarooTip: "未来无限宽广，适合你的就是最好的。"
             },
 
         },

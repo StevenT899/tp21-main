@@ -35,28 +35,34 @@ li {
     text-align: center;
     margin-bottom: 2rem;
     position: relative;
+    flex-direction: column;
 }
 
-.journey-title {
-    color: #2563eb;
-    margin-bottom: 0.5rem;
-}
-
-.journey-subtitle {
+.tutorial-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 0rem 6rem;
+    margin: 0 auto;
+    max-width: 550px;
     color: #64748b;
-    font-weight: normal;
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    animation: pulse 2s infinite;
+    height: 60px;
 }
 
-/* 袋鼠角色和对话框 */
 .kangaroo-guide {
-    position: absolute;
-    bottom: 10px;
-    left: 20px;
-    width: 80px;
+    position: relative;
+    margin-top: 1rem;
+    margin-left: 3rem;
+    flex-shrink: 0;
+    width: 110px;
     height: 100px;
-    z-index: 100;
+    min-width: 110px;
+    min-height: 100px;
     cursor: pointer;
     transition: transform 0.3s ease;
 }
@@ -67,9 +73,10 @@ li {
 
 .speech-bubble {
     position: absolute;
-    left: 100px;
-    bottom: 60px;
-    max-width: 220px;
+    left: 130px;
+    top: 10px;
+    min-width: 260px;
+    max-width: 300px;
     background: #fff;
     border: 2px solid #2563eb;
     border-radius: 16px;
@@ -81,7 +88,6 @@ li {
     transform: translateY(10px);
     transition: all 0.3s ease;
     pointer-events: none;
-    z-index: 100;
 }
 
 .speech-bubble::after {
@@ -101,22 +107,6 @@ li {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
-}
-
-.tutorial-hint {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f8fafc;
-    border-radius: 10px;
-    padding: 0.1rem 6rem;
-    margin: 1rem auto;
-    max-width: 550px;
-    color: #64748b;
-    font-size: 0.9rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    animation: pulse 2s infinite;
-    height: 60px;
 }
 
 @keyframes pulse {
@@ -293,7 +283,7 @@ li {
 }
 
 .card-front.non-interactive {
-  pointer-events: none;
+    pointer-events: none;
 }
 
 .card-back {
@@ -307,37 +297,39 @@ li {
 }
 
 .icon-wrapper {
-  width: 64px;
-  height: 64px;
-  background: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    width: 64px;
+    height: 64px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .flat-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  padding: 6px;
-  object-fit: contain;
-  
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    padding: 6px;
+    object-fit: contain;
+
 }
 
 .flat-icon.early {
-  background-color: #8ba6ff
+    background-color: #8ba6ff
 }
+
 .flat-icon.primary {
-  background-color: #fff371
-  
+    background-color: #fff371
 }
+
 .flat-icon.secondary {
-  background-color: #ff9cd4
+    background-color: #ff9cd4
 }
+
 .flat-icon.tertiary {
-  background-color: #7494ff
+    background-color: #7494ff
 }
 
 .step-number {
@@ -497,8 +489,8 @@ li {
 }
 
 .back-button:hover {
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-  transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+    transform: translateY(-2px);
 }
 
 .early {
