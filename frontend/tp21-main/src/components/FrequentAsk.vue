@@ -1,7 +1,7 @@
 <template>
     <section class="max-w-3xl mx-auto py-8 px-4">
    
-      <h2 class="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
+      <h2 class="text-3xl font-bold mb-6">{{ $t('supportView.frequentAskTitle') }}</h2>
   
   
       <div

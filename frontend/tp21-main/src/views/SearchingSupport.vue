@@ -156,6 +156,10 @@ async function fetchResults() {
 
      results.value = returnList.data
      totalResults.value = returnList.data.length
+      if(results.value.content) {
+        results.value.content = results.value.content.replace(/\\n/g, '\n')
+      }
+
 
 
   } catch (error) {
@@ -166,16 +170,19 @@ async function fetchResults() {
 function prevPage() {
   if (page.value > 1) {
     page.value--
+    pageSwitch()
   }
 }
 function nextPage() {
   if (page.value < totalPages.value) {
     page.value++
+    pageSwitch()
   }
 }
 function goPage(n) {
   if (n !== page.value) {
     page.value = n
+    pageSwitch()
   }
 }
 
@@ -185,6 +192,10 @@ function handleScroll() {
 }
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+function pageSwitch() {
+  window.scrollTo({ top: 0 })
 }
 
 onMounted(() => {

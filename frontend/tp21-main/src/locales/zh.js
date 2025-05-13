@@ -438,6 +438,30 @@ export default {
             }
         }
     },
+
+
+    supportView: {
+        Header: {
+            title: '在维州成长：孩子的教育路径',
+            description: '提出问题或浏览常见主题，了解维多利亚州的教育运作方式——从招生到课程设置。输入您的问题即可开始。',
+        },
+
+        Placeholder: '请输入您的问题...',
+        searchButton: '搜索',
+        tryAskingTitle: '你可能想问的',
+
+        supportView: {
+            tryAsking1: "什么是 NAPLAN？",
+            tryAsking2: "ICSEA 是什么意思？为什么它很重要？",
+            tryAsking3: "学校的报名截止时间是什么时候？",
+            tryAsking4: "什么是独立学校"
+        },
+
+        frequentAskTitle: '常用问题',
+        
+      
+    },
+
     checklist: {
         title: "入学清单",
         instruction: "请勾选您已准备的项目：",
