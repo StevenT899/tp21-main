@@ -439,10 +439,35 @@ export default {
             }
         },
     },
+
+
+
+    supportView: {
+        Header: {
+            title: 'Find answers about schooling in Victoria',
+            description: 'Ask a question or browse common topics to learn how education works in Victoria — from enrolment to curriculum and beyond. Type in your question to start.',
+        },
+
+        Placeholder: 'What do you need to know?',
+        searchButton: 'Search',
+        tryAskingTitle: 'Try asking',
+
+        supportView: {
+            tryAsking1: "What is NAPLAN?",
+            tryAsking2: "What does ICSEA mean and why is it important?",
+            tryAsking3: "What are the school enrollment deadlines?",
+            tryAsking4: "What is an independent school?"
+        },
+
+        frequentAskTitle: 'Frequently Asked Questions',
+
+    },
+
     checklist: {
         title: "Enrolment Checklist",
         instruction: "Tick the items you've prepared:",
         exportWord: "Export to Word",
         exportExcel: "Export to Excel",
     }
+
 };
