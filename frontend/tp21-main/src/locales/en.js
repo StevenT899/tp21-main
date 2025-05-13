@@ -410,6 +410,7 @@ export default {
                 items: [
                     "Unique Student Identifier",
                     "Birth certificate or passport",
+                    "Health information",
                     "Online assessment*",
                     "Application form*"
                 ]
@@ -442,6 +443,13 @@ export default {
     checklist: {
         title: "Enrolment Checklist",
         instruction: "Tick the items you've prepared:",
+        reference: "Reference and licence:",
+        referenceById: {
+            0: "https://www.vic.gov.au/how-enrol-kindergarten",
+            1: "Enrolling in Foundation (Prep) {'|'} vic.gov.au (www.vic.gov.au)",
+            2: "Moving from primary to secondary school {'|'} vic.gov.au (www.vic.gov.au)",
+            3: "TAFE Victoria {'|'} vic.gov.au (www.vic.gov.au)",
+        },
         exportWord: "Export to Word",
         exportExcel: "Export to Excel",
     }

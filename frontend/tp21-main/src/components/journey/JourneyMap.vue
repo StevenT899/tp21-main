@@ -76,7 +76,7 @@
     </div>
   </div>
 
-  <CheckList :visible="showChecklist" :title="currentTitle" :checklist="currentChecklist" @close="closeChecklist" />
+  <CheckList :visible="showChecklist" :id = "schoolTypeId" :title="currentTitle" :checklist="currentChecklist" @close="closeChecklist" />
   <QuestionList :visible="showQuestionList" :title="questionTitle" :questions="questionList"
     @close="showQuestionList = false" />
 </template>
@@ -93,107 +93,82 @@ import CheckList from './CheckList.vue'
 import QuestionList from './QuestionList.vue'
 import { useI18n } from 'vue-i18n'
 
-
 const { t } = useI18n()
 
-// QuestionList
-const showQuestionList = ref(false)
-const questionList = ref([])
-const questionTitle = ref('')
+// UI state
+const flippedCards = ref([false, false, false, false])
+const speechActive = ref(false)
+const currentSpeech = ref('')
+const isDragging = ref(false)
+const startX = ref(0)
+const scrollLeft = ref(0)
+const isScrollStart = ref(true)
+const isScrollEnd = ref(false)
+const timeline = ref(null)
 
-function openRelatedQuestions(index) {
-  const stage = stages.value[index]
-  if (!stage) return
-  const type = stage.class
+// Kangaroo speech defaults
+const kangarooDefault = computed(() => t('journeyMap.journey.kangarooGuide'))
 
-  if (type === 'early') {
-    questionTitle.value = t('journeyMap.relatedQuestions.early.title');
-    questionList.value = [
-      { title: t('journeyMap.relatedQuestions.early.q1'), id: 35 },
-      { title: t('journeyMap.relatedQuestions.early.q2'), id: 36 }
-    ];
-  } else if (type === 'primary') {
-    questionTitle.value = t('journeyMap.relatedQuestions.primary.title');
-    questionList.value = [
-      { title: t('journeyMap.relatedQuestions.primary.q1'), id: 7 },
-      { title: t('journeyMap.relatedQuestions.primary.q2'), id: 25 },
-      { title: t('journeyMap.relatedQuestions.primary.q3'), id: 30 }
-    ];
-  } else if (type === 'secondary') {
-    questionTitle.value = t('journeyMap.relatedQuestions.secondary.title');
-    questionList.value = [
-      { title: t('journeyMap.relatedQuestions.secondary.q1'), id: 26 },
-      { title: t('journeyMap.relatedQuestions.secondary.q2'), id: 27 }
-    ];
-  } else if (type === 'tertiary') {
-    questionTitle.value = t('journeyMap.relatedQuestions.tertiary.title');
-    questionList.value = [
-      { title: t('journeyMap.relatedQuestions.tertiary.q1'), id: 37 },
-      { title: t('journeyMap.relatedQuestions.tertiary.q2'), id: 38 }
-    ];
+// Methods
+const toggleSpeech = () => {
+  speechActive.value = !speechActive.value
+  if (speechActive.value) {
+    currentSpeech.value = kangarooDefault
+    setTimeout(() => { speechActive.value = false }, 5000)
   }
+}
 
-  showQuestionList.value = true;
+function updateSpeechBubble(idx) {
+  const tip = stages[idx]?.kangarooTip
+  currentSpeech.value = tip || kangarooDefault
+  speechActive.value = true
+  setTimeout(() => { speechActive.value = false }, 5000)
+}
+
+const flipCard = (index) => {
+  if (!flippedCards.value[index]) updateSpeechBubble(index)
+  flippedCards.value[index] = !flippedCards.value[index]
 }
 
 
-// CheckList
-const showChecklist = ref(false);
-const currentChecklist = ref([]);
-const currentTitle = ref('');
-
-function openChecklist(type) {
-  if (type === 'early') {
-    currentTitle.value = t('journeyMap.checklist.early.title');
-    currentChecklist.value = [
-      t('journeyMap.checklist.early.items.0'),
-      t('journeyMap.checklist.early.items.1'),
-      t('journeyMap.checklist.early.items.2'),
-      t('journeyMap.checklist.early.items.3'),
-      t('journeyMap.checklist.early.items.4'),
-      t('journeyMap.checklist.early.items.5'),
-      t('journeyMap.checklist.early.items.6'),
-      t('journeyMap.checklist.early.items.7'),
-    ];
-  } else if (type === 'primary') {
-    currentTitle.value = t('journeyMap.checklist.primary.title');
-    currentChecklist.value = [
-      t('journeyMap.checklist.primary.items.0'),
-      t('journeyMap.checklist.primary.items.1'),
-      t('journeyMap.checklist.primary.items.2'),
-      t('journeyMap.checklist.primary.items.3'),
-      t('journeyMap.checklist.primary.items.4'),
-      t('journeyMap.checklist.primary.items.5'),
-      t('journeyMap.checklist.primary.items.6'),
-      t('journeyMap.checklist.primary.items.7'),
-    ];
-  } else if (type === 'secondary') {
-    currentTitle.value = t('journeyMap.checklist.secondary.title');
-    currentChecklist.value = [
-      t('journeyMap.checklist.secondary.items.0'),
-      t('journeyMap.checklist.secondary.items.1'),
-      t('journeyMap.checklist.secondary.items.2'),
-      t('journeyMap.checklist.secondary.items.3'),
-      t('journeyMap.checklist.secondary.items.4'),
-      t('journeyMap.checklist.secondary.items.5'),
-      t('journeyMap.checklist.secondary.items.6'),
-      t('journeyMap.checklist.secondary.items.7'),
-    ];
-  } else if (type === 'tertiary') {
-    currentTitle.value = t('journeyMap.checklist.tertiary.title');
-    currentChecklist.value = [
-      t('journeyMap.checklist.tertiary.items.0'),
-      t('journeyMap.checklist.tertiary.items.1'),
-      t('journeyMap.checklist.tertiary.items.2'),
-      t('journeyMap.checklist.tertiary.items.3'),
-    ];
-  }
-  showChecklist.value = true;
+// scrolling section
+const scrollTimeline = (dir) => {
+  const w = 292
+  timeline.value.scrollLeft += dir * w * 2
+  checkScrollPosition()
+}
+const checkScrollPosition = () => {
+  isScrollStart.value = timeline.value.scrollLeft <= 10
+  isScrollEnd.value = timeline.value.scrollLeft + timeline.value.clientWidth >= timeline.value.scrollWidth - 10
+}
+const startDrag = (e) => {
+  isDragging.value = true
+  startX.value = e.pageX || e.touches[0].pageX
+  scrollLeft.value = timeline.value.scrollLeft
+}
+const onDrag = (e) => {
+  if (!isDragging.value) return
+  e.preventDefault()
+  const x = e.pageX || e.touches[0].pageX
+  timeline.value.scrollLeft = scrollLeft.value - (x - startX.value) * 2
+  checkScrollPosition()
+}
+const endDrag = () => {
+  isDragging.value = false
 }
 
-function closeChecklist() {
-  showChecklist.value = false;
-}
+// Lifecycle hooks
+onMounted(() => {
+  currentSpeech.value = kangarooDefault
+  window.addEventListener('resize', checkScrollPosition)
+  checkScrollPosition()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScrollPosition)
+})
+
+
 
 // Education stages
 const stages = computed(() => [
@@ -270,77 +245,108 @@ const stages = computed(() => [
   }
 ])
 
-// UI state
-const flippedCards = ref([false, false, false, false])
-const speechActive = ref(false)
-const currentSpeech = ref('')
-const isDragging = ref(false)
-const startX = ref(0)
-const scrollLeft = ref(0)
-const isScrollStart = ref(true)
-const isScrollEnd = ref(false)
-const timeline = ref(null)
+// QuestionList
+const showQuestionList = ref(false)
+const questionList = ref([])
+const questionTitle = ref('')
 
-// Kangaroo speech defaults
-const kangarooDefault = computed(() => t('journeyMap.journey.kangarooGuide'))
+function openRelatedQuestions(index) {
+  const stage = stages.value[index]
+  if (!stage) return
+  const type = stage.class
 
-// Methods
-const toggleSpeech = () => {
-  speechActive.value = !speechActive.value
-  if (speechActive.value) {
-    currentSpeech.value = kangarooDefault
-    setTimeout(() => { speechActive.value = false }, 5000)
+  if (type === 'early') {
+    questionTitle.value = t('journeyMap.relatedQuestions.early.title');
+    questionList.value = [
+      { title: t('journeyMap.relatedQuestions.early.q1'), id: 35 },
+      { title: t('journeyMap.relatedQuestions.early.q2'), id: 36 }
+    ];
+  } else if (type === 'primary') {
+    questionTitle.value = t('journeyMap.relatedQuestions.primary.title');
+    questionList.value = [
+      { title: t('journeyMap.relatedQuestions.primary.q1'), id: 7 },
+      { title: t('journeyMap.relatedQuestions.primary.q2'), id: 25 },
+      { title: t('journeyMap.relatedQuestions.primary.q3'), id: 30 }
+    ];
+  } else if (type === 'secondary') {
+    questionTitle.value = t('journeyMap.relatedQuestions.secondary.title');
+    questionList.value = [
+      { title: t('journeyMap.relatedQuestions.secondary.q1'), id: 26 },
+      { title: t('journeyMap.relatedQuestions.secondary.q2'), id: 27 }
+    ];
+  } else if (type === 'tertiary') {
+    questionTitle.value = t('journeyMap.relatedQuestions.tertiary.title');
+    questionList.value = [
+      { title: t('journeyMap.relatedQuestions.tertiary.q1'), id: 37 },
+      { title: t('journeyMap.relatedQuestions.tertiary.q2'), id: 38 }
+    ];
   }
-}
 
-function updateSpeechBubble(idx) {
-  const tip = stages[idx]?.kangarooTip
-  currentSpeech.value = tip || kangarooDefault
-  speechActive.value = true
-  setTimeout(() => { speechActive.value = false }, 5000)
-}
-
-const flipCard = (index) => {
-  if (!flippedCards.value[index]) updateSpeechBubble(index)
-  flippedCards.value = flippedCards.value.map((v, i) => i === index ? !v : false)
+  showQuestionList.value = true;
 }
 
 
-// scrolling section
-const scrollTimeline = (dir) => {
-  const w = 292
-  timeline.value.scrollLeft += dir * w * 2
-  checkScrollPosition()
-}
-const checkScrollPosition = () => {
-  isScrollStart.value = timeline.value.scrollLeft <= 10
-  isScrollEnd.value = timeline.value.scrollLeft + timeline.value.clientWidth >= timeline.value.scrollWidth - 10
-}
-const startDrag = (e) => {
-  isDragging.value = true
-  startX.value = e.pageX || e.touches[0].pageX
-  scrollLeft.value = timeline.value.scrollLeft
-}
-const onDrag = (e) => {
-  if (!isDragging.value) return
-  e.preventDefault()
-  const x = e.pageX || e.touches[0].pageX
-  timeline.value.scrollLeft = scrollLeft.value - (x - startX.value) * 2
-  checkScrollPosition()
-}
-const endDrag = () => {
-  isDragging.value = false
+// CheckList
+const showChecklist = ref(false);
+const currentChecklist = ref([]);
+const currentTitle = ref('');
+const schoolTypeId = ref();
+
+function openChecklist(type) {
+  if (type === 'early') {
+    schoolTypeId.value = 0;
+    currentTitle.value = t('journeyMap.checklist.early.title');
+    currentChecklist.value = [
+      t('journeyMap.checklist.early.items.0'),
+      t('journeyMap.checklist.early.items.1'),
+      t('journeyMap.checklist.early.items.2'),
+      t('journeyMap.checklist.early.items.3'),
+      t('journeyMap.checklist.early.items.4'),
+      t('journeyMap.checklist.early.items.5'),
+      t('journeyMap.checklist.early.items.6'),
+      t('journeyMap.checklist.early.items.7'),
+    ];
+  } else if (type === 'primary') {
+    schoolTypeId.value = 1;
+    currentTitle.value = t('journeyMap.checklist.primary.title');
+    currentChecklist.value = [
+      t('journeyMap.checklist.primary.items.0'),
+      t('journeyMap.checklist.primary.items.1'),
+      t('journeyMap.checklist.primary.items.2'),
+      t('journeyMap.checklist.primary.items.3'),
+      t('journeyMap.checklist.primary.items.4'),
+      t('journeyMap.checklist.primary.items.5'),
+      t('journeyMap.checklist.primary.items.6'),
+      t('journeyMap.checklist.primary.items.7'),
+    ];
+  } else if (type === 'secondary') {
+    schoolTypeId.value = 2;
+    currentTitle.value = t('journeyMap.checklist.secondary.title');
+    currentChecklist.value = [
+      t('journeyMap.checklist.secondary.items.0'),
+      t('journeyMap.checklist.secondary.items.1'),
+      t('journeyMap.checklist.secondary.items.2'),
+      t('journeyMap.checklist.secondary.items.3'),
+      t('journeyMap.checklist.secondary.items.4'),
+      t('journeyMap.checklist.secondary.items.5'),
+      t('journeyMap.checklist.secondary.items.6'),
+      t('journeyMap.checklist.secondary.items.7'),
+    ];
+  } else if (type === 'tertiary') {
+    schoolTypeId.value = 3;
+    currentTitle.value = t('journeyMap.checklist.tertiary.title');
+    currentChecklist.value = [
+      t('journeyMap.checklist.tertiary.items.0'),
+      t('journeyMap.checklist.tertiary.items.1'),
+      t('journeyMap.checklist.tertiary.items.2'),
+      t('journeyMap.checklist.tertiary.items.3'),
+      t('journeyMap.checklist.tertiary.items.4'),
+    ];
+  }
+  showChecklist.value = true;
 }
 
-
-// Lifecycle hooks
-onMounted(() => {
-  currentSpeech.value = kangarooDefault
-  window.addEventListener('resize', checkScrollPosition)
-  checkScrollPosition()
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', checkScrollPosition)
-})
+function closeChecklist() {
+  showChecklist.value = false;
+}
 </script>
