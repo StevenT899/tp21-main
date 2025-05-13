@@ -5,8 +5,8 @@
             <button @click="close" class="absolute top-2 right-3 text-gray-600 hover:text-red-400 text-3xl cursor-pointer">
                 &times;
             </button>
-            <h2 class="text-xl font-semibold mb-4">{{ title }} Enrolment Checklist</h2>
-            <p class="text-gray-700 mb-4">Tick the items you've prepared:</p>
+            <h2 class="text-xl font-semibold mb-4">{{ title }} {{ $t('checklist.title') }}</h2>
+            <p class="text-gray-700 mb-4">{{ $t('checklist.instruction') }}</p>
             <ul class="text-left space-y-2">
                 <li v-for="(item, index) in checklist" :key="index" class="flex items-center space-x-2">
                     <input type="checkbox" v-model="checkedItems[index]" class="accent-blue-500 cursor-pointer"
@@ -16,11 +16,11 @@
             </ul>
             <button @click="exportToWord"
                 class="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 w-5/6 cursor-pointer block mx-auto">
-                Export to word
+                {{ $t('checklist.exportWord') }}
             </button>
             <button @click="exportToExcel"
                 class="mt-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 w-5/6 cursor-pointer block mx-auto">
-                Export to Excel
+                {{ $t('checklist.exportExcel') }}
             </button>
         </div>
     </div>
@@ -34,7 +34,6 @@ import JSZipUtils from "jszip-utils";
 import JSZip from "pizzip";
 import ExcelJS from 'exceljs';
 // import 'pizzip/utils/index.js';
-
 
 const emit = defineEmits(['close']);
 const checkedItems = ref([]);

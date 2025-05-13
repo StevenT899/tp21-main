@@ -1,8 +1,6 @@
 <template>
   <div class="journey-container">
     <div class="journey-intro">
-      <h2 class="journey-title">{{ $t('journeyMap.journey.title') }}</h2>
-      <p class="journey-subtitle">{{ $t('journeyMap.journey.subtitle') }}</p>
       <!-- Kangaroo guide -->
       <div class="kangaroo-guide" @click="toggleSpeech">
         <img src="@/assets/images/kangaroo.png" alt="kangaroo photo" class="w-full h-auto" />
@@ -51,8 +49,8 @@
               <div class="flat-age">{{ stage.age }}</div>
               <div class="flat-desc" v-html="stage.desc"></div>
               <!-- Checklist -->
-              <button class="question-button" @click="openChecklist(stage.class); $event.stopPropagation()">Enrolment
-                Checklist</button>
+              <button class="question-button" @click="openChecklist(stage.class); $event.stopPropagation()">
+                {{ $t('journeyMap.cardFront.checklistButton') }}</button>
             </div>
 
             <!-- card back -->
@@ -69,7 +67,7 @@
                 </ul>
               </div>
               <button class="back-button" @click.stop="openRelatedQuestions(index)">
-                Related questions
+                {{ $t('journeyMap.cardBack.relatedQuestions') }}
               </button>
             </div>
           </div>
@@ -109,35 +107,34 @@ function openRelatedQuestions(index) {
   const type = stage.class
 
   if (type === 'early') {
-    questionTitle.value = 'Early Childhood';
+    questionTitle.value = t('journeyMap.relatedQuestions.early.title');
     questionList.value = [
-      { title: 'What types of kindergarten programs are available?', id: 35 },
-      { title: 'Is my child eligible for 15 hours of free Three-Year-Old Kinder per week?', id: 36 }
+      { title: t('journeyMap.relatedQuestions.early.q1'), id: 35 },
+      { title: t('journeyMap.relatedQuestions.early.q2'), id: 36 }
     ];
   } else if (type === 'primary') {
-    questionTitle.value = 'Primary School';
+    questionTitle.value = t('journeyMap.relatedQuestions.primary.title');
     questionList.value = [
-      { title: 'What is a school zone and how can I find schools within my zone?', id: 7 },
-      { title: 'What is NAPLAN?', id: 25 },
-      { title: 'What is a language program?', id: 30 }
+      { title: t('journeyMap.relatedQuestions.primary.q1'), id: 7 },
+      { title: t('journeyMap.relatedQuestions.primary.q2'), id: 25 },
+      { title: t('journeyMap.relatedQuestions.primary.q3'), id: 30 }
     ];
   } else if (type === 'secondary') {
-    questionTitle.value = 'Secondary School';
+    questionTitle.value = t('journeyMap.relatedQuestions.secondary.title');
     questionList.value = [
-      { title: 'What is the VCE (Victorian Certificate of Education)?', id: 26 },
-      { title: 'What is the ATAR?', id: 27 }
+      { title: t('journeyMap.relatedQuestions.secondary.q1'), id: 26 },
+      { title: t('journeyMap.relatedQuestions.secondary.q2'), id: 27 }
     ];
   } else if (type === 'tertiary') {
-    questionTitle.value = 'Tertiary Education';
+    questionTitle.value = t('journeyMap.relatedQuestions.tertiary.title');
     questionList.value = [
-      { title: 'When should I decide whether to go to TAFE or university?', id: 37 },
-      { title: 'Can I use a VET course as a pathway to university?', id: 38 }
+      { title: t('journeyMap.relatedQuestions.tertiary.q1'), id: 37 },
+      { title: t('journeyMap.relatedQuestions.tertiary.q2'), id: 38 }
     ];
   }
 
   showQuestionList.value = true;
 }
-
 
 
 // CheckList
@@ -147,48 +144,48 @@ const currentTitle = ref('');
 
 function openChecklist(type) {
   if (type === 'early') {
-    currentTitle.value = 'For kinder/childcare';
+    currentTitle.value = t('journeyMap.checklist.early.title');
     currentChecklist.value = [
-      'Parent ID or Medicare card',
-      'Child\'s Birth certificate or other identity documents',
-      'Child\'s Medical health and immunisation status',
-      'Proof of address',
-      'Information about yourself and any other parents, carers or guardians',
-      'Details of people who can collect your child',
-      'Details of any parenting orders or legal matters to do with the care or safety of your child.',
-      'Child Care Subsidy application (if eligible)',
+      t('journeyMap.checklist.early.items.0'),
+      t('journeyMap.checklist.early.items.1'),
+      t('journeyMap.checklist.early.items.2'),
+      t('journeyMap.checklist.early.items.3'),
+      t('journeyMap.checklist.early.items.4'),
+      t('journeyMap.checklist.early.items.5'),
+      t('journeyMap.checklist.early.items.6'),
+      t('journeyMap.checklist.early.items.7'),
     ];
   } else if (type === 'primary') {
-    currentTitle.value = 'Government primary school';
+    currentTitle.value = t('journeyMap.checklist.primary.title');
     currentChecklist.value = [
-      'Parent ID or Medicare card',
-      'Parent and emergency contact details',
-      'Child\'s birth certificate or passport',
-      'Child\'s immunisation history statement',
-      'Child\'s health information (allergies or illnesses)',
-      'Details of any parenting orders or legal matters to do with the care or safety of your child',
-      'Proof of address',
-      'Application form',
+      t('journeyMap.checklist.primary.items.0'),
+      t('journeyMap.checklist.primary.items.1'),
+      t('journeyMap.checklist.primary.items.2'),
+      t('journeyMap.checklist.primary.items.3'),
+      t('journeyMap.checklist.primary.items.4'),
+      t('journeyMap.checklist.primary.items.5'),
+      t('journeyMap.checklist.primary.items.6'),
+      t('journeyMap.checklist.primary.items.7'),
     ];
   } else if (type === 'secondary') {
-    currentTitle.value = 'Government secondary school';
+    currentTitle.value = t('journeyMap.checklist.secondary.title');
     currentChecklist.value = [
-      'Parent ID or Medicare card',
-      'Parent and emergency contact details',
-      'Child\'s birth certificate or passport',
-      'Child\'s immunisation history statement',
-      'Child\'s health information (allergies or illnesses)',
-      'Details of any parenting orders or legal matters to do with the care or safety of your child',
-      'Proof of address',
-      'Application form',
+      t('journeyMap.checklist.secondary.items.0'),
+      t('journeyMap.checklist.secondary.items.1'),
+      t('journeyMap.checklist.secondary.items.2'),
+      t('journeyMap.checklist.secondary.items.3'),
+      t('journeyMap.checklist.secondary.items.4'),
+      t('journeyMap.checklist.secondary.items.5'),
+      t('journeyMap.checklist.secondary.items.6'),
+      t('journeyMap.checklist.secondary.items.7'),
     ];
   } else if (type === 'tertiary') {
-    currentTitle.value = 'TAFE';
+    currentTitle.value = t('journeyMap.checklist.tertiary.title');
     currentChecklist.value = [
-      'Unique Student Identifier',
-      'Birth certificate or passport',
-      'Online assessment*',
-      'Application form*',
+      t('journeyMap.checklist.tertiary.items.0'),
+      t('journeyMap.checklist.tertiary.items.1'),
+      t('journeyMap.checklist.tertiary.items.2'),
+      t('journeyMap.checklist.tertiary.items.3'),
     ];
   }
   showChecklist.value = true;
@@ -209,6 +206,7 @@ const stages = computed(() => [
     whatTheyLearn: [
       t('journeyMap.stages.early.whatTheyLearn.0'),
       t('journeyMap.stages.early.whatTheyLearn.1'),
+      t('journeyMap.stages.early.whatTheyLearn.2'),
     ],
     keyTiming: [
       t('journeyMap.stages.early.keyTiming.0'),

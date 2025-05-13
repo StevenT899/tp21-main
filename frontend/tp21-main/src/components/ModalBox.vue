@@ -59,11 +59,11 @@
         </button>
         <h2 class="text-xl font-semibold mb-4">{{ $t('ModalBox.schoolZone.title') }}</h2>
         <p class="text-lg text-gray-700 mb-6">
-          {{ $t('ModalBox.schoolZone.description') }}
+          {{ $t('ModalBox.schoolZone.description')}}
         </p>
-        <!-- <button @click="toggleModal('icsea')" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+        <button @click="toggleModal('icsea')" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
           {{ $t('ModalBox.schoolZone.readMore') }}
-        </button> -->
+        </button>
       </div>
     </div>
   </div>
@@ -87,4 +87,9 @@ const toggleModal = (modalType) => {
 defineExpose({
   toggleModal
 });
+
+function onSuggestionClick(item) {
+  router.push({ name: 'ArticleDetail', params: { id: item.id } });
+}
+
 </script>

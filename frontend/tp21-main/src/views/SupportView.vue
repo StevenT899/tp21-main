@@ -1,103 +1,91 @@
 <template>
-    <section class="bg-white py-16">
-      <div class="max-w-4xl mx-auto text-center px-4">
-        <h1 class="text-3xl md:text-4xl font-bold uppercase mb-4">
-          Find answers about schooling in Victoria
-        </h1>
-        <p class="text-gray-600 mb-8">
-          Ask a question or browse common topics to learn how education works in Victoria —
-          from enrolment to curriculum and beyond. Type in your question to start.
-        </p>
-        <div class="flex items-center max-w-xl mx-auto mb-6">
-          <input
-            v-model="searchQuery"
-            @keyup.enter="onSearch"
-            type="text"
-            placeholder="What do you need to be helped with?"
-            class="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            @click="onSearch"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-r-lg"
-          >
-            Search
+  <section class="bg-white py-16">
+    <div class="max-w-4xl mx-auto text-center px-4">
+      <h1 class="text-3xl md:text-4xl font-bold uppercase mb-4">
+        Find answers about schooling in Victoria
+      </h1>
+      <p class="text-gray-600 mb-8">
+        Ask a question or browse common topics to learn how education works in Victoria —
+        from enrolment to curriculum and beyond. Type in your question to start.
+      </p>
+      <div class="flex items-center max-w-xl mx-auto mb-6">
+        <input v-model="searchQuery" @keyup.enter="onSearch" type="text"
+          placeholder="What do you need to be helped with?"
+          class="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button @click="onSearch" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-r-lg">
+          Search
+        </button>
+      </div>
+      <div>
+        <p class="text-gray-700 mb-4 font-medium">Try asking</p>
+        <div class="flex flex-wrap justify-center gap-2">
+          <button v-for="(item, index) in suggestions" :key="index" @click="onSuggestionClick(item)"
+            class="border border-gray-300 rounded-full px-4 py-2 text-gray-800 hover:bg-gray-100">
+            {{ item.text }}
           </button>
         </div>
-        <div>
-          <p class="text-gray-700 mb-4 font-medium">Try asking</p>
-          <div class="flex flex-wrap justify-center gap-2">
-            <button
-              v-for="(item, index) in suggestions"
-              :key="index"
-              @click="onSuggestionClick(item)"
-              class="border border-gray-300 rounded-full px-4 py-2 text-gray-800 hover:bg-gray-100"
-            >
-            {{ item.text }}
-            </button>
-          </div>
-        </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <FrequentAsk/>
-
-
-    <!-- Toast -->
-    <transition name="fade">
-      <div v-if="toast.show" :class="['toast', toast.type]">{{ toast.message }}</div>
-    </transition>
+  <FrequentAsk />
 
 
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  import FrequentAsk from '@/components/FrequentAsk.vue';
-  import '../assets/toast.css'
-  import { useI18n } from 'vue-i18n'
-  const { t } = useI18n()  
-  const router = useRouter();
-  const searchQuery = ref('');
-  const suggestions = [
+  <!-- Toast -->
+  <transition name="fade">
+    <div v-if="toast.show" :class="['toast', toast.type]">{{ toast.message }}</div>
+  </transition>
+
+
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import FrequentAsk from '@/components/FrequentAsk.vue';
+import '../assets/toast.css'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+const router = useRouter();
+const searchQuery = ref('');
+const suggestions = [
   { text: 'What is NAPLAN?', id: 25 },
   { text: 'What does ICSEA mean and why is it important?', id: 23 },
   { text: 'What are the school enrollment deadlines?', id: 17 },
   { text: 'What is an independent school?', id: 6 }
 ];
 
-  const toast = ref({ show: false, type: '', message: '' })
-  let toastTimeout = null
+const toast = ref({ show: false, type: '', message: '' })
+let toastTimeout = null
 
-    // const showToast = (type, messageKey, params = {}, duration = 3000) => {
-    // const message = t(`messages.toast.${type}.${messageKey}`, params)
-    // toast.value = { show: true, type, message }
-    // if (toastTimeout) clearTimeout(toastTimeout)
-    // toastTimeout = setTimeout(() => {
-    //     toast.value.show = false
-    // }, duration)
-    // }
+// const showToast = (type, messageKey, params = {}, duration = 3000) => {
+// const message = t(`messages.toast.${type}.${messageKey}`, params)
+// toast.value = { show: true, type, message }
+// if (toastTimeout) clearTimeout(toastTimeout)
+// toastTimeout = setTimeout(() => {
+//     toast.value.show = false
+// }, duration)
+// }
 
-    function showToast(type, message, duration = 3000) {
-        toast.value = { show: true, type, message }
-        if (toastTimeout) clearTimeout(toastTimeout)
-        toastTimeout = setTimeout(() => {
-            toast.value.show = false
-        }, duration)
-    }
-  
-  function onSearch() {
-    if(searchQuery.value.trim() === '') {
-      showToast('warning', 'Search query is empty, please enter your question.')
-      return
-    }
-    if (searchQuery.value.trim()) {
-      router.push({ name: 'SearchingSupport', query: { q: searchQuery.value } });
-    }
-  }
-  
-  function onSuggestionClick(item) {
-  router.push({ name: 'ArticleDetail', params: { id: item.id } }); 
+function showToast(type, message, duration = 3000) {
+  toast.value = { show: true, type, message }
+  if (toastTimeout) clearTimeout(toastTimeout)
+  toastTimeout = setTimeout(() => {
+    toast.value.show = false
+  }, duration)
 }
-  </script>
-  
+
+function onSearch() {
+  if (searchQuery.value.trim() === '') {
+    showToast('warning', 'Search query is empty, please enter your question.')
+    return
+  }
+  if (searchQuery.value.trim()) {
+    router.push({ name: 'SearchingSupport', query: { q: searchQuery.value } });
+  }
+}
+
+function onSuggestionClick(item) {
+  router.push({ name: 'ArticleDetail', params: { id: item.id } });
+}
+</script>

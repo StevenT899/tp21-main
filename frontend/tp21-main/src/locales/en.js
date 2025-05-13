@@ -288,14 +288,16 @@ export default {
     },
     journeyMap: {
         journey: {
-            title: "Victorian Education Journey Map",
-            subtitle: "A Complete Education Journey from Kindergarten to University",
             kangarooGuide: "Hello! I'm the Victorian Education Kangaroo. Click each card for details, or ask me any questions!",
             tutorialHint: "Click on each stage card for details, swipe to see more"
         },
+        cardFront: {
+            checklistButton: "Enrolment checklist"
+        },
         cardBack: {
             whatTheyLearn: "What they learn:",
-            keyTiming: "Key timing:"
+            keyTiming: "Key timing:",
+            relatedQuestions: "Related questions"
         },
         stages: {
             early: {
@@ -304,8 +306,9 @@ export default {
                 desc: "Early childhood education supports your child's development before formal school begins.\n It includes childcare, kindergarten and play-based learning programs-often the first step in settling into Australian life.\n Starting early can help your child build confidence, social skills, and get ready for primary school.",
 
                 whatTheyLearn: {
-                    0: 'Play-based learning, communication, early literacy and numeracy',
-                    1: 'Social development, emotional regulation, independence',
+                    0: 'Play-based learning, communication',
+                    1: 'Early literacy and numeracy',
+                    2: 'Social development, emotional regulation, independence',
                 },
                 keyTiming: {
                     0: 'Age 3-4: Enrol in funded kindergarten (15 hours/week)',
@@ -361,7 +364,85 @@ export default {
                 },
                 kangarooTip: "Click to explore early childhood learning!"
             }
-        }
+        },
+        checklist: {
+            early: {
+                title: "For kinder/childcare",
+                items: [
+                    "Parent ID or Medicare card",
+                    "Child's Birth certificate or other identity documents",
+                    "Child's Medical health and immunisation status",
+                    "Proof of address",
+                    "Information about yourself and any other parents, carers or guardians",
+                    "Details of people who can collect your child",
+                    "Details of any parenting orders or legal matters to do with the care or safety of your child.",
+                    "Child Care Subsidy application (if eligible)"
+                ]
+            },
+            primary: {
+                title: "Government primary school",
+                items: [
+                    "Parent ID or Medicare card",
+                    "Parent and emergency contact details",
+                    "Child's birth certificate or passport",
+                    "Child's immunisation history statement",
+                    "Child's health information (allergies or illnesses)",
+                    "Details of any parenting orders or legal matters to do with the care or safety of your child",
+                    "Proof of address",
+                    "Application form"
+                ]
+            },
+            secondary: {
+                title: "Government secondary school",
+                items: [
+                    "Parent ID or Medicare card",
+                    "Parent and emergency contact details",
+                    "Child's birth certificate or passport",
+                    "Child's immunisation history statement",
+                    "Child's health information (allergies or illnesses)",
+                    "Details of any parenting orders or legal matters to do with the care or safety of your child",
+                    "Proof of address",
+                    "Application form"
+                ]
+            },
+            tertiary: {
+                title: "TAFE",
+                items: [
+                    "Unique Student Identifier",
+                    "Birth certificate or passport",
+                    "Online assessment*",
+                    "Application form*"
+                ]
+            }
+        },
+        relatedQuestions: {
+            early: {
+                title: "Early Childhood",
+                q1: "What types of kindergarten programs are available?",
+                q2: "Is my child eligible for 15 hours of free Three-Year-Old Kinder per week?"
+            },
+            primary: {
+                title: "Primary School",
+                q1: "What is a school zone and how can I find schools within my zone?",
+                q2: "What is NAPLAN?",
+                q3: "What is a language program?"
+            },
+            secondary: {
+                title: "Secondary School",
+                q1: "What is the VCE (Victorian Certificate of Education)?",
+                q2: "What is the ATAR?"
+            },
+            tertiary: {
+                title: "Tertiary Education",
+                q1: "When should I decide whether to go to TAFE or university?",
+                q2: "Can I use a VET course as a pathway to university?"
+            }
+        },
     },
-
+    checklist: {
+        title: "Enrolment Checklist",
+        instruction: "Tick the items you've prepared:",
+        exportWord: "Export to Word",
+        exportExcel: "Export to Excel",
+    }
 };
