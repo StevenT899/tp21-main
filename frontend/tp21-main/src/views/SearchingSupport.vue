@@ -2,18 +2,18 @@
   <div class="max-w-5xl mx-auto py-8 px-4">
     <button @click="goBack"
       class="mb-6 inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 focus:outline-none">
-      <span class="text-lg font-medium">&lt; Back</span>
+      <span class="text-lg font-medium">{{ $t('searchingSupport.button.goBack') }}</span>
     </button>
 
     <h2 class="text-2xl font-bold mb-2">
-      Search results for '{{ searchTerm || "" }}'
+      {{ $t('searchingSupport.search.resultsFor') }} '{{ searchTerm || "" }}'
     </h2>
     <p class="text-gray-600 mb-4">
-      Displaying {{ resultStart }}-{{ resultEnd }} of {{ totalResults }} results
+      {{ $t('searchingSupport.search.displaying') }} {{ resultStart }}-{{ resultEnd }} {{ $t('searchingSupport.search.of') }} {{ totalResults }} {{ $t('searchingSupport.search.results') }}
     </p>
 
     <ul>
-      <li v-for="item in paginatedResults" :key="item.id" class="mb-6">
+      <li v-for="item in translatedResults" :key="item.id" class="mb-6">
         <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
           <div class="bg-blue-50 px-4 py-2 border-b border-gray-200">
             <a href="#" @click.prevent="onSuggestionClick(item)"
@@ -24,7 +24,7 @@
           </div>
           <div class="px-4 py-3">
             <p v-if="isReady" class="text-gray-700" v-html="formatContent(item.content)"></p>
-            <div v-else class="text-center text-gray-500 py-12">Loading results...</div>
+            <div v-else class="text-center text-gray-500 py-12">{{ $t('searchingSupport.search.loadingResults') }}</div>
           </div>
         </div>
       </li>
@@ -37,7 +37,7 @@
           stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
-        Previous
+        {{ $t('searchingSupport.button.prevPage') }}
       </button>
 
       <button v-for="n in pagesToShow" :key="n" @click="goPage(n)" :class="[
@@ -49,7 +49,7 @@
 
       <button @click="nextPage" :disabled="page === totalPages"
         class="flex items-center px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 cursor-pointer">
-        Next
+        {{ $t('searchingSupport.button.nextPage') }}
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24"
           stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
@@ -61,7 +61,7 @@
   <button v-if="showBackToTop" @click="scrollToTop"
     class="fixed bottom-6 right-6 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition"
     aria-label="Back to top">
-    Back to Top
+    {{$t('searchingSupport.button.goTop') }}
   </button>
 </template>
 
@@ -69,7 +69,9 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
+import { useI18n } from 'vue-i18n'
 
+const { locale, messages } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const isReady = ref(false)
@@ -104,10 +106,25 @@ const resultEnd = computed(() =>
   Math.min(page.value * perPage, totalResults.value)
 )
 
-const paginatedResults = computed(() => {
+const translatedResults = computed(() => {
+  const articleList = locale.value === 'zh'
+    ? results.value.map(item => {
+        const zhItem = messages.value.zh?.articles?.[String(item.ID)]
+        return {
+          ...item,
+          ...zhItem,
+          content: (zhItem?.content || item.content || '').replace(/\\n/g, '<br>')
+        }
+      })
+    : results.value.map(item => ({
+        ...item,
+        content: (item.content || '').replace(/\\n/g, '<br>')
+      }))
+
   const start = (page.value - 1) * perPage
-  return results.value.slice(start, start + perPage)
+  return articleList.slice(start, start + perPage)
 })
+
 
 function goBack() {
   window.history.back()
