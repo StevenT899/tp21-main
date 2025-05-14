@@ -1,9 +1,3 @@
-
-import SearchingSupport from "@/views/SearchingSupport.vue";
-
-import FrequentAsk from "@/components/FrequentAsk.vue";
-
-
 export default {
     nav: {
         home: 'Home',
@@ -446,9 +440,6 @@ export default {
             }
         },
     },
-
-
-
     supportView: {
         Header: {
             title: 'Find answers about schooling in Victoria',
@@ -467,17 +458,12 @@ export default {
         },
         frequentAskTitle: 'Frequently Asked Questions',
         frequentAsk1: 'What types of primary schools are available in Victoria?',
-       
+
         toast: {
             warning: 'Search query is empty, please enter your question.'
         },
 
     },
-
-
-   
-
-
     checklist: {
         title: "Enrolment Checklist",
         instruction: "Tick the items you've prepared:",
@@ -520,8 +506,8 @@ export default {
         loading: 'Loading...'
     },
     frequentAsk: {
-        faqs: [
-            {
+        faqs: {
+            0: {
                 question: 'What types of primary schools are available in Victoria?',
                 answer: [
                     'Victoria has several types of primary schools:',
@@ -531,7 +517,7 @@ export default {
                     'You can choose any type of school, but spots at some schools (especially public ones) depend on where you live.'
                 ]
             },
-            {
+            1: {
                 question: 'What is a school zone and how can I find schools within my zone?',
                 answer: [
                     'A school zone is the geographic area around a school that defines which students have a guaranteed right to enrol.',
@@ -539,20 +525,20 @@ export default {
                     'You can use the official “Find My School” tool or our website to check your home’s school zone and see which schools are available to you.'
                 ]
             },
-            {
+            2: {
                 question: 'How do I enroll my child in school?',
                 answer: [
                     'Contact the school directly to request an enrolment form or download it from the Department of Education website.',
                     'You’ll need to fill out the form and provide documents like proof of address, ID, and immunisation history.'
                 ]
             },
-            {
+            3: {
                 question: 'Can I enrol my child in multiple schools simultaneously?',
                 answer: [
                     'No. While you can apply to multiple schools, your child can only enrol in one school at a time.',
                     'Once accepted and confirmed, other offers should be declined.'
                 ]
             }
-        ]
+        }
     },
 };
