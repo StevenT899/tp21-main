@@ -446,7 +446,7 @@ export default {
             description: 'Ask a question or browse common topics to learn how education works in Victoria — from enrolment to curriculum and beyond. Type in your question to start.',
         },
 
-        Placeholder: 'What do you need to know?',
+        Placeholder: 'What do you need help with?',
         searchButton: 'Search',
         tryAskingTitle: 'Try asking',
 

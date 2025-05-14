@@ -465,7 +465,7 @@ export default {
             tryAsking1: "什么是 NAPLAN？",
             tryAsking2: "ICSEA 是什么意思？为什么它很重要？",
             tryAsking3: "学校的报名截止时间是什么时候？",
-            tryAsking4: "什么是独立学校"
+            tryAsking4: "什么是独立学校?"
         },
         frequentAskTitle: '常问问题',
     },

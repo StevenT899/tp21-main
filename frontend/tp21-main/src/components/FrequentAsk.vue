@@ -4,27 +4,32 @@
     <h2 class="text-3xl font-bold mb-6">{{ $t('supportView.frequentAskTitle') }}</h2>
 
 
-    <div v-for="(item, idx) in faqs" :key="idx" class="border-b last:border-b-0">
+    <div v-for="(item, idx) in faqs" :key="idx">
 
-      <button @click="toggle(idx)" class="w-full flex items-center justify-between py-4 focus:outline-none">
-        <span class="flex items-center text-lg font-medium leading-tight">
-          <img :src="item.icon" alt="icon" class="w-6 h-6 align-middle mr-2" />
-          <span class="align-middle">{{ item.question }}</span>
-        </span>
-        <svg v-if="item.open" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-600 align-middle" fill="none"
+      <button @click="toggle(idx)" class="w-full flex items-center justify-between py-3 focus:outline-none bg-[#F4F7FC] mt-1">
+
+          <span class="flex items-center text-lg font-medium leading-tight ml-2">
+            <img :src="item.icon" alt="icon" class="w-6 h-6 align-middle mr-2" />
+            <span class="align-middle">{{ $t(`frequentAsk.faqs[${idx}].question`) }}</span>
+          </span>
+        <svg v-if="item.open" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hover:text-gray-500 align-middle me-2" fill="none"
           viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
         </svg>
-        <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-600 align-middle" fill="none"
+        <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hover:text-gray-500 align-middle me-2" fill="none"
           viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m7-7H5" />
         </svg>
       </button>
 
       <transition name="fade">
-        <div v-if="item.open" class="pb-4 text-gray-700 leading-relaxed">
-          <p v-for="(line, i) in item.answer" :key="i" class="mb-2">
-            {{ line }}
+        <div v-if="item.open" class="pb-4 text-gray-700 leading-relaxed mt-1">
+          <p
+            v-for="i in $tm(`frequentAsk.faqs[${idx}].answer`).length"
+            :key="i"
+            class="mb-2 ml-10 me-2"
+          >
+            {{ $t(`frequentAsk.faqs[${idx}].answer[${i - 1}]`) }}
           </p>
         </div>
       </transition>

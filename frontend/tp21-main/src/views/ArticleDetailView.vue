@@ -8,7 +8,7 @@
       <h1 class="text-3xl font-bold mb-4">{{ currentArticle.topic }}</h1>
       <hr class="border-t-2 mb-6">
       <div class="text-gray-800 leading-relaxed mb-6" v-html="currentArticle.content"></div>
-      <div class="bg-blue-50 p-4 rounded text-sm text-gray-700 space-y-1">
+      <div class="bg-[#F4F7FC] p-4 rounded text-sm text-gray-700 space-y-1">
         <p><strong>{{ $t('articleDetailView.refer') }}</strong></p>
         <p>
           {{ $t('articleDetailView.adapt') }}
