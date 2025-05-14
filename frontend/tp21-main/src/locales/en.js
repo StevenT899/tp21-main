@@ -459,11 +459,9 @@ export default {
             tryAsking3: "What are the school enrollment deadlines?",
             tryAsking4: "What is an independent school?"
         },
-
         frequentAskTitle: 'Frequently Asked Questions',
 
     },
-
     checklist: {
         title: "Enrolment Checklist",
         instruction: "Tick the items you've prepared:",
@@ -476,6 +474,15 @@ export default {
         },
         exportWord: "Export to Word",
         exportExcel: "Export to Excel",
-    }
+    },
+    articleDetailView: {
+        button: {
+            goBack: '< Back'
+        },
+        refer: "Reference and Licence:",
+        adapt: "Adapted from:",
+        under: "Under",
+        loading: 'Loading...'
+    },
 
 };
