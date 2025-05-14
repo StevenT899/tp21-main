@@ -1,9 +1,7 @@
 <template>
   <div class="max-w-5xl mx-auto py-8 px-4">
-    <button
-      @click="goBack"
-      class="mb-6 inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 focus:outline-none"
-    >
+    <button @click="goBack"
+      class="mb-6 inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 focus:outline-none">
       <span class="text-lg font-medium">&lt; Back</span>
     </button>
 
@@ -11,82 +9,58 @@
       Search results for '{{ searchTerm || "" }}'
     </h2>
     <p class="text-gray-600 mb-4">
-      Displaying {{ resultStart }}–{{ resultEnd }} of {{ totalResults }} results
+      Displaying {{ resultStart }}-{{ resultEnd }} of {{ totalResults }} results
     </p>
 
-    <!-- 结果列表 -->
     <ul>
-      <li
-        v-for="item in paginatedResults"
-        :key="item.id"
-        class="mb-6"
-      >
+      <li v-for="item in paginatedResults" :key="item.id" class="mb-6">
         <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
           <div class="bg-blue-50 px-4 py-2 border-b border-gray-200">
-            <a
-  href="#"
-  @click.prevent="onSuggestionClick(item)"
-  class="underline text-xl font-semibold text-blue-600 cursor-pointer"
->
-  {{ item.topic }}
-</a>
+            <a href="#" @click.prevent="onSuggestionClick(item)"
+              class="underline text-xl font-semibold text-blue-600 cursor-pointer">
+              {{ item.topic }}
+            </a>
 
           </div>
           <div class="px-4 py-3">
-            <p class="text-gray-700">
-              {{ item.content }}
-            </p>
+            <p v-if="isReady" class="text-gray-700" v-html="formatContent(item.content)"></p>
+            <div v-else class="text-center text-gray-500 py-12">Loading results...</div>
           </div>
         </div>
       </li>
     </ul>
 
-    <!-- 分页 -->
     <div class="flex justify-center items-center mt-8 space-x-2">
-      <button
-        @click="prevPage"
-        :disabled="page === 1"
-        class="flex items-center px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 cursor-pointer"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" fill="none"
-             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <button @click="prevPage" :disabled="page === 1"
+        class="flex items-center px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
         Previous
       </button>
 
-      <button
-        v-for="n in pagesToShow"
-        :key="n"
-        @click="goPage(n)"
-        :class="[
-          'px-3 py-1 border rounded',
-          n === page ? 'border-2 border-blue-600 text-blue-600' : 'hover:bg-gray-100'
-        ]"
-      >
+      <button v-for="n in pagesToShow" :key="n" @click="goPage(n)" :class="[
+        'px-3 py-1 border rounded',
+        n === page ? 'border-2 border-blue-600 text-blue-600' : 'hover:bg-gray-100'
+      ]">
         {{ n }}
       </button>
 
-      <button
-        @click="nextPage"
-        :disabled="page === totalPages"
-        class="flex items-center px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 cursor-pointer"
-      >
+      <button @click="nextPage" :disabled="page === totalPages"
+        class="flex items-center px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 cursor-pointer">
         Next
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none"
-             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
         </svg>
       </button>
     </div>
   </div>
 
-  <button
-    v-if="showBackToTop"
-    @click="scrollToTop"
+  <button v-if="showBackToTop" @click="scrollToTop"
     class="fixed bottom-6 right-6 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition"
-    aria-label="Back to top"
-  >
+    aria-label="Back to top">
     Back to Top
   </button>
 </template>
@@ -97,9 +71,8 @@ import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 
 const route = useRoute()
-
-
 const router = useRouter()
+const isReady = ref(false)
 
 function onSuggestionClick(item) {
   router.push({ name: 'ArticleDetail', params: { id: item.ID } })
@@ -154,18 +127,28 @@ async function fetchResults() {
       articles: results.value
     })
 
-     results.value = returnList.data
-     totalResults.value = returnList.data.length
-      if(results.value.content) {
-        results.value.content = results.value.content.replace(/\\n/g, '\n')
+    results.value = returnList.data
+    totalResults.value = returnList.data.length
+    results.value = returnList.data.map(item => {
+      return {
+        ...item,
+        content: item.content?.replace(/\\n/g, '\n')
       }
-
+    
+    })
+    isReady.value = true
 
 
   } catch (error) {
     console.error('Error fetching or searching articles:', error)
   }
 }
+
+function formatContent(text) {
+  if (!text) return ''
+  return text.replace(/\n/g, '<br>')
+}
+
 
 function prevPage() {
   if (page.value > 1) {
@@ -207,6 +190,4 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

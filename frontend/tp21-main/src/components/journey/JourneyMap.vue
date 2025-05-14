@@ -49,7 +49,7 @@
               <div class="flat-age">{{ stage.age }}</div>
               <div class="flat-desc" v-html="stage.desc"></div>
               <!-- Checklist -->
-              <button class="question-button" @click="openChecklist(stage.class); $event.stopPropagation()">
+              <button class="back-button" @click="openChecklist(stage.class); $event.stopPropagation()">
                 {{ $t('journeyMap.cardFront.checklistButton') }}</button>
             </div>
 
@@ -66,7 +66,7 @@
                   <li v-for="(detail, idx) in stage.keyTiming" :key="idx">{{ detail }}</li>
                 </ul>
               </div>
-              <button class="back-button" @click.stop="openRelatedQuestions(index)">
+              <button class="question-button" @click.stop="openRelatedQuestions(index)">
                 {{ $t('journeyMap.cardBack.relatedQuestions') }}
               </button>
             </div>
