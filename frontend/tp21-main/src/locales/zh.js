@@ -456,11 +456,9 @@ export default {
             title: '探索在维州上学的常见问题',
             description: '从入学流程到课程安排，我们为你准备了常见问题和实用解答。',
         },
-
         Placeholder: '输入你的问题，开始了解吧！',
         searchButton: '搜索',
         tryAskingTitle: '你可能想问的',
-
         supportView: {
             tryAsking1: "什么是 NAPLAN？",
             tryAsking2: "ICSEA 是什么意思？为什么它很重要？",
