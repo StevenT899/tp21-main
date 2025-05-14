@@ -467,7 +467,18 @@ export default {
             tryAsking3: "学校的报名截止时间是什么时候？",
             tryAsking4: "什么是独立学校"
         },
-        frequentAskTitle: '常问问题',
+
+
+        frequentAskTitle: '常用问题',
+        frequentAsk1:'维多利亚州有哪些类型的小学？',
+        
+
+         toast: {
+            warning: '输入不能为空，请重试。'
+        },
+        
+      
+
     },
     articleDetailView: {
         button: {

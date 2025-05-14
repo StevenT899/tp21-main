@@ -89,7 +89,7 @@ function showToast(type, message, duration = 3000) {
 
 function onSearch() {
   if (searchQuery.value.trim() === '') {
-    showToast('warning', 'Search query is empty, please enter your question.')
+    showToast('warning', t('supportView.toast.warning'))
     return
   }
   if (searchQuery.value.trim()) {

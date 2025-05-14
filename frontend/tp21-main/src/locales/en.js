@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import SearchingSupport from "@/views/SearchingSupport.vue";
+=======
+import FrequentAsk from "@/components/FrequentAsk.vue";
+>>>>>>> Stashed changes
 
 export default {
     nav: {
@@ -462,8 +466,18 @@ export default {
             tryAsking4: "What is an independent school?"
         },
         frequentAskTitle: 'Frequently Asked Questions',
+        frequentAsk1: 'What types of primary schools are available in Victoria?',
+       
+        toast: {
+            warning: 'Search query is empty, please enter your question.'
+        },
 
     },
+
+
+   
+
+
     checklist: {
         title: "Enrolment Checklist",
         instruction: "Tick the items you've prepared:",
