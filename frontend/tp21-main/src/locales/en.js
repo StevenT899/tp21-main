@@ -1,8 +1,8 @@
-<<<<<<< Updated upstream
+
 import SearchingSupport from "@/views/SearchingSupport.vue";
-=======
+
 import FrequentAsk from "@/components/FrequentAsk.vue";
->>>>>>> Stashed changes
+
 
 export default {
     nav: {
