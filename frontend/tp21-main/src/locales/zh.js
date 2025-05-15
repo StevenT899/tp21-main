@@ -735,6 +735,30 @@ export default {
             "content": "不是。EAL项目面向所有在家使用非英语语言、在学习英语方面需要支持的学生，不论其是否为移民家庭。这也包括出生在澳洲但在家讲其他语言的孩子。",
             "licence": "CC BY 4.0 许可协议 使用。",
             "reference": "https://www2.education.vic.gov.au/pal/languages-education/guidance/languages-data-and-research"
+        },
+        "35": {
+            "topic": "幼儿园有哪些类型？",
+            "content": "孩子可以在以下两种类型的机构就读幼儿园：\\n1. 长日托中心（又称 Childcare）\\n提供整天的托管服务，并包含幼儿园课程\\n幼儿园课程由合格老师授课\\n开放时间灵活，适合工作家庭\\n2. 独立幼儿园（又称 Sessional Kinder）\\n每周在特定时间上课\\n一年运行约 40 周，通常按学校学期放假\\n无托管服务，仅提供教育课程\\n这两类机构通常都提供 三岁幼儿园 和 四岁幼儿园 项目。",
+            "licence": "CC BY 4.0 许可协议 使用。",
+            "reference": "https://www.vic.gov.au/english-benefits-kinder#types-of-kindergarten-programs"
+        },
+        "36": {
+            "topic": "我的孩子是否可以每周免费上15小时的三岁幼儿园？",
+            "content": "某些孩子可通过专项项目获得15小时的免费课程。\\n如果您的孩子属于以下情况之一，可能有资格：\\n澳大利亚原住民或托雷斯海峡岛民\\n被儿童保护机构关注或转介至Child FIRST\\n难民或寻求庇护者家庭\\n符合**幼儿园费用补贴（Kindergarten Fee Subsidy）**条件的家庭也可能获得免费课程：\\n四岁：最多每周15小时\\n三岁：每周5至15小时，取决于所选幼儿园的安排\\n报名时请向幼儿园咨询您的家庭是否符合资格。",
+            "licence": "CC BY 4.0 许可协议 使用。",
+            "reference": "https://www.vic.gov.au/kinder-quick-guide-parents"
+        },
+        "37": {
+            "topic": "学生什么时候该决定是去 TAFE 还是上大学？",
+            "content": "不需要太早决定，但在 10年级左右 开始思考自己的兴趣和目标会很有帮助。\\n如果你喜欢学术类课程并打算上大学，可以选择 VCE 路径\\n如果你更喜欢动手实践或想早点进入职场，可以考虑 VCE 职业主修（VM） 或 直接申请 TAFE\\n不管选哪种路径，你都可以加入 VET 职业教育课程 来学技能。\\n很多学生在过程中会改变想法——这也是很正常的。建议和学校的升学老师聊聊，获取专业建议。",
+            "licence": "CC BY 4.0 许可协议 使用。",
+            "reference": "https://www.vic.gov.au/learn-about-training-course-and-qualification-levels"
+        },
+        "38": {
+            "topic": "学生可以通过 VET 课程进入大学吗？",
+            "content": "可以 —— 一些大学接受 职业教育与培训课程（VET） 作为升学路径。\\n如果你完成的是相关的 VET 课程（通常由 TAFE 提供），你可能可以：\\n申请 学分转换，跳过部分大学课程\\n通过 既往学习认证（RPL） 认可你的技能或学历\\n某些情况下，无需 ATAR 也能进入大学学位课程\\n但并不是所有 VET 课程都能直接升入大学，建议你提前咨询培训机构和目标大学，确认课程之间是否有正式对接协议。",
+            "licence": "CC BY 4.0 许可协议 使用。",
+            "reference": "https://www.vic.gov.au/use-training-pathway-university"
         }
     }
 };

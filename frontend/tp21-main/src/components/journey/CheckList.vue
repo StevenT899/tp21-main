@@ -16,7 +16,7 @@
                 </li>
             </ul>
             <p class="text-gray-700 mt-4">{{ $t('checklist.reference') }}</p>
-            <p class="text-blue-900 mb-4 text-sm">{{ referenceText}}</p>
+            <p class="text-blue-900 mb-4 text-sm cursor-pointer hover:underline" @click="handleReferenceClick">{{ referenceText}}</p>
             
             <!-- export features -->
             <button @click="exportToWord"
@@ -42,7 +42,23 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const emit = defineEmits(['close']);
 const checkedItems = ref([]);
+
+// reference
 const referenceText = computed(() => t(`checklist.referenceById.${props.id}`))
+const referenceMap = {
+  0: "https://www.vic.gov.au/how-enrol-kindergarten",
+  1: "https://www.vic.gov.au/enrolling-foundation-prep#rpl-skip-links",
+  2: "https://www.vic.gov.au/moving-primary-secondary-school-information-parents-and-carers#moving-to-a-non-government-secondary-school-or-registering-for-home-schooling",
+  3: "https://www.vic.gov.au/tafe",
+}
+
+const handleReferenceClick = () => {
+  const url = referenceMap[props.id]
+  if (url) {
+    window.open(url, '_blank')
+  }
+}
+
 
 const props = defineProps({
     visible: Boolean,
