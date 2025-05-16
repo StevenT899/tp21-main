@@ -2,7 +2,7 @@
 from flask import Blueprint, jsonify, request
 import requests
 from .dao import fetch_all_schools, fetch_all_zone_schools, fetch_zone_schools_by_name, fetch_school_by_id,fetch_all_articles,fetch_article_by_id, fetch_search_result
-from .config import VALID_USERNAME, VALID_PASSWORD
+from .config import VALID_USERNAME, VALID_PASSWORD, GOOGLE_API_KEY
 
 bp = Blueprint('api', __name__)
 
@@ -32,8 +32,7 @@ def get_zone_schools_by_name():
 def place_autocomplete():
     input_data = request.args.get('input')
     components = 'country:au'
-    google_api_key = 'AIzaSyAptCwXW0pUgbqzN4s-e66aQYH7k5qKjkY'
-    url = f'https://maps.googleapis.com/maps/api/place/autocomplete/json?input={input_data}&key={google_api_key}&types=geocode&components={components}'
+    url = f'https://maps.googleapis.com/maps/api/place/autocomplete/json?input={input_data}&key={GOOGLE_API_KEY}&types=geocode&components={components}'
     response = requests.get(url)
     data = response.json()
 
@@ -50,8 +49,7 @@ def place_autocomplete():
 @bp.route('/api/proxy/geocode', methods=['GET'])
 def geocode():
     address = request.args.get('address')
-    google_api_key = 'AIzaSyAptCwXW0pUgbqzN4s-e66aQYH7k5qKjkY'
-    url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={google_api_key}'
+    url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={GOOGLE_API_KEY}'
     response = requests.get(url)
     return jsonify(response.json())
 
@@ -69,6 +67,9 @@ def list_articles():
 @bp.route('/articles/<int:article_id>')
 def get_article(article_id):
     article = fetch_article_by_id(article_id)
+    if not article:
+        return jsonify({'error': 'not found'}), 404
+    
     return jsonify({
         'ID':        article.ID,
         'topic':     article.topic,

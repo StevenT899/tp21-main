@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# C extensions
+*.pyd
+
+# Test cache & reports
+.pytest_cache/
+test_report.html
+
+# Environment variables & secrets
+.env
+*.ini
+
+# Virtual environments
+env/
+venv/
+
+# VSCode or PyCharm project files
+.idea/
+.vscode/
+
+# Migrations (optional: if you regenerate them often)
+migrations/__pycache__/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

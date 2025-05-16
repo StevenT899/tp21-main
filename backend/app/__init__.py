@@ -5,10 +5,15 @@ from .routes import bp
 import configparser
 from .extensions import db
 from flask_migrate import Migrate
+import os
 
 # Load configuration settings from config.ini
 config = configparser.ConfigParser()
-config.read('config.ini')
+
+config_path = os.path.join(os.path.dirname(__file__), '..', 'config.ini')
+config.read(os.path.abspath(config_path))
+# config.read('config.ini')
+
 url_prefix = config.get('app', 'url_prefix', fallback='/')
 
 # Initialize database and migration components

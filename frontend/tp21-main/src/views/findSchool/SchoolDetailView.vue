@@ -269,7 +269,7 @@ import GenderChartInDetailPage from '@/components/chart/GenderChartInDetailPage.
 import LanguageChartInDetailPage from '@/components/chart/LanguageChartInDetailPage.vue'
 import { point, polygon, booleanPointInPolygon } from '@turf/turf';
 import { useI18n } from 'vue-i18n';
-import '../assets/toast.css'
+import '@/assets/toast.css'
 
 const showBackToTop = ref(false)
 
