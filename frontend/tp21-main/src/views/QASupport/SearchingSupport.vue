@@ -1,3 +1,19 @@
+<!--
+  SearchingSupportView.vue
+
+  This component is responsible for rendering the search results page.
+
+  Features:
+  - Displays search result count and keyword from URL query.
+  - Supports internationalization (i18n) with fallback to English.
+  - Paginates results with next, previous, and specific page buttons.
+  - Allows user to click on result title to navigate to article details.
+  - Includes scroll-to-top button that appears after scrolling down.
+  - Fetches articles from API and refines the result using an AI similarity model.
+  - Formats content with proper line breaks using <br> tags.
+-->
+
+
 <template>
   <div class="max-w-5xl mx-auto py-8 px-4">
     <button @click="goBack"

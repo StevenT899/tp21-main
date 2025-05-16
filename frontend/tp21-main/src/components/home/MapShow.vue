@@ -162,10 +162,10 @@ import { ref, onMounted, reactive, defineProps, watch, computed, onUnmounted } f
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import schoolIcon from '@/assets/images/school.png';
-import CompareSideBar from '@/components/CompareSideBar.vue';
-import ModalBox from './ModalBox.vue';
+import CompareSideBar from '@/components/home/CompareSideBar.vue';
+import ModalBox from '../base/ModalBox.vue';
 import { useI18n } from 'vue-i18n'
-import '../assets/toast.css'
+import '@/assets/toast.css'
 
 const { t } = useI18n();
 const ModalBoxRef = ref(null);

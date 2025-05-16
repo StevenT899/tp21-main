@@ -1,3 +1,15 @@
+<!--
+  SupportView.vue
+
+  This component provides the support search interface, including:
+  - A title and description section
+  - A search input and button to navigate to search results
+  - Suggested quick question buttons
+  - A "Back to top" floating button
+  - Includes the FrequentAsk component
+  - Displays toast messages for empty input validation
+-->
+
 <template>
   <section class="bg-white py-16">
     <div class="max-w-4xl mx-auto text-center px-4">
@@ -53,8 +65,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import FrequentAsk from '@/components/FrequentAsk.vue';
-import '../assets/toast.css'
+import FrequentAsk from '@/components/support/FrequentAsk.vue';
+import '@/assets/toast.css'
 import { useI18n } from 'vue-i18n'
 
 import { onMounted, onUnmounted } from 'vue'
@@ -89,18 +101,8 @@ const suggestions = computed(() => [
 ])
 
 
-
 const toast = ref({ show: false, type: '', message: '' })
 let toastTimeout = null
-
-// const showToast = (type, messageKey, params = {}, duration = 3000) => {
-// const message = t(`messages.toast.${type}.${messageKey}`, params)
-// toast.value = { show: true, type, message }
-// if (toastTimeout) clearTimeout(toastTimeout)
-// toastTimeout = setTimeout(() => {
-//     toast.value.show = false
-// }, duration)
-// }
 
 function showToast(type, message, duration = 3000) {
   toast.value = { show: true, type, message }

@@ -1,9 +1,8 @@
 <script setup>
 import { watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import NavBar from './components/NavBar.vue';
-import Footer from './components/FooterTeam.vue';
-import FrequentAsk from './components/FrequentAsk.vue';
+import NavBar from './components/base/NavBar.vue';
+import Footer from './components/base/FooterTeam.vue';
 import { isLoggedIn } from './auth';
 
 const router = useRouter();

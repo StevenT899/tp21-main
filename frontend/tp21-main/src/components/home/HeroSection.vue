@@ -159,14 +159,14 @@
 
 <script setup>
 import { ref, nextTick } from 'vue';
-import MapShow from '@/components/MapShow.vue';
+import MapShow from '@/components/home/MapShow.vue';
 import MapZShow from './MapZShow.vue';
 import { useClickOutside } from '@/utils/useClickOutside';
 import { useI18n } from 'vue-i18n';
 import axios from 'axios';
 import debounce from 'lodash.debounce';
 import { point, polygon, booleanPointInPolygon } from '@turf/turf';
-import ModalBox from '../ModalBox.vue';
+import ModalBox from '../base/ModalBox.vue';
 
 const ModalBoxRef = ref(null);
 const openModal = (modalType) => {

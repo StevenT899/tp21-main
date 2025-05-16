@@ -288,8 +288,8 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted} from 'vue'
-import GenderBarChart from '../components/GenderBarChart.vue'
-import LanguageBarChart from '../components/LanguageBarChart.vue'
+import GenderBarChart from '../../components/chart/GenderBarChart.vue'
+import LanguageBarChart from '../../components/chart/LanguageBarChart.vue'
 import { useI18n } from 'vue-i18n'
 
 

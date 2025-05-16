@@ -19,40 +19,40 @@ const routes = [
   {
     path: '/compare',
     name: 'Compare',
-    component: () => import('../views/CompareView.vue'),
+    component: () => import('../views/findSchool/CompareView.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/journey',
     name: 'Journey',
-    component: () => import('../views/JourneyView.vue'),
+    component: () => import('../views/JourneyMap/JourneyView.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/support',
     name: 'Support',
-    component: () => import('../views/SupportView.vue'),
+    component: () => import('../views/QASupport/SupportView.vue'),
     meta: { requiresAuth: true }
   },
 
   {
     path: '/searchingSupport',
     name: 'SearchingSupport',
-    component: () => import('../views/SearchingSupport.vue'),
+    component: () => import('../views/QASupport/SearchingSupport.vue'),
     meta: { requiresAuth: true }
   },
 
   {
     path: '/detail/:id',
     name: 'SchoolDetail',
-    component: () => import('../views/SchoolDetailView.vue'),
+    component: () => import('../views/findSchool/SchoolDetailView.vue'),
     meta: { requiresAuth: true }
   },
 
   {
     path: '/article/:id',
     name: 'ArticleDetail',
-    component: () => import('../views/ArticleDetailView.vue'),
+    component: () => import('../views/QASupport/ArticleDetailView.vue'),
     meta: { requiresAuth: true }
   },
 ];

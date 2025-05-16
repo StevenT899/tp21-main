@@ -83,7 +83,7 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import '../assets/toast.css'
+import '@/assets/toast.css'
 
 
 const emit = defineEmits(['rm', 'rma'])

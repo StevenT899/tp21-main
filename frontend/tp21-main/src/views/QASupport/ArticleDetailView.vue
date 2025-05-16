@@ -1,3 +1,16 @@
+<!--
+  ArticleDetailView.vue
+
+  This component displays the detailed content of a selected article.
+
+  Features:
+  - Shows the article title, full content, and reference information.
+  - Supports internationalization (i18n); uses translated content if available for the current locale.
+  - Applies line break formatting to content using <br> tags.
+  - Provides a "Go Back" button for navigation.
+  - Displays a loading message while the article is being fetched.
+-->
+
 <template>
   <section class="max-w-3xl mx-auto py-8 px-4">
     <button @click="goBack"

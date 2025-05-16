@@ -108,7 +108,7 @@
 
 <script setup>
 import { onMounted, ref, watch, defineEmits, computed, onUnmounted } from 'vue';
-import CompareSideBar from '@/components/CompareSideBar.vue';
+import CompareSideBar from '@/components/home/CompareSideBar.vue';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import selfIcon from '@/assets/images/self_position.png';

@@ -265,8 +265,8 @@
 <script setup>
 import { onMounted,  onUnmounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import GenderChartInDetailPage from '@/components/GenderChartInDetailPage.vue'
-import LanguageChartInDetailPage from '@/components/LanguageChartInDetailPage.vue'
+import GenderChartInDetailPage from '@/components/chart/GenderChartInDetailPage.vue'
+import LanguageChartInDetailPage from '@/components/chart/LanguageChartInDetailPage.vue'
 import { point, polygon, booleanPointInPolygon } from '@turf/turf';
 import { useI18n } from 'vue-i18n';
 import '../assets/toast.css'
