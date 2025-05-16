@@ -461,7 +461,7 @@ export default {
         tryAskingTitle: '你可能想问的',
         supportView: {
             tryAsking1: "什么是 NAPLAN？",
-            tryAsking2: "ICSEA 是什么意思？为什么它很重要？",
+            tryAsking2: "社区社会教育优势指数(ICSEA)代表什么？为什么它很重要？",
             tryAsking3: "学校的报名截止时间是什么时候？",
             tryAsking4: "什么是独立学校?"
         },

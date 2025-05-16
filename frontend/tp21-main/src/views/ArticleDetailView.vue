@@ -21,12 +21,19 @@
       </div>
     </div>
     <div v-else class="text-center text-gray-400">{{ $t('articleDetailView.loading') }}</div>
+
+    
   </section>
+
+
+
+
+
 
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { useI18n } from 'vue-i18n'
@@ -34,9 +41,17 @@ const { locale, messages } = useI18n()
 const route = useRoute()
 const article = ref(null)
 
+
+
+
+
+
+
 function goBack() {
   window.history.back()
 }
+
+
 
 onMounted(async () => {
   const id = route.params.id
@@ -45,8 +60,8 @@ onMounted(async () => {
   if (article.value.content) {
     article.value.content = article.value.content.replace(/\\n/g, '\n')
   }
-  console.log(article.value)
 })
+
 
 const currentArticle = computed(() => {
   const articleId = String(route.params.id)

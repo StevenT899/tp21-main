@@ -231,6 +231,10 @@ def fetch_search_result(query, articles):
     df_result = df.iloc[top_indices].copy()
     df_result['similarity_score'] = similarities[top_indices]
 
+    df_result['content'] = df_result['content'].apply(
+        lambda x: ' '.join(x.split()[:15]) + ('...' if len(x.split()) > 15 else '')
+    )
+
     result = df_result.to_dict(orient='records')
 
     return result
