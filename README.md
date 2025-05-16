@@ -32,8 +32,37 @@ tp21-main
 │   ├── assets
 │   │   └── images
 │   │   └── main.css
+│   │   └── journey.css
+│   │   └── toast.css
 │   ├── components
-│   │   └── home
+│   │   └── base
+│   │     |   └──FooterTeam.vue
+│   │     |   └──ModalBox.vue
+│   │     |   └──NavBar.vue
+│   │     |
+│   │     |── chart
+│   │     |   └── GenderBarChart.vue
+│   │     |   └── GenderBarChartInDetailPage.vue
+│   │     |   └── LanguageChart.vue
+│   │    |    └── LanguageChartInDetailPage.vue
+│   │     |
+│   │     └── home
+│   │     |   └── CompareSideBar.vue
+│   │     |   └── HelpSection.vue
+│   │     |   └── HeroSection.vue
+│   │     |   └── MapShow.vue      
+│   │     |   └── MapZShow.vue 
+│   │     └── journey
+│   │         └── CheckList.vue
+│   │     |   └── JourneyMap.vue
+│   │     |   └── QuestionList.vue  
+│   │     └── support
+│   │           └── FrequentAsk.vue 
+│   │         
+│   │         
+│   │     
+│   │
+│   │
 │   ├── locales
 │   |   ├── en.js
 │   |   └── zh.js
