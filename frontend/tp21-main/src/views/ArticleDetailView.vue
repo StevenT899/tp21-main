@@ -57,15 +57,13 @@ onMounted(async () => {
   const id = route.params.id
   const response = await axios.get(`${import.meta.env.VITE_API_URL}/articles/${id}`)
   article.value = response.data
-  if (article.value.content) {
-    article.value.content = article.value.content.replace(/\\n/g, '\n')
-  }
+  
 })
 
 
 const currentArticle = computed(() => {
   const articleId = String(route.params.id)
-  const raw = locale.value === 'zh'
+  const raw = locale.value === 'zh' 
     ? messages.value.zh?.articles?.[articleId] || article.value
     : article.value
 
