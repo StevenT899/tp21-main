@@ -16,10 +16,11 @@
       <li v-for="item in translatedResults" :key="item.id" class="mb-6">
         <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
           <div class="bg-blue-50 px-4 py-2 border-b border-gray-200">
-            <a href="#" @click.prevent="onSuggestionClick(item)"
+            <a v-if="isReady" href="#" @click.prevent="onSuggestionClick(item)"
               class="underline text-xl font-semibold text-blue-600 cursor-pointer">
               {{ item.topic }}
             </a>
+             <div v-else class="text-center text-gray-500 py-1">{{ $t('searchingSupport.search.loadingResults') }}</div>
 
           </div>
           <div class="px-4 py-3">
