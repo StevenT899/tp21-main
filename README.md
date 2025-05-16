@@ -39,25 +39,23 @@ tp21-main
 │   │     |   └──FooterTeam.vue
 │   │     |   └──ModalBox.vue
 │   │     |   └──NavBar.vue
-│   │     |
 │   │     |── chart
 │   │     |   └── GenderBarChart.vue
 │   │     |   └── GenderBarChartInDetailPage.vue
 │   │     |   └── LanguageChart.vue
-│   │    |    └── LanguageChartInDetailPage.vue
-│   │     |
+│   │     |   └── LanguageChartInDetailPage.vue
 │   │     └── home
 │   │     |   └── CompareSideBar.vue
 │   │     |   └── HelpSection.vue
 │   │     |   └── HeroSection.vue
 │   │     |   └── MapShow.vue      
 │   │     |   └── MapZShow.vue 
-│   │     └── journey
-│   │         └── CheckList.vue
-│   │     |   └── JourneyMap.vue
-│   │     |   └── QuestionList.vue  
+│   │     │── journey
+│   │     │   └── CheckList.vue
+│   │     │   └── JourneyMap.vue
+│   │     │   └── QuestionList.vue  
 │   │     └── support
-│   │           └── FrequentAsk.vue 
+│   │         └── FrequentAsk.vue 
 │   │         
 │   │         
 │   │     
@@ -69,10 +67,13 @@ tp21-main
 │   ├── router
 │   │   └── index.js
 │   ├── views
-|   |   ├── CompareView.vue
+|   |   ├── findSchool
+|   |   ├── JourneyMap
+|   |   ├── QASupport
 |   |   ├── HomeView.vue
-|   |   ├── LoginView.vue
-|   |   └── SchoolDetailView.vue
+│   │   └── LoginView.vue
+|   |   
+|   |   
 │   ├── App.vue
 │   ├── auth.js
 │   └── main.js
@@ -91,29 +92,36 @@ tp21-main
 └── vite.config.js
 ```
 
-### Third-Party API Integration
 
-This project uses the following services to support map display and address lookup:
+### Project Building process
+This project follows an Agile development methodology and was executed over three iterations.
 
-- **Mapbox API**  
-  - **Features**: map rendering (vector tiles, static images), interactive markers, custom styles, geocoding  
-  - **Use cases**: displaying school locations and boundaries on the map, highlighting selected items  
+Iteration 1
+Main pages: HomeView, CompareView
 
-- **Google Places API**  
-  - **Features**: place autocomplete, place details (name, address, coordinates, business hours, etc.)  
-  - **Use cases**: offering real-time suggestions as users type an address or school name; retrieving full metadata for the selected place  
+Work Flow
+Once the user performs a search, a map is displayed showing the corresponding school(s) or all schools within the selected area. Each school is represented by a clickable icon pinned to its real-world location on the map. 
 
-- **Geocoding API**  
-  - **Features**: forward geocoding (address → coordinates), reverse geocoding (coordinates → address)  
-  - **Use cases**:  
-    - converting user-entered addresses into map coordinates and marking them on the map  
-    - translating map clicks or device location data into human-readable addresses  
+Users can further refine the results by applying filters such as School Type and Language Programs. The map will update in real-time to reflect only the schools matching the selected criteria.
 
-> **Notes:**  
-> - Store all API credentials (access tokens / API keys) centrally (e.g. environment variables or a managed secrets service) to avoid hard-coding sensitive information.  
+When the user clicks on an school icon, a popup window appears displaying a brief summary of the school's information and an “Add to Compare” button. Clicking this button allows the user to add the selected school to the Compare Page.
 
-### Project License
-This project is licensed under the MIT License.
+The Compare Page supports up to three schools, each represented as a card in a three-column layout. These cards display detailed school information, including key data points,visualizations such as charts, and real website of corresponding school. Users can remove any added school or search and add a new school to any available (empty) slot using the search bar located above the cards.
+
+👉 You may refer to the corresponding implementation in the iteration1-dev branch of our GitHub repository for more technical details.
+
+
+
+Iteration 2 
+
+For implementation details of this iteration, please refer to the iteration2-dev branch in our GitHub repository.
+
+Iteration 3
+
+For implementation details of this iteration, please refer to the iteration3-dev branch in our GitHub repository.
+
+
+
 
 
 ### Project Support
@@ -143,3 +151,27 @@ npm run build
 ```sh
 npm run lint
 ```
+
+### Third-Party API Integration
+
+This project uses the following services to support map display and address lookup:
+
+- **Mapbox API**  
+  - **Features**: map rendering (vector tiles, static images), interactive markers, custom styles, geocoding  
+  - **Use cases**: displaying school locations and boundaries on the map, highlighting selected items  
+
+- **Google Places API**  
+  - **Features**: place autocomplete, place details (name, address, coordinates, business hours, etc.)  
+  - **Use cases**: offering real-time suggestions as users type an address or school name; retrieving full metadata for the selected place  
+
+- **Geocoding API**  
+  - **Features**: forward geocoding (address → coordinates), reverse geocoding (coordinates → address)  
+  - **Use cases**:  
+    - converting user-entered addresses into map coordinates and marking them on the map  
+    - translating map clicks or device location data into human-readable addresses  
+
+> **Notes:**  
+> - Store all API credentials (access tokens / API keys) centrally (e.g. environment variables or a managed secrets service) to avoid hard-coding sensitive information.  
+
+### Project License
+This project is licensed under the MIT License.
