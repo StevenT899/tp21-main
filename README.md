@@ -98,16 +98,6 @@ This project follows an Agile development methodology and was executed over thre
 
 Iteration 1
 Main pages: HomeView, CompareView
-
-Work Flow
-Once the user performs a search, a map is displayed showing the corresponding school(s) or all schools within the selected area. Each school is represented by a clickable icon pinned to its real-world location on the map. 
-
-Users can further refine the results by applying filters such as School Type and Language Programs. The map will update in real-time to reflect only the schools matching the selected criteria.
-
-When the user clicks on an school icon, a popup window appears displaying a brief summary of the school's information and an “Add to Compare” button. Clicking this button allows the user to add the selected school to the Compare Page.
-
-The Compare Page supports up to three schools, each represented as a card in a three-column layout. These cards display detailed school information, including key data points,visualizations such as charts, and real website of corresponding school. Users can remove any added school or search and add a new school to any available (empty) slot using the search bar located above the cards.
-
 👉 You may refer to the corresponding implementation in the iteration1-dev branch of our GitHub repository for more technical details.
 
 
