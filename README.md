@@ -63,6 +63,40 @@ This web application is designed to support migrant families in Victoria, Austra
 - Entry point from either the map or comparison view
 ---
 
+## 🖼️ Screenshots
+Below are example screenshots of key pages in **SchoolMate** that demonstrate its main features and user experience.
+##### 🏠 Home Page – School Map and Zone Detection  
+Users can search for schools or addresses and view the zoning area on an interactive map.
+
+![Home Page](./screenshots/home-map1.png)
+![Home Page](./screenshots/home-map2.png)
+---
+##### 📊 Compare Page – Side-by-Side Comparison  
+Users can compare up to three schools simultaneously by viewing key statistics and visual charts.
+![Compare Page – School Comparison](./screenshots/compare.png)
+
+---
+##### 🏫 School Detail Page  
+Detailed view of a single school, including ICSEA score, enrolment data, and charts.
+![School Detail Page](./screenshots/detail.png)
+
+---
+##### 🧭 Education Journey Map  
+Interactive timeline showing major education stages: Early Childhood, Primary, Secondary, Tertiary.
+![Education Journey Map](./screenshots/journey-map.png)
+
+---
+##### 📋 Enrolment Checklist  
+Step-by-step checklist for school enrolment, including downloadable documents and status tracking.
+![Checklist](./screenshots/checklist.png)
+
+---
+##### ❓ Support Page – Q&A Module  
+Searchable FAQ interface with answers grouped by education stage (e.g., Prep, Primary, Secondary).
+
+![Support](./screenshots/support1.png)
+![Support](./screenshots/support2.png)
+---
 
 ## 🛠️ Project Technologies
 SchoolMate is a full-stack web application built with modern web technologies, deployed on a cloud-based infrastructure to ensure performance, scalability, and maintainability.
@@ -109,13 +143,17 @@ This project follows an Agile development methodology and was executed over thre
   - Iteration 2: [iteration2-dev](https://github.com/StevenT899/tp21-main/tree/iteration2-dev)
   - Iteration 3: [iteration3-dev](https://github.com/StevenT899/tp21-main/tree/iteration3-dev)
   
+##### 📦 Releases
+- [v1.0 – Iteration 1](https://github.com/StevenT899/tp21-main/releases/tag/v1.0)
+- [v2.0 – Iteration 2](https://github.com/StevenT899/tp21-main/releases/tag/v2.0)
+- [v3.0 – Iteration 3](https://github.com/StevenT899/tp21-main/releases/tag/v3.0)
+
 ##### 📝 Change Log
 | Version | Branch Name       | Release Date | Key Features / Changes |
 |---------|-------------------|--------------|--------------------------|
 | v1.0    | `iteration1-dev`  | 2025-03      | Home page, map search, basic comparison |
 | v2.0    | `iteration2-dev`  | 2025-04      | Address-based school zone check, sidebar, school detail page |
 | v3.0    | `iteration3-dev`  | 2025-05      | Journey map, bilingual checklist, Q&A article formatting |
-- Each version is associated with a feature-complete milestone based on team-defined Epics and User Stories. Development branches can be found here.
 
 ##### 💻 Development Members & Roles  
 | Name                | Role                  | Responsibility Summary  |  
@@ -123,129 +161,162 @@ This project follows an Agile development methodology and was executed over thre
 | YuHan Chen (MIT)    | Full Stack Developer  | schools/school zones, journey map checklist, Flask APIs, interface pytest|  
 | XinWen Tan (MIT)    | Full Stack Developer  | school comparison, Flask APIs, school detail, Q&A module |  
 
+
+
 ---
-### Project File Structure
-```
-Frontend
-tp21-main
-├── .vscode
-├── node_modules
-├── public
-├── src
-│   ├── assets
-│   │   └── images
-│   │   └── main.css
-│   │   └── journey.css
-│   │   └── toast.css
-│   ├── components
-│   │   └── base
-│   │     |   └──FooterTeam.vue
-│   │     |   └──ModalBox.vue
-│   │     |   └──NavBar.vue
-│   │     |── chart
-│   │     |   └── GenderBarChart.vue
-│   │     |   └── GenderBarChartInDetailPage.vue
-│   │     |   └── LanguageChart.vue
-│   │     |   └── LanguageChartInDetailPage.vue
-│   │     └── home
-│   │     |   └── CompareSideBar.vue
-│   │     |   └── HelpSection.vue
-│   │     |   └── HeroSection.vue
-│   │     |   └── MapShow.vue      
-│   │     |   └── MapZShow.vue 
-│   │     │── journey
-│   │     │   └── CheckList.vue
-│   │     │   └── JourneyMap.vue
-│   │     │   └── QuestionList.vue  
-│   │     └── support
-│   │         └── FrequentAsk.vue 
-│   │         
-│   │         
-│   │     
-│   │
-│   │
-│   ├── locales
-│   |   ├── en.js
-│   |   └── zh.js
-│   ├── router
-│   │   └── index.js
-│   ├── views
-|   |   ├── findSchool
-|   |   ├── JourneyMap
-|   |   ├── QASupport
-|   |   ├── HomeView.vue
-│   │   └── LoginView.vue
-|   |   
-|   |   
-│   ├── App.vue
-│   ├── auth.js
-│   └── main.js
-├── .editorconfig
-├── .gitattributes
-├── .gitignore
-├── eslint.config.js
-├── index.html
-├── jsconfig.json
-├── package-lock.json
-├── package.json
-└── vite.config.js
-```
+## ⚙️ Project Support
 
-
-
-
-
-
-
-
-### Project Support
 ##### Recommended IDE Setup
-
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
 ##### Customize configuration
 See [Vite Configuration Reference](https://vite.dev/config/).
 
-##### Project Setup
-```sh
+##### 📦 Prerequisites
+- Node.js >= 18.x
+- Python >= 3.9
+- MariaDB / MySQL
+- Google & Mapbox API keys
+
+##### 📁 Project File Structure
+```
+TP21-MAIN
+├── backend
+│   └── app
+│       ├── __init__.py
+│       ├── config.py
+│       ├── dao.py
+│       ├── extensions.py
+│       ├── models.py
+│       └── routes.py
+│   ├── migrations
+│   ├── config.ini
+│   ├── requirements.txt
+│   └── run.py
+├── frontend
+│   └── tp21-main
+│       ├──.vscode
+│       ├── dist
+│       ├── node_modules
+│       ├── public
+│       ├── src
+│       │   ├── assets
+│       │   ├── components
+│       │   ├── locales
+│       │   ├── router
+│       │   ├── utils
+│       │   └── views
+│       │       ├── findSchool
+│       │       ├── JourneyMap
+│       │       ├── QASupport
+│       │       ├── HomeView.vue
+│       │       ├── LoginView.vue
+│       │       └── App.vue
+│       ├── auth.js
+│       ├── main.js
+│       ├──.editorconfig
+│       ├──.env.development
+│       ├──.env.iter1
+│       ├──.env.iter2
+│       ├──.env.iter3
+│       ├──.env.production
+│       ├── eslint.config.js
+│       ├── index.html
+│       ├── jsconfig.json
+│       ├── package-lock.json
+│       ├── package.json
+│       └── vite.config.js
+├── tests
+│   └── api
+│       ├── __pycache__
+│       ├──.gitignore
+│       ├── conftest.py
+│       ├── test_articles.py
+│       ├── test_auth.py
+│       ├── test_proxy.py
+│       ├── test_schools.py
+│   ├── pytest.ini
+│   └── test_report.html
+├──.env
+└── README.md
+```
+##### 🔐 Environment & API Keys
+
+To run this project locally, make sure to configure the following environment variables.
+
+##### 📁 `frontend/.env.development`
+Create a file named `.env.development` inside the `frontend/tp21-main/` directory with the following content:
+
+```env
+VITE_API_URL="http://127.0.0.1:5000"                 # Proxy to backend Flask API
+VITE_MAPBOX_TOKEN=your_mapbox_token_here
+```
+##### 📁 `TP21-MAIN/.env`
+In the `TP21-MAIN/`, create a file named `.env` and add:
+
+```bash
+[google]
+GOOGLE_API_KEY = your_google_api_key_here
+
+[mysql]
+MYSQL_HOST = your_mysql_host
+MYSQL_USER = your_mysql_user
+MYSQL_PASSWORD = your_mysql_password
+MYSQL_DATABASE = your_database_name
+
+[auth]
+LOGIN_USERNAME = your_login_username
+LOGIN_PASSWORD = your_login_password
+
+[app]
+url_prefix = /api
+```
+##### 🚀 Frontend Setup
+```bash
+cd frontend/tp21-main
 npm install
+npm run dev   # or: npm run build
+```
+##### 🔧 Backend Setup
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+flask run
 ```
 
-##### Compile and Hot-Reload for Development
-```sh
-npm run dev
-```
+##### 🌍 Third-Party API Integration
+This project integrates several third-party APIs and services to support core functionalities such as mapping, address search, and zone checking.
+- **🗺️ Mapbox API**  
+  - **Features**: Map rendering using vector tiles and static images, custom styles, interactive markers  
+  - **Use Cases**:  
+    - Displaying government primary schools on a dynamic map  
+    - Visualizing school zones and user-selected areas  
+    - Highlighting added schools with visual feedback  
 
-##### Compile and Minify for Production
-```sh
-npm run build
-```
+- **📍 Google Places API**  
+  - **Features**: Autocomplete suggestions, place detail metadata (e.g., name, address, coordinates)  
+  - **Use Cases**:  
+    - Suggesting valid locations in Victoria while typing  
+    - Enabling location-aware school search  
 
-##### Lint with [ESLint](https://eslint.org/)
-```sh
-npm run lint
-```
+- **📌 Google Geocoding API**  
+  - **Features**:  
+    - Forward Geocoding (address → coordinates)  
+    - Reverse Geocoding (coordinates → address)  
+  - **Use Cases**:  
+    - Determining school eligibility based on entered residential addresses  
+    - Translating map clicks or GPS-based user location into readable addresses  
 
-### Third-Party API Integration
+> 🔐 **Security Note**:  
+> All API credentials (tokens and keys) are stored securely in `.env` or `config.ini` files and **never hard-coded**. This practice improves maintainability and prevents accidental credential exposure in public repositories.
 
-This project uses the following services to support map display and address lookup:
+##### 📄 License
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
-- **Mapbox API**  
-  - **Features**: map rendering (vector tiles, static images), interactive markers, custom styles, geocoding  
-  - **Use cases**: displaying school locations and boundaries on the map, highlighting selected items  
+---
 
-- **Google Places API**  
-  - **Features**: place autocomplete, place details (name, address, coordinates, business hours, etc.)  
-  - **Use cases**: offering real-time suggestions as users type an address or school name; retrieving full metadata for the selected place  
+### 📬 Contact
 
-- **Geocoding API**  
-  - **Features**: forward geocoding (address → coordinates), reverse geocoding (coordinates → address)  
-  - **Use cases**:  
-    - converting user-entered addresses into map coordinates and marking them on the map  
-    - translating map clicks or device location data into human-readable addresses  
-
-> **Notes:**  
-> - Store all API credentials (access tokens / API keys) centrally (e.g. environment variables or a managed secrets service) to avoid hard-coding sensitive information.  
-
-### Project License
-This project is licensed under the MIT License.
+We welcome questions, feedback, or suggestions to improve **SchoolMate**.
+💻 **GitHub**: [Xinwen Tan](https://github.com/StevenT899),    [Yuhan Chen](https://github.com/ReviveDesire)
