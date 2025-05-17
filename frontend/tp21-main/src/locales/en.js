@@ -467,6 +467,12 @@ export default {
     checklist: {
         title: "Enrolment Checklist",
         instruction: "Tick the items you've prepared:",
+        explainById: {
+            0: " ",
+            1: "* For other types of schools, the required documents may vary. It is recommended to contact the school directly for accurate information.",
+            2: "* For other types of schools, the required documents may vary. It is recommended to contact the school directly for accurate information.",
+            3: "* The required documents may vary from different course provider. It is recommended to contact the institution directly for accurate information.",
+        },
         reference: "Reference and licence:",
         referenceById: {
             0: "https://www.vic.gov.au/how-enrol-kindergarten",

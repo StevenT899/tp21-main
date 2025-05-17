@@ -441,6 +441,12 @@ export default {
     checklist: {
         title: "入学清单",
         instruction: "请勾选您已准备的项目：",
+        explainById: {
+            0: " ",
+            1: "* 对于其他类型的学校，所需文件可能有所不同。建议直接联系学校以获取准确信息。",
+            2: "* 对于其他类型的学校，所需文件可能有所不同。建议直接联系学校以获取准确信息。",
+            3: "* 不同课程提供方的要求可能有所不同。建议直接联系相关机构以获取准确信息。",
+        },
         reference: "参考与许可：",
         referenceById: {
             0: "https://www.vic.gov.au/how-enrol-kindergarten",

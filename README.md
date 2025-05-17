@@ -1,11 +1,11 @@
 ## 👥 Project Team
-**Team ID:** TP-21
-**Project Name:** SchoolMate – Your School Search Companion
-**Target Audience:** Migrant families in Victoria, Australia
-**Live Website:** https://schoolmatetp21.click/
-**Website Access**:
-- Username: `user`
-- Password: `tp21-newbee`
+- **Team ID:** TP-21
+- **Project Name:** SchoolMate – Your School Search Companion
+- **Target Audience:** Migrant families in Victoria, Australia
+- **Live Website:** https://schoolmatetp21.click/
+- **Website Access**:
+  - Username: `user`
+  - Password: `tp21-newbee`
   
 Our team is committed to building an intuitive platform that supports parents in navigating the local education system with confidence. The platform focuses on location-based school search, zone checking, comparison tools, and accessible bilingual information.
 
@@ -70,6 +70,7 @@ Users can search for schools or addresses and view the zoning area on an interac
 
 ![Home Page](./screenshots/home-map1.png)
 ![Home Page](./screenshots/home-map2.png)
+
 ---
 ##### 📊 Compare Page – Side-by-Side Comparison  
 Users can compare up to three schools simultaneously by viewing key statistics and visual charts.
@@ -96,6 +97,7 @@ Searchable FAQ interface with answers grouped by education stage (e.g., Prep, Pr
 
 ![Support](./screenshots/support1.png)
 ![Support](./screenshots/support2.png)
+
 ---
 
 ## 🛠️ Project Technologies

@@ -114,7 +114,6 @@ const toggleSpeech = () => {
   speechActive.value = !speechActive.value
   if (speechActive.value) {
     currentSpeech.value = kangarooDefault
-    setTimeout(() => { speechActive.value = false }, 5000)
   }
 }
 
@@ -122,7 +121,6 @@ function updateSpeechBubble(idx) {
   const tip = stages.value[idx]?.kangarooTip
   currentSpeech.value = tip || kangarooDefault
   speechActive.value = true
-  setTimeout(() => { speechActive.value = false }, 5000)
 }
 
 const flipCard = (index) => {
@@ -160,7 +158,25 @@ const endDrag = () => {
 // Lifecycle hooks
 onMounted(() => {
   currentSpeech.value = kangarooDefault
+  toggleSpeech()
   window.addEventListener('resize', checkScrollPosition)
+
+  const smoothScrollTo = (targetY, duration) => {
+    const startY = window.scrollY || document.documentElement.scrollTop;
+    const distance = targetY - startY;
+    const startTime = performance.now();
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      window.scrollTo(0, startY + distance * progress);
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    requestAnimationFrame(animate);
+  };
+  smoothScrollTo(230, 500);
+
   checkScrollPosition()
 })
 

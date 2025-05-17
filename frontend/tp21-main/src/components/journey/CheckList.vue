@@ -2,7 +2,8 @@
     <div v-if="visible"
         class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-opacity-80 bg-gray-30 z-50">
         <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
-            <button @click="close" class="absolute top-2 right-3 text-gray-600 hover:text-red-400 text-3xl cursor-pointer">
+            <button @click="close"
+                class="absolute top-2 right-3 text-gray-600 hover:text-red-400 text-3xl cursor-pointer">
                 &times;
             </button>
             <h2 class="text-xl font-semibold mb-4">{{ title }} {{ $t('checklist.title') }}</h2>
@@ -15,9 +16,14 @@
                     <label @click="toggleItem(index)">{{ item }}</label>
                 </li>
             </ul>
+            <p :class="['text-gray-700 mt-4 text-sm', props.id === 3 ? 'cursor-pointer hover:underline' : '']"
+                @click="handleExplainClick">
+                {{ explainText }}
+            </p>
             <p class="text-gray-700 mt-4">{{ $t('checklist.reference') }}</p>
-            <p class="text-blue-900 mb-4 text-sm cursor-pointer hover:underline" @click="handleReferenceClick">{{ referenceText}}</p>
-            
+            <p class="text-blue-900 mb-4 text-sm cursor-pointer hover:underline" @click="handleReferenceClick">{{
+                referenceText }}</p>
+
             <!-- export features -->
             <button @click="exportToWord"
                 class="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 w-5/6 cursor-pointer block mx-auto">
@@ -43,20 +49,33 @@ const { t } = useI18n()
 const emit = defineEmits(['close']);
 const checkedItems = ref([]);
 
+
+// Explain
+const explainText = computed(() => t(`checklist.explainById.${props.id}`))
+const explainMap = {
+    3: "https://www.vic.gov.au/find-my-local-tafe",
+}
+const handleExplainClick = () => {
+    const url = explainMap[props.id]
+    if (url) {
+        window.open(url, '_blank')
+    }
+}
+
 // reference
 const referenceText = computed(() => t(`checklist.referenceById.${props.id}`))
 const referenceMap = {
-  0: "https://www.vic.gov.au/how-enrol-kindergarten",
-  1: "https://www.vic.gov.au/enrolling-foundation-prep#rpl-skip-links",
-  2: "https://www.vic.gov.au/moving-primary-secondary-school-information-parents-and-carers#moving-to-a-non-government-secondary-school-or-registering-for-home-schooling",
-  3: "https://www.vic.gov.au/tafe",
+    0: "https://www.vic.gov.au/how-enrol-kindergarten",
+    1: "https://www.vic.gov.au/enrolling-foundation-prep#rpl-skip-links",
+    2: "https://www.vic.gov.au/moving-primary-secondary-school-information-parents-and-carers#moving-to-a-non-government-secondary-school-or-registering-for-home-schooling",
+    3: "https://www.vic.gov.au/tafe",
 }
 
 const handleReferenceClick = () => {
-  const url = referenceMap[props.id]
-  if (url) {
-    window.open(url, '_blank')
-  }
+    const url = referenceMap[props.id]
+    if (url) {
+        window.open(url, '_blank')
+    }
 }
 
 
@@ -71,11 +90,21 @@ function toggleItem(index) {
     checkedItems.value[index] = !checkedItems.value[index];
 }
 
-watch(
-    () => props.checklist,
-    (newList) => { checkedItems.value = newList.map(() => false); },
-    { immediate: true }
-);
+
+const storageKey = computed(() => `checklist-${props.id}`);
+watch(() => props.checklist, (newList) => {
+    const saved = sessionStorage.getItem(storageKey.value);
+    if (saved) {
+        checkedItems.value = JSON.parse(saved);
+    } else {
+        checkedItems.value = newList.map(() => false);
+    }
+}, { immediate: true });
+
+watch(checkedItems, (newVal) => {
+    sessionStorage.setItem(storageKey.value, JSON.stringify(newVal));
+}, { deep: true });
+
 
 function close() {
     emit('close');
@@ -92,12 +121,16 @@ function exportToWord() {
         '公立中学': '/exportFiles/zh/Secondary School (12–18 years  Year 7 – Year 12) Checklist - CHN.docx',
         '职业技术学院（TAFE）': '/exportFiles/zh/TAFE (Post-Year 10  Vocational Pathway) Checklist - CHN.docx'
     };
-    const templatePath = titleToTemplateMap[props.title]
+    const templatePath = titleToTemplateMap[props.title];
+    if (!templatePath) {
+        alert('Template not found for this title');
+        return;
+    }
 
-    const allItemsWithStatus = props.checklist.map((item, index) => ({
-        item,
-        checked: checkedItems.value[index] === true,
-    }));
+    const itemsObject = {};
+    checkedItems.value.forEach((checked, index) => {
+        itemsObject[`item${index}`] = { checked };
+    });
 
     JSZipUtils.getBinaryContent(templatePath, function (error, content) {
         if (error) {
@@ -110,7 +143,7 @@ function exportToWord() {
             const zip = new JSZip(content);
             const doc = new Docxtemplater().loadZip(zip);
 
-            doc.setData({ items: allItemsWithStatus });
+            doc.setData(itemsObject);
 
             doc.render();
 
@@ -156,7 +189,7 @@ async function exportToExcel() {
         props.checklist.forEach((item, index) => {
             const row = sheet.getRow(index + 4);
             row.getCell(1).value = checkedItems.value[index] ? '√' : ' '; // Status
-            row.getCell(2).value = item;      // Document
+            // row.getCell(2).value = item;      // Document
             row.commit();
         });
 
