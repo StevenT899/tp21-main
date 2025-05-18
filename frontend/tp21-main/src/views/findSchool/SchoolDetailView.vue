@@ -20,9 +20,24 @@
     <div class="max-w-4xl mx-auto px-6 py-6 space-y-6">
         <!-- Header -->
         <div>
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+            <div>
+                <button
+                @click="goBack"
+                class="mb-2 inline-flex items-center px-3 py-1 bg-[#E2EDFE] text-gray-800 rounded hover:bg-gray-200 focus:outline-none"
+                >
+                <span class="text-lg font-medium">
+                    {{ $t('articleDetailView.button.goBack') }}
+                </span>
+                </button>
+
+                
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mt-4">
                 {{ school?.School_Name || $t('SchoolDetail.loading') }}
-            </h1>
+                </h1>
+            
+            </div>
+
+            
             <p class="text-lg text-gray-600 mt-4">{{ school?.Suburb }}, {{ school?.Postcode }}</p>
             <div class="flex justify-end items-center mt-4 flex-wrap gap-4">
                 <a :href="school?.School_URL || '#'" target="_blank" rel="noopener"
@@ -43,15 +58,15 @@
         </div>
 
         <div class="map-instruction flex items-center gap-2 mb-2 pr-40 mt-1">
-        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500">
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="16" x2="12" y2="12"></line>
           <line x1="12" y1="8" x2="12.01" y2="8"></line>
-        </svg> -->
-        <svg width="27" height="25" viewBox="0 0 27 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        </svg>
+        <!-- <svg width="27" height="25" viewBox="0 0 27 25" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M13.5 16.6666V12.5M13.5 8.33331H13.5113M24.75 12.5C24.75 18.2529 19.7132 22.9166 13.5 22.9166C7.2868 22.9166 2.25 18.2529 2.25 12.5C2.25 6.74701 7.2868 2.08331 13.5 2.08331C19.7132 2.08331 24.75 6.74701 24.75 12.5Z" stroke="#757575" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+</svg> -->
         <span>{{ $t('compareView.pageHeader.description2') }}</span>
       </div>
 
@@ -321,9 +336,10 @@ const showToast = (type, messageKey, duration = 3000) => {
 };
 
 // Function to go back to the previous page
-const goBack = () => {
-    router.go(-1)
+function goBack() {
+  window.history.back()
 }
+
 
 // Add the current school to the compare list
 const addToCompare = () => {

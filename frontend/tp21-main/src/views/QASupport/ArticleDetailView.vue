@@ -14,7 +14,7 @@
 <template>
   <section class="max-w-3xl mx-auto py-8 px-4">
     <button @click="goBack"
-      class="mb-6 inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 focus:outline-none">
+      class="mb-6 inline-flex items-center px-3 py-1 bg-[#E2EDFE] text-gray-800 rounded hover:bg-gray-200 focus:outline-none">
       <span class="text-lg font-medium">{{ $t('articleDetailView.button.goBack') }}</span>
     </button>
     <div v-if="article">

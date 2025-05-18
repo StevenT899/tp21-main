@@ -23,6 +23,11 @@
   <div class="min-h-screen bg-gray-50 p-8 mx-auto max-w-[1400px]">
     <!-- Page Header -->
     <div class="text-start mb-5">
+      <button @click="goBack"
+        class="mb-6 inline-flex items-center px-3 py-1 bg-[#E2EDFE] text-gray-800 rounded hover:bg-gray-200 focus:outline-none">
+        <span class="text-lg font-medium">{{ $t('articleDetailView.button.goBack') }}</span>
+      </button>
+
       <h1 class="text-3xl font-semibold text-blue-600 mb-2">{{ $t('compareView.pageHeader.title') }}</h1>
       <p class="text-lg text-gray-600">{{ $t('compareView.pageHeader.description') }}</p>
 
@@ -37,6 +42,10 @@
         <span>{{ $t('compareView.pageHeader.description2') }}</span>
       </div>
 
+      
+
+      
+
     </div>
 
     <!-- School Comparison Cards -->
@@ -44,11 +53,26 @@
       <div v-for="i in 3" :key="i"
         class="relative w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-4 max-w-md bg-white rounded-lg shadow-lg min-h-[650px]">
         <template v-if="schools[i - 1]">
+          
           <button @click="removeSchool(i - 1)"
-            class="absolute top-2 right-2 text-sm font-semibold text-gray-400 hover:text-blue-500 z-10 bg-white px-2 py-1 rounded shadow"
-            title="{{ $t('compareView.schoolCard.removeButton') }}">
-            {{ $t('compareView.schoolCard.removeButton') }}
-          </button>
+  class="flex items-center absolute top-2 right-2 text-sm font-semibold hover:text-blue-500 z-10 bg-white px-2 py-1 rounded shadow"
+  title="{{ $t('compareView.schoolCard.removeButton') }}">
+
+  <svg
+    class="w-4 h-4 mr-1 self-center"
+    width="14"
+    height="14"
+    viewBox="0 0 20 23"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M1.875 7.1875V21.5625C1.875 22.3531 2.52187 23 3.3125 23H16.25C17.0406 23 17.6875 22.3531 17.6875 21.5625V7.1875H1.875ZM6.1875 20.125H4.75V10.0625H6.1875V20.125ZM9.0625 20.125H7.625V10.0625H9.0625V20.125ZM11.9375 20.125H10.5V10.0625H11.9375V20.125ZM14.8125 20.125H13.375V10.0625H14.8125V20.125ZM18.0469 2.875H13.375V1.07812C13.3739 0.792538 13.2599 0.518972 13.058 0.31703C12.856 0.115088 12.5825 0.00113555 12.2969 0L7.26562 0C6.98004 0.00113555 6.70647 0.115088 6.50453 0.31703C6.30259 0.518972 6.18864 0.792538 6.1875 1.07812V2.875H1.51562C1.22969 2.875 0.955463 2.98859 0.753276 3.19078C0.551088 3.39296 0.4375 3.66719 0.4375 3.95312V5.75H19.125V3.95312C19.125 3.66719 19.0114 3.39296 18.8092 3.19078C18.607 2.98859 18.3328 2.875 18.0469 2.875ZM11.9375 2.875H7.625V1.45619H11.9375V2.875Z"
+    />
+  </svg>
+
+  {{ $t('compareView.schoolCard.removeButton') }}
+</button>
 
           <div class="flex flex-col justify-between mb-4 h-28">
             <h2 class="text-3xl font-bold text-center text-600 mt-6">{{ schools[i - 1].name }}</h2>
@@ -310,6 +334,11 @@ const showToast = ref(false)
 
 
 const showModal = ref(null)
+
+function goBack() {
+  window.history.back()
+}
+
 
 
 

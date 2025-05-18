@@ -177,7 +177,7 @@ export default {
             description2: '学校数据基于官方的数据集反映了2024年的情况'
         },
         schoolCard: {
-            removeButton: '移除学校',
+            removeButton: '移除',
             visitWebsite: '访问学校网站',
             schoolType: '学校类型',
             yearRange: '年级范围',
