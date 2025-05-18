@@ -10,7 +10,7 @@ export default {
         home: '首页',
         compare: '对比',
         journey: '旅程',
-        support: '支持',
+        support: '帮助',
         english: 'English',
         chinese: '中文'
     },

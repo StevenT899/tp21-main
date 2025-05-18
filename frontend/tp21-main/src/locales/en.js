@@ -333,7 +333,7 @@ export default {
                     1: 'Communication, teamwork, responsibility',
                 },
                 keyTiming: {
-                    0: 'Prep enrolment: Apply the year before (by August)',
+                    0: 'Prep enrolment: Apply the year before (by July)',
                     1: 'School year divided into 4 terms',
                     2: 'NAPLAN: Conducted in Years 3 and 5, assessing reading, writing, spelling and numeracy',
                     3: 'Grade 6: Transition information for secondary school usually begins mid-year'
