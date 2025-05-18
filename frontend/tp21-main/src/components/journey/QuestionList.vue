@@ -1,3 +1,18 @@
+<!-- /**
+  QuestionList.vue
+
+  Description:
+    Displays a modal popup containing a list of frequently asked questions (FAQs) related to an educational stage.
+    Each question is clickable and navigates the user to a detailed article page.
+
+  Key Features:
+    - Modal overlay with backdrop blur and centered layout
+    - Dynamically displays questions based on props
+    - Each question redirects to an article detail page with routing context
+    - Emits 'close' event when modal is dismissed
+    - Styled for user-friendly readability and accessibility
+ / -->
+
 <template>
     <div v-if="visible"
         class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-opacity-80 bg-gray-30 z-50">

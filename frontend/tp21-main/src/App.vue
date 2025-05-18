@@ -1,3 +1,17 @@
+<!-- /**
+  App.vue
+
+  Description:
+    Main application layout that conditionally renders navigation and footer based on login status.
+    Performs authentication check on initial load and watches for changes to `isLoggedIn` to enforce routing logic.
+
+  Key Features:
+    - Imports and renders global layout components: NavBar and FooterTeam
+    - Redirects unauthenticated users to the login page
+    - Uses Vue Router's `router-view` to render page content dynamically
+    - Watches login state reactively to handle mid-session logouts
+ / -->
+ 
 <script setup>
 import { watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';

@@ -1,3 +1,19 @@
+<!-- /**
+  CheckList.vue
+
+  Description:
+    Renders a modal checklist interface for users to track their preparation status across education stages.
+    Provides export functions for Word and Excel formats using preloaded templates, supports bilingual templates.
+
+  Key Features:
+    - Dynamically rendered modal with checklist items based on props
+    - Checklist status (ticked/unticked) is stored in sessionStorage for persistence
+    - Displays clickable reference and explanation links depending on stage
+    - Supports export to Word (.docx) and Excel (.xlsx) using pre-designed templates
+    - Bilingual support through i18n translation system
+    - Emits 'close' event when modal is dismissed
+ / -->
+ 
 <template>
     <div v-if="visible"
         class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-opacity-80 bg-gray-30 z-50">

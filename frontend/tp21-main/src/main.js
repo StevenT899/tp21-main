@@ -1,3 +1,17 @@
+/**
+ * main.js
+ *
+ * Description:
+ *   Initializes the Vue 3 application, sets up global plugins and components,
+ *   and mounts the root App component to the DOM.
+ *
+ * Key Features:
+ *   - Registers ECharts (with bar chart and canvas renderer support) via `vue-echarts`
+ *   - Applies global styles from `main.css`
+ *   - Configures Vue Router and Vue I18n for navigation and localization
+ *   - Mounts the app to the HTML element with ID `#app`
+ */
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'

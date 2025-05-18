@@ -1,3 +1,21 @@
+<!-- /**
+  JourneyMap.vue
+
+  Description:
+    Renders a horizontally scrollable educational journey map with interactive cards representing each stage of learning.
+    Each card provides key information about age ranges, milestones, and what children learn at that stage.
+    Includes kangaroo guide tips, stage-specific checklists, and related Q&A popup modals.
+
+  Key Features:
+    - Scrollable timeline with four key education stages: early, primary, secondary, tertiary
+    - Interactive cards with front/back flipping animations showing milestone and learning info
+    - Animated kangaroo guide with context-sensitive speech bubbles
+    - Buttons to open checklists and related questions (both in modal overlays)
+    - Timeline navigation via buttons or drag/swipe
+    - Auto-scroll to timeline on first load, with restore logic when returning from question detail
+    - Responsive design with bilingual support via vue-i18n
+ / -->
+ 
 <template>
   <div class="journey-container">
     <div class="journey-intro">

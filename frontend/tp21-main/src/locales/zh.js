@@ -1,3 +1,10 @@
+/**
+ * locales/zh.js
+ *
+ * Chinese translation messages for the application.
+ * Structured by feature/module and used by Vue I18n.
+ */
+
 export default {
     nav: {
         home: '首页',

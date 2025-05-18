@@ -1,3 +1,19 @@
+/**
+ * router/index.js
+ *
+ * Description:
+ *   Defines application routes and configures Vue Router with authentication checks.
+ *   Supports lazy loading of view components and redirects unauthenticated users to login.
+ *
+ * Key Features:
+ *   - Routes for main views: Home, Login, Compare, Journey, Support, etc.
+ *   - Dynamic route matching for school and article detail pages
+ *   - Redirects `/` to `/home`
+ *   - Uses `meta.requiresAuth` flag to guard routes that require login
+ *   - Checks login status using `localStorage.isLoggedIn`
+ *   - Applies `createWebHistory` using VITE_BASE from environment
+ */
+
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [

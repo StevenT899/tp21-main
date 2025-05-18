@@ -1,3 +1,18 @@
+<!-- /**
+  JourneyView.vue
+
+  Description:
+    Acts as the main page for the "Educational Journey" feature. It displays a header introduction and
+    integrates the JourneyMap component, which provides an interactive timeline of education stages.
+    Includes a floating "Back to Top" button that appears after scrolling.
+
+  Key Features:
+    - Displays page title and description from i18n translation
+    - Renders the JourneyMap component containing all journey cards and interaction logic
+    - Shows a floating back-to-top button when the user scrolls beyond a threshold
+    - Handles scroll events with lifecycle-safe listeners
+ / -->
+
 <template>
     <div class="min-h-screen bg-gray-50 p-8 pb-1 mx-auto max-w-[1600px]">
     <!-- Page Header -->
