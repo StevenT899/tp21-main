@@ -16,37 +16,39 @@
 
 <template>
 
-<div class="flex items-center flex-wrap mb-2">
-  <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500 me-2">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg> -->
+  <div class="flex items-center flex-wrap mb-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500 me-2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+    </svg>
 
-      <svg class= "me-2" width="27" height="25" viewBox="0 0 27 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- <svg class= "me-2" width="27" height="25" viewBox="0 0 27 25" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M13.5 16.6666V12.5M13.5 8.33331H13.5113M24.75 12.5C24.75 18.2529 19.7132 22.9166 13.5 22.9166C7.2868 22.9166 2.25 18.2529 2.25 12.5C2.25 6.74701 7.2868 2.08331 13.5 2.08331C19.7132 2.08331 24.75 6.74701 24.75 12.5Z" stroke="#757575" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+</svg> -->
 
-        <span>{{ $t('MapShow.mapInstruction1') }} </span>
-        <img
-          :src="schoolIcon"
-          alt="School Icon"
-          class="w-5 h-5 mx-1 ms-2 me-2"
-        />
-        <span>{{ $t('MapShow.mapInstruction2') }} </span>
-        <div class="rounded-md p-2 text-center text-sm ms-2 me-2" style="background-color: #EBF1FA;">
-              {{ $t(`MapShow.mapInstruction4`) }}
-        </div>
-        <span>{{ $t('MapShow.mapInstruction3') }} </span>
-      </div>
-      <span class="mb-2 ms-9">{{ $t('MapShow.mapInstruction5') }} </span>
+    <!-- <svg width="23" height="25" viewBox="0 0 23 25" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+<path d="M11.5 0.406128C17.7134 0.406128 22.75 5.44275 22.75 11.6561C22.75 17.8695 17.7134 22.9061 11.5 22.9061C5.28663 22.9061 0.25 17.8695 0.25 11.6561C0.25 5.44275 5.28663 0.406128 11.5 0.406128ZM11.5 2.65613C9.11305 2.65613 6.82387 3.60434 5.13604 5.29217C3.44821 6.97999 2.5 9.26918 2.5 11.6561C2.5 14.0431 3.44821 16.3323 5.13604 18.0201C6.82387 19.7079 9.11305 20.6561 11.5 20.6561C13.8869 20.6561 16.1761 19.7079 17.864 18.0201C19.5518 16.3323 20.5 14.0431 20.5 11.6561C20.5 9.26918 19.5518 6.97999 17.864 5.29217C16.1761 3.60434 13.8869 2.65613 11.5 2.65613ZM11.5 16.1561C11.7984 16.1561 12.0845 16.2747 12.2955 16.4856C12.5065 16.6966 12.625 16.9828 12.625 17.2811C12.625 17.5795 12.5065 17.8656 12.2955 18.0766C12.0845 18.2876 11.7984 18.4061 11.5 18.4061C11.2016 18.4061 10.9155 18.2876 10.7045 18.0766C10.4935 17.8656 10.375 17.5795 10.375 17.2811C10.375 16.9828 10.4935 16.6966 10.7045 16.4856C10.9155 16.2747 11.2016 16.1561 11.5 16.1561ZM11.5 5.46863C12.4476 5.46866 13.3655 5.79865 14.0963 6.40193C14.827 7.00521 15.3248 7.84411 15.5042 8.77453C15.6836 9.70495 15.5335 10.6688 15.0795 11.5006C14.6255 12.3323 13.8961 12.98 13.0165 13.3324C12.8862 13.3803 12.7688 13.4577 12.6734 13.5585C12.6239 13.6148 12.616 13.6868 12.6171 13.761L12.625 13.9061C12.6247 14.1929 12.5149 14.4687 12.318 14.6772C12.1212 14.8857 11.8522 15.0111 11.5659 15.0279C11.2797 15.0448 10.9978 14.9516 10.7779 14.7676C10.5581 14.5835 10.4167 14.3225 10.3829 14.0378L10.375 13.9061V13.6249C10.375 12.3278 11.4213 11.5493 12.1795 11.2444C12.4881 11.1211 12.7573 10.9162 12.9582 10.6515C13.1591 10.3868 13.2841 10.0724 13.3198 9.742C13.3555 9.41163 13.3005 9.07777 13.1608 8.77629C13.021 8.4748 12.8018 8.21708 12.5266 8.03079C12.2514 7.8445 11.9307 7.73669 11.5989 7.71893C11.2671 7.70117 10.9367 7.77413 10.6432 7.92998C10.3497 8.08583 10.1042 8.31868 9.93309 8.60353C9.76196 8.88838 9.67166 9.21445 9.67188 9.54675C9.67188 9.84512 9.55335 10.1313 9.34237 10.3422C9.13139 10.5532 8.84524 10.6718 8.54688 10.6718C8.24851 10.6718 7.96236 10.5532 7.75138 10.3422C7.5404 10.1313 7.42188 9.84512 7.42188 9.54675C7.42188 8.46517 7.85153 7.42788 8.61633 6.66308C9.38113 5.89829 10.4184 5.46863 11.5 5.46863Z" fill="black"/>
+</svg> -->
+
+
+
+    <span>{{ $t('MapShow.mapInstruction1') }} </span>
+    <img :src="schoolIcon" alt="School Icon" class="w-5 h-5 mx-1 ms-2 me-2" />
+    <span>{{ $t('MapShow.mapInstruction2') }} </span>
+    <div class="rounded-md p-2 text-center text-sm ms-2 me-2" style="background-color: #EBF1FA;">
+      {{ $t(`MapShow.mapInstruction4`) }}
+    </div>
+    <span>{{ $t('MapShow.mapInstruction3') }} </span>
+  </div>
+  <span class="mb-2 ms-9">{{ $t('MapShow.mapInstruction5') }} </span>
 
   <div class="map-outer-container flex">
 
-    
+
     <div class="map-wrapper relative rounded-lg overflow-hidden border border-gray-300" style="height: 500px;">
-      
+
       <div id="map" class="w-full h-full"></div>
       <!-- Popup -->
       <div v-if="selectedSchool" class="school-popup absolute bg-white p-4 rounded-lg shadow-lg"

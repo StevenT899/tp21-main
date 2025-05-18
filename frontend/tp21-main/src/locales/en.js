@@ -179,7 +179,7 @@ export default {
 
         },
         schoolCard: {
-            removeButton: 'Remove School',
+            removeButton: 'Remove',
             visitWebsite: 'Visit school website',
             schoolType: 'School Type',
             yearRange: 'Year Range',
