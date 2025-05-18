@@ -27,7 +27,7 @@
           {{ $t('articleDetailView.adapt') }}
           <a :href="article.reference" target="_blank" rel="noopener noreferrer"
             class="text-blue-600 underline hover:text-blue-800">
-             {{ currentArticle.reference }}
+            {{ currentArticle.reference }}
           </a>
         </p>
         <p>{{ $t('articleDetailView.under') }} {{ currentArticle.licence }}</p>
@@ -35,48 +35,51 @@
     </div>
     <div v-else class="text-center text-gray-400">{{ $t('articleDetailView.loading') }}</div>
 
-    
+
   </section>
-
-
-
-
-
 
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import { useI18n } from 'vue-i18n'
 const { locale, messages } = useI18n()
 const route = useRoute()
 const article = ref(null)
-
-
-
-
-
-
+const router = useRouter()
 
 function goBack() {
+  const from = route.query.from
+  const title = route.query.title
+
+  if (from === 'questionList') {
+    // 回到 journey 页面并触发 QuestionList 弹窗
+    router.push({
+      name: 'Journey',
+      query: {
+        from: 'questionList',
+        title
+      }
+    })
+  } else {
+    // 默认回退行为
+    window.history.back()
+  }
   window.history.back()
 }
-
-
 
 onMounted(async () => {
   const id = route.params.id
   const response = await axios.get(`${import.meta.env.VITE_API_URL}/articles/${id}`)
   article.value = response.data
-  
-})
 
+})
 
 const currentArticle = computed(() => {
   const articleId = String(route.params.id)
-  const raw = locale.value === 'zh' 
+  const raw = locale.value === 'zh'
     ? messages.value.zh?.articles?.[articleId] || article.value
     : article.value
 

@@ -213,10 +213,23 @@ li {
     border: 2.5px solid transparent;
     perspective: 1000px;
     z-index: 1;
-    animation: cardFadeIn 0.8s ease forwards;
-    opacity: 0;
-    transform: translateY(30px);
 }
+
+
+.flat-step:hover,
+.flat-step:focus {
+    box-shadow: 0 8px 24px 0 rgba(37, 99, 235, 0.15);
+    border-color: #2563eb;
+    z-index: 2;
+    transform: translateY(-8px);
+}
+
+.flat-step.animate-in {
+  animation: cardFadeIn 0.8s ease forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
 
 @keyframes cardFadeIn {
     0% {
@@ -228,14 +241,6 @@ li {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-.flat-step:hover,
-.flat-step:focus {
-    box-shadow: 0 8px 24px 0 rgba(37, 99, 235, 0.15);
-    border-color: #2563eb;
-    z-index: 2;
-    transform: translateY(-8px);
 }
 
 /* 卡片内外部容器，用于翻转效果 */

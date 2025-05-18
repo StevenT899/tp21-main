@@ -29,8 +29,9 @@
 
       <div class="flat-timeline" ref="timeline" @scroll="checkScrollPosition" @mousedown="startDrag" @mousemove="onDrag"
         @mouseup="endDrag" @mouseleave="endDrag" @touchstart="startDrag" @touchmove="onDrag" @touchend="endDrag">
-        <div v-for="(stage, index) in stages" :key="index" class="flat-step" :class="stage.class" tabindex="0"
-          @click="flipCard(index)" :style="{ animationDelay: index * 0.2 + 's' }">
+        <div v-for="(stage, index) in stages" :key="index"
+          :class="['flat-step', stage.class, { 'animate-in': !isRestoredFromArticle }]" @click="flipCard(index)"
+          :style="getAnimationStyle(index)">
 
           <div class="step-number">{{ index + 1 }}</div>
           <div class="card-container" :class="{ 'flipped': flippedCards[index] }">
@@ -76,7 +77,8 @@
     </div>
   </div>
 
-  <CheckList :visible="showChecklist" :id = "schoolTypeId" :title="currentTitle" :checklist="currentChecklist" @close="closeChecklist" />
+  <CheckList :visible="showChecklist" :id="schoolTypeId" :title="currentTitle" :checklist="currentChecklist"
+    @close="closeChecklist" />
   <QuestionList :visible="showQuestionList" :title="questionTitle" :questions="questionList"
     @close="showQuestionList = false" />
 </template>
@@ -92,7 +94,8 @@ import '../../assets/journey.css'
 import CheckList from './CheckList.vue'
 import QuestionList from './QuestionList.vue'
 import { useI18n } from 'vue-i18n'
-
+import { useRoute } from 'vue-router'
+const route = useRoute()
 const { t } = useI18n()
 
 // UI state
@@ -108,6 +111,11 @@ const timeline = ref(null)
 
 // Kangaroo speech defaults
 const kangarooDefault = computed(() => t('journeyMap.journey.kangarooGuide'))
+
+const isRestoredFromArticle = ref(false)
+
+const getAnimationStyle = (index) =>
+  !isRestoredFromArticle.value ? { animationDelay: `${index * 0.2}s` } : {}
 
 // Methods
 const toggleSpeech = () => {
@@ -157,6 +165,7 @@ const endDrag = () => {
 
 // Lifecycle hooks
 onMounted(() => {
+  isRestoredFromArticle.value = route.query.from === 'questionList'
   currentSpeech.value = kangarooDefault
   toggleSpeech()
   window.addEventListener('resize', checkScrollPosition)
@@ -175,9 +184,22 @@ onMounted(() => {
     };
     requestAnimationFrame(animate);
   };
-  smoothScrollTo(230, 500);
-
+  // ✅ 仅首次进入页面时才执行平滑滚动
+  if (!isRestoredFromArticle.value) {
+    smoothScrollTo(230, 500)
+  }
   checkScrollPosition()
+
+  // ✅ 如果是从文章详情页返回，恢复弹窗
+  if (isRestoredFromArticle.value && route.query.title) {
+    questionTitle.value = route.query.title
+    const stage = stages.value.find(
+      stage => t(`journeyMap.relatedQuestions.${stage.class}.title`) === route.query.title
+    )
+    if (stage) {
+      openRelatedQuestions(stages.value.indexOf(stage))
+    }
+  }
 })
 
 onBeforeUnmount(() => {

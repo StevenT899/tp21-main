@@ -34,7 +34,14 @@ const emit = defineEmits(['close'])
 const close = () => emit('close')
 
 function goToArticle(id) {
-    router.push({ name: 'ArticleDetail', params: { id } })
+    router.push({
+        name: 'ArticleDetail',
+        params: { id },
+        query: {
+            from: 'questionList',
+            title: props.title
+        }
+    })
     close()
 }
 </script>
