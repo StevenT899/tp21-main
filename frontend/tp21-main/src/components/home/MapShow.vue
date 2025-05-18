@@ -80,18 +80,16 @@
     <!-- Map Instruction -->
     <div class="map-instruction flex items-center gap-2 mb-2 pr-40">
       <svg width="27" height="25" viewBox="0 0 27 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M13.5 16.6666V12.5M13.5 8.33331H13.5113M24.75 12.5C24.75 18.2529 19.7132 22.9166 13.5 22.9166C7.2868 22.9166 2.25 18.2529 2.25 12.5C2.25 6.74701 7.2868 2.08331 13.5 2.08331C19.7132 2.08331 24.75 6.74701 24.75 12.5Z" stroke="#757575" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+        <path
+          d="M13.5 16.6666V12.5M13.5 8.33331H13.5113M24.75 12.5C24.75 18.2529 19.7132 22.9166 13.5 22.9166C7.2868 22.9166 2.25 18.2529 2.25 12.5C2.25 6.74701 7.2868 2.08331 13.5 2.08331C19.7132 2.08331 24.75 6.74701 24.75 12.5Z"
+          stroke="#757575" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
       <div class="flex items-center flex-wrap">
         <span>{{ $t('MapShow.mapInstruction1') }} </span>
-        <img
-          :src="schoolIcon"
-          alt="School Icon"
-          class="w-5 h-5 mx-1 ms-2 me-2"
-        />
+        <img :src="schoolIcon" alt="School Icon" class="w-5 h-5 mx-1 ms-2 me-2" />
         <span>{{ $t('MapShow.mapInstruction2') }} </span>
         <div class="rounded-md p-2 text-center text-sm ms-2 me-2" style="background-color: #EBF1FA;">
-              {{ $t(`MapShow.mapInstruction4`) }}
+          {{ $t(`MapShow.mapInstruction4`) }}
         </div>
         <span>{{ $t('MapShow.mapInstruction3') }} </span>
       </div>
@@ -124,7 +122,7 @@
             <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop"
               class="text-blue-500 hover:underline">
               <button class="text-blue-500 underline cursor-pointer">{{ $t('MapShow.schoolPopup.viewDetails')
-              }}</button>
+                }}</button>
             </router-link>
             <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
               class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
@@ -141,12 +139,10 @@
     </div>
 
 
-    <div v-if="checkCompareListLength" 
-    class="absolute top-0 h-full flex flex-col p-4 bg-white shadow-lg border-l border-gray-200" 
-    style="width: 190px; right: -40px;">
-      <CompareSideBar 
-      @rm="onSingleRemoved"
-      @rma="onAllRemoved"/>
+    <div v-if="checkCompareListLength"
+      class="absolute top-0 h-full flex flex-col p-4 bg-white shadow-lg border-l border-gray-200"
+      style="width: 190px; right: -40px;">
+      <CompareSideBar @rm="onSingleRemoved" @rma="onAllRemoved" />
     </div>
 
     <!-- Toast -->
@@ -162,6 +158,7 @@ import { ref, onMounted, reactive, defineProps, watch, computed, onUnmounted } f
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import schoolIcon from '@/assets/images/school.png';
+import schoolIconSelected from '@/assets/images/school_clicked.png';
 import CompareSideBar from '@/components/home/CompareSideBar.vue';
 import ModalBox from '../base/ModalBox.vue';
 import { useI18n } from 'vue-i18n'
@@ -209,11 +206,11 @@ const showToast = (type, messageKey, params = {}, duration = 3000) => {
 
 
 function onSingleRemoved() {
-  
+
   showToast('success', 'removedFromCompare')
 }
 function onAllRemoved() {
- 
+
   showToast('success', 'allSchoolsRemoved')
 }
 
@@ -421,46 +418,30 @@ const initializeMap = () => {
 
 // Initialize school data and layers
 const initializeSchools = () => {
-  // Add school icon
-  map.loadImage(
-    schoolIcon, // School icon
-    (error, image) => {
-      if (error) throw error
+  map.loadImage(schoolIcon, (err1, image1) => {
+    if (err1) throw err1;
+    map.addImage('school-icon', image1);
 
-      map.addImage('school-icon', image)
+    map.loadImage(schoolIconSelected, (err2, image2) => {
+      if (err2) throw err2;
+      map.addImage('school-icon-selected', image2);
 
-      // Add school points
+      // initial data (no selected schools)
       map.addSource('schools', {
         type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: schools.value.map(school => ({
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [school.Longitude, school.Latitude] // Generate coordinates based on backend data
-            },
-            properties: {
-              id: school.School_AGE_ID, // Use School_AGE_ID as id
-              name: school.School_Name, // Use School_Name as name
-              type: school.School_Sector, // Use School_Sector as type
-              languages: Array.isArray(school.languages) ? school.languages.join(',') : '',
-              suburb: school.Suburb // Ensure correct case for Suburb
-            }
-          }))
-        }
-      })
+        data: buildSchoolsGeoJSON(schools.value, null)
+      });
 
       map.addLayer({
         id: 'school-points',
         type: 'symbol',
         source: 'schools',
         layout: {
-          'icon-image': 'school-icon',
+          'icon-image': ['case', ['==', ['get', 'selected'], 'yes'], 'school-icon-selected', 'school-icon'],
           'icon-size': 0.9,
           'icon-allow-overlap': true
         }
-      })
+      });
 
       map.on('click', 'school-points', (e) => {
         if (e.features && e.features.length > 0) {
@@ -473,6 +454,9 @@ const initializeSchools = () => {
           };
 
           isSchoolLoaded.value = false;
+
+          // update to selected state
+          map.getSource('schools').setData(buildSchoolsGeoJSON(schools.value, selectedSchool.value.id));
 
           const sid = properties.id;
           fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
@@ -492,22 +476,15 @@ const initializeSchools = () => {
         }
       });
 
-      // Change cursor style on mouse hover
-      map.on('mouseenter', 'school-points', () => {
-        map.getCanvas().style.cursor = 'pointer'
-      })
+      map.on('mouseenter', 'school-points', () => map.getCanvas().style.cursor = 'pointer');
+      map.on('mouseleave', 'school-points', () => map.getCanvas().style.cursor = '');
 
-      map.on('mouseleave', 'school-points', () => {
-        map.getCanvas().style.cursor = ''
-      })
-
-      // Apply initial filters
       setTimeout(() => {
         applyFilters();
       }, 100);
-    }
-  )
-}
+    });
+  });
+};
 
 // Apply filter conditions
 const applyFilters = () => {
@@ -523,23 +500,8 @@ const applyFilters = () => {
 
   // Update map data
   try {
-    map.getSource('schools').setData({
-      type: 'FeatureCollection',
-      features: filteredSchools.value.map(school => ({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: [school.Longitude, school.Latitude]
-        },
-        properties: {
-          id: school.School_AGE_ID,
-          name: school.School_Name,
-          type: school.School_Sector,
-          languages: Array.isArray(school.languages) ? school.languages.join(',') : '',
-          suburb: school.Suburb
-        }
-      }))
-    });
+    map.getSource('schools').setData(buildSchoolsGeoJSON(filteredSchools.value, selectedSchool.value?.id || null));
+
 
     // If there are schools after filtering, zoom the map to these school locations
     if (filteredSchools.value.length > 0) {
@@ -553,6 +515,28 @@ const applyFilters = () => {
     console.error('Error updating map data:', error);
   }
 }
+
+function buildSchoolsGeoJSON(schoolList, selectedId = null) {
+  return {
+    type: 'FeatureCollection',
+    features: schoolList.map(school => ({
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [school.Longitude, school.Latitude]
+      },
+      properties: {
+        id: school.School_AGE_ID,
+        name: school.School_Name,
+        type: school.School_Sector,
+        languages: Array.isArray(school.languages) ? school.languages.join(',') : '',
+        suburb: school.Suburb,
+        selected: school.School_AGE_ID === selectedId ? 'yes' : 'no'
+      }
+    }))
+  };
+}
+
 
 // Reset filter conditions
 const resetFilters = () => {
@@ -614,6 +598,4 @@ onMounted(() => {
   position: relative;
   width: 100%;
 }
-
-
 </style>

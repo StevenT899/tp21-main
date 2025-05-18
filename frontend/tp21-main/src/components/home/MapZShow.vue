@@ -113,6 +113,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import selfIcon from '@/assets/images/self_position.png';
 import schoolIcon from '@/assets/images/school.png';
+import schoolIconSelected from '@/assets/images/school_clicked.png';
 import { useI18n } from 'vue-i18n'
 import '@/assets/toast.css'
 
@@ -305,64 +306,74 @@ function initializeSearchPoint() {
 }
 
 function initializeSchools() {
-  map.value.loadImage(schoolIcon, (err, img) => {
+  map.value.loadImage(schoolIcon, (err, normalImg) => {
     if (err) throw err;
+    map.value.addImage('school-icon', normalImg);
 
-    map.value.addImage('school-icon', img);
-    map.value.addSource('schools', { type: 'geojson', data: buildSchoolsGeoJSON(props.schools) });
-    map.value.addLayer({
-      id: 'school-points',
-      type: 'symbol',
-      source: 'schools',
-      layout: {
-        'icon-image': 'school-icon',
-        'icon-size': 0.9,
-        'icon-allow-overlap': true
-      }
+    map.value.loadImage(schoolIconSelected, (err2, selectedImg) => {
+      if (err2) throw err2;
+      map.value.addImage('school-icon-selected', selectedImg);
+
+      map.value.addSource('schools', {
+        type: 'geojson',
+        data: buildSchoolsGeoJSON(props.schools)
+      });
+
+      map.value.addLayer({
+        id: 'school-points',
+        type: 'symbol',
+        source: 'schools',
+        layout: {
+          'icon-image': ['case', ['==', ['get', 'selected'], 'yes'], 'school-icon-selected', 'school-icon'],
+          'icon-size': 0.9,
+          'icon-allow-overlap': true
+        }
+      });
+
+      map.value.on('click', (e) => {
+        const features = map.value.queryRenderedFeatures(e.point, { layers: ['school-points'] });
+        if (features.length === 0) {
+          selectedSchool.value = null;
+          map.value.getSource('schools').setData(buildSchoolsGeoJSON(props.schools, null));
+        }
+      });
+
+      map.value.on('click', 'school-points', async e => {
+        const p = e.features[0].properties;
+        selectedSchool.value = {
+          id: p.id,
+          name: p.name,
+          type: p.type,
+          languages: p.languages ? p.languages.split(',') : []
+        };
+        isSchoolLoaded.value = false;
+
+        // update to selected state
+        map.value.getSource('schools').setData(buildSchoolsGeoJSON(props.schools, selectedSchool.value.id));
+
+        const sid = selectedSchool.value.id;
+        fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
+          .then(response => response.json())
+          .then(fullData => {
+            if (fullData && !fullData.error) {
+              selectedSchool.value = {
+                ...fullData,
+                id: fullData.School_AGE_ID,
+                name: fullData.School_Name,
+                type: fullData.School_Sector,
+                languages: fullData.languages || []
+              };
+              isSchoolLoaded.value = true;
+            }
+          });
+      });
+
+      map.value.on('mouseenter', 'school-points', () => map.value.getCanvas().style.cursor = 'pointer');
+      map.value.on('mouseleave', 'school-points', () => map.value.getCanvas().style.cursor = '');
     });
-
-    const closePopup = () => {
-      selectedSchool.value = null; // Reset the selected school to close the popup
-    };
-    map.value.on('click', (e) => {
-      const features = map.value.queryRenderedFeatures(e.point, { layers: ['school-points'] });
-      if (features.length === 0) {
-        closePopup();
-      }
-    });
-
-    map.value.on('click', 'school-points', async e => {
-      const p = e.features[0].properties;
-      selectedSchool.value = {
-        id: p.id,
-        name: p.name,
-        type: p.type,
-        languages: p.languages ? p.languages.split(',') : []
-      };
-      isSchoolLoaded.value = false;
-
-      const sid = selectedSchool.value.id;
-      fetch(`${import.meta.env.VITE_API_URL}/school/${sid}`)
-        .then(response => response.json())
-        .then(fullData => {
-          if (fullData && !fullData.error) {
-            selectedSchool.value = {
-              ...fullData,
-              id: fullData.School_AGE_ID,
-              name: fullData.School_Name,
-              type: fullData.School_Sector,
-              languages: fullData.languages || []
-            };
-            isSchoolLoaded.value = true;
-          }
-        });
-    });
-
-    // hover
-    map.value.on('mouseenter', 'school-points', () => map.value.getCanvas().style.cursor = 'pointer');
-    map.value.on('mouseleave', 'school-points', () => map.value.getCanvas().style.cursor = '');
   });
 }
+
 
 function initializeZonePolygon() {
   map.value.addSource('zone-polygons', {
@@ -373,13 +384,15 @@ function initializeZonePolygon() {
   map.value.addLayer({ id: 'zone-line', type: 'line', source: 'zone-polygons', paint: { 'line-color': '#088', 'line-width': 2 } });
 }
 
-function buildSchoolsGeoJSON(schools) {
+function buildSchoolsGeoJSON(schools, selectedId = null) {
+
   return {
     type: 'FeatureCollection',
     features: schools.map(s => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [s.Longitude, s.Latitude] },
       properties: {
+        selected: s.School_AGE_ID === selectedId ? 'yes' : 'no',
         id: s.School_AGE_ID,
         name: s.School_Name,
         type: s.School_Sector,
@@ -405,8 +418,8 @@ function fitMapToSchools() {
 
 // watch data
 watch(() => props.schools, newArr => {
-  map.value.getSource('schools').setData(buildSchoolsGeoJSON(newArr));
-  fitMapToSchools()
+  map.value.getSource('schools').setData(buildSchoolsGeoJSON(newArr, selectedSchool.value?.id || null));
+  fitMapToSchools();
 });
 watch(() => props.polygonValue, poly => {
   map.value.getSource('zone-polygons').setData({ type: 'Feature', geometry: { type: 'Polygon', coordinates: poly } });
