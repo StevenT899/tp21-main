@@ -22,7 +22,7 @@
       <div class="flex items-center max-w-xl mx-auto mb-6">
         <input v-model="searchQuery" @keyup.enter="onSearch" type="text" :placeholder="$t('supportView.Placeholder')"
           class="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        <button @click="onSearch" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-r-lg">
+        <button @click="onSearch" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded-r-lg">
           {{ $t('supportView.searchButton') }}
         </button>
       </div>

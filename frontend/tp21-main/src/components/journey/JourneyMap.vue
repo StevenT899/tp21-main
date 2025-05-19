@@ -202,13 +202,12 @@ onMounted(() => {
     };
     requestAnimationFrame(animate);
   };
-  // ✅ 仅首次进入页面时才执行平滑滚动
+
   if (!isRestoredFromArticle.value) {
     smoothScrollTo(230, 500)
   }
   checkScrollPosition()
 
-  // ✅ 如果是从文章详情页返回，恢复弹窗
   if (isRestoredFromArticle.value && route.query.title) {
     questionTitle.value = route.query.title
     const stage = stages.value.find(
