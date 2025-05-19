@@ -1,12 +1,12 @@
-mysql_connector_repackaged==0.3.1
-Flask==3.1.0
-flask-cors==5.0.1
-Flask-Migrate==4.1.0
-Flask-SQLAlchemy==3.1.1
-numpy==2.2.5
-pandas==2.2.3
-requests==2.32.3
-scikit-learn==1.6.1
-
-torch==2.1.2+cpu   
-sentence-transformers==2.6.1
+alembic==1.15.2            # Database migration tool
+Flask==3.1.1               # Web framework (latest stable version)
+flask_cors==5.0.1          # Cross-Origin Resource Sharing (CORS) support
+Flask_Migrate==4.1.0       # Database migration extension for Flask
+flask_sqlalchemy==3.1.1    # SQLAlchemy integration for Flask
+numpy==2.2.6               # Scientific computing library
+pandas==2.2.3              # Data analysis library
+python-dotenv==1.1.0       # Environment variable management
+Requests==2.32.3           # HTTP library for making API requests
+scikit_learn==1.6.1        # Machine learning library
+sentence_transformers==2.6.1  # Sentence embeddings and transformer models
+SQLAlchemy==2.0.41         # Database toolkit and ORM
