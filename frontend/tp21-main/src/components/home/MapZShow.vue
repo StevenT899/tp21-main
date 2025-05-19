@@ -34,13 +34,13 @@
 
 
     <img :src="schoolIconSelected" alt="School Icon" class="w-5 h-5 mx-1 ms-2 me-2" />
-    <span>{{ $t('MapShow.mapInstruction1') }} </span>
+    <span>{{ $t('MapZShow.mapInstruction1') }} </span>
     <div class="rounded-md p-2 text-center text-sm ms-2 me-2" style="background-color: #EBF1FA;">
-      {{ $t(`MapShow.mapInstruction4`) }}
+      {{ $t(`MapZShow.mapInstruction4`) }}
     </div>
-    <span>{{ $t('MapShow.mapInstruction3') }} </span>
+    <span>{{ $t('MapZShow.mapInstruction3') }} </span>
   </div>
-  <span class="mb-2 ms-9">{{ $t('MapShow.mapInstruction5') }} </span>
+  <span class="mb-2 ms-9">{{ $t('MapZShow.mapInstruction5') }} </span>
 
   <div class="map-outer-container flex">
 

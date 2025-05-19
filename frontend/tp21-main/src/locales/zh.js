@@ -136,8 +136,9 @@ export default {
             reset: "重置",
             all: "全部"
         },
-        mapInstruction1: "地图上显示的学校已自动选中。你可以查看",
-        mapInstruction3: "等关键信息，或将其加入对比列表。",
+        mapInstruction1: "点击地图上的任何",
+        mapInstruction2: "学校图标以预览关键信息，包括",
+        mapInstruction3: "并添加到比较列表中。",
         mapInstruction4: "语言课程",
         mapInstruction5: "学校区域的划定范围适用于2026年入学年份",
         schoolPopup: {
@@ -152,6 +153,10 @@ export default {
         }
     },
     MapZShow: {
+        mapInstruction1: "地图上显示的学校已自动选中。你可以查看",
+        mapInstruction3: "等关键信息，或将其加入对比列表。",
+        mapInstruction4: "语言课程",
+        mapInstruction5: "学校区域的划定范围适用于2026年入学年份",
         filterSection: {
             schoolType: "学校类型",
             languageProgram: "语言课程",
