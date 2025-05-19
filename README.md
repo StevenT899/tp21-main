@@ -174,10 +174,13 @@ This project follows an Agile development methodology and was executed over thre
 See [Vite Configuration Reference](https://vite.dev/config/).
 
 ##### 📦 Prerequisites
-- Node.js >= 18.x
-- Python >= 3.9
-- MariaDB / MySQL
-- Google & Mapbox API keys
+
+- **Node.js** ≥ 18.x — for building the Vue 3 frontend  
+- **Python** ≥ 3.9 — for running the Flask backend  
+- **MariaDB / MySQL** — relational database used by the backend  
+- **Mapbox Access Token** — for map rendering  
+- **Google Maps API Key** — for autocomplete and geocoding
+
 
 ##### 📁 Project File Structure
 ```
@@ -313,6 +316,21 @@ This project integrates several third-party APIs and services to support core fu
 > 🔐 **Security Note**:  
 > All API credentials (tokens and keys) are stored securely in `.env` or `config.ini` files and **never hard-coded**. This practice improves maintainability and prevents accidental credential exposure in public repositories.
 
+##### ✅ Running Backend Tests
+To run backend unit tests and generate an HTML report:
+```bash
+cd tests
+pytest
+```
+This will execute all test files under tests/api/ and automatically generate a standalone HTML report (test_report.html) if pytest.ini is properly configured.
+> ℹ️ Make sure you have all dependencies installed:
+> ```bash
+> pip install -r../backend/requirements.txt
+> ```
+**Example output:**
+
+- `tests/test_report.html` — Viewable in browser, includes pass/fail breakdown and details.
+
 ##### 📄 License
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
@@ -322,3 +340,4 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 
 We welcome questions, feedback, or suggestions to improve **SchoolMate**.
 💻 **GitHub**: [Xinwen Tan](https://github.com/StevenT899),    [Yuhan Chen](https://github.com/ReviveDesire)
+
