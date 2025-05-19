@@ -1,4 +1,22 @@
-# app/models.py
+"""
+app/models.py
+
+Description:
+    Defines SQLAlchemy ORM models for core database tables used in the SchoolMate application.
+    These models represent schools, languages, language programs, and Q&A articles,
+    and are mapped directly to their respective database tables.
+
+Key Models:
+    - School: Stores detailed metadata for each school, including enrolment stats, location,
+              ICSEA scores, and language flags.
+    - Language: Represents supported languages across schools.
+    - LanguageProgram: Association table linking schools to their offered languages (many-to-many).
+    - Article: Represents educational support articles shown in the Q&A module.
+
+Relationships:
+    - School <-> Language: Many-to-many via LanguageProgram
+"""
+
 from .extensions import db
 
 class School(db.Model):

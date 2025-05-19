@@ -1,4 +1,15 @@
-# tests/api/test_auth.py
+"""
+test_auth.py
+
+Description:
+    Unit tests for the /login endpoint of the SchoolMate backend.
+    These tests verify authentication logic using correct and incorrect credentials.
+
+Test Cases:
+    - test_login_success: Simulates a successful login with valid username and password
+    - test_login_failure: Simulates login attempt with incorrect credentials and expects a 401 response
+"""
+
 def test_login_success(client):
     response = client.post('/login', json={
         'username': 'user',

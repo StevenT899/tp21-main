@@ -1,4 +1,23 @@
-# app/__init__.py
+"""
+app/__init__.py
+
+Description:
+    Application factory module for initializing the Flask app instance.
+    This script sets up the core backend services, including:
+    - CORS support
+    - Blueprint registration
+    - Configuration loading from config.ini
+    - Database initialization with SQLAlchemy
+    - Migration setup with Flask-Migrate
+
+Key Components:
+    - create_app(): Factory function that returns a configured Flask app instance
+    - CORS: Enables cross-origin requests for frontend-backend integration
+    - config.ini: Externalized configuration for environment-specific settings
+    - db (SQLAlchemy): Shared database instance initialized here
+    - bp (Blueprint): API routing logic imported from app.routes
+"""
+
 from flask import Flask
 from flask_cors import CORS
 from .routes import bp

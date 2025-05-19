@@ -55,7 +55,7 @@ function goBack() {
   const title = route.query.title
 
   if (from === 'questionList') {
-    // 回到 journey 页面并触发 QuestionList 弹窗
+    // back to journey page and trigger QuestionList
     router.push({
       name: 'Journey',
       query: {
@@ -64,10 +64,8 @@ function goBack() {
       }
     })
   } else {
-    // 默认回退行为
     window.history.back()
   }
-  window.history.back()
 }
 
 onMounted(async () => {
