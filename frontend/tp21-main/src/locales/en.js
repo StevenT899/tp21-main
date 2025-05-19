@@ -137,9 +137,8 @@ export default {
             reset: "Reset",
             all: "ALL"
         },
-        mapInstruction1: "Click on any ",
-        mapInstruction2: "icon on the map to preview key info including",
-        mapInstruction3: "and add to compare.",
+        mapInstruction1: "The school shown on the map has been automatically selected. You can preview key information including the",
+        mapInstruction3: "and add it to your comparison list.",
         mapInstruction4: "Language Program",
         mapInstruction5: "School zone boundaries apply to the 2026 intake year.",
         schoolPopup: {

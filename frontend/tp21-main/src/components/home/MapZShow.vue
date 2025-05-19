@@ -33,10 +33,8 @@
 </svg> -->
 
 
-
+    <img :src="schoolIconSelected" alt="School Icon" class="w-5 h-5 mx-1 ms-2 me-2" />
     <span>{{ $t('MapShow.mapInstruction1') }} </span>
-    <img :src="schoolIcon" alt="School Icon" class="w-5 h-5 mx-1 ms-2 me-2" />
-    <span>{{ $t('MapShow.mapInstruction2') }} </span>
     <div class="rounded-md p-2 text-center text-sm ms-2 me-2" style="background-color: #EBF1FA;">
       {{ $t(`MapShow.mapInstruction4`) }}
     </div>
