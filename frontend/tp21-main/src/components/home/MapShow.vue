@@ -56,7 +56,7 @@
 
 
       <div class="filter-actions flex items-end gap-2" style="margin-top: 1.375rem;">
-        <button @click="applyFilters"
+        <button @click="applyFilters(false)"
           class="flex items-center gap-2 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -129,7 +129,7 @@
             <router-link :to="{ name: 'SchoolDetail', params: { id: selectedSchool.id } }" @click.native="scrollToTop"
               class="text-blue-500 hover:underline">
               <button class="text-blue-500 underline cursor-pointer">{{ $t('MapShow.schoolPopup.viewDetails')
-                }}</button>
+              }}</button>
             </router-link>
             <button @click="handleAddToCompare(selectedSchool)" :disabled="!isSchoolLoaded"
               class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
@@ -500,14 +500,14 @@ const initializeSchools = () => {
       map.on('mouseleave', 'school-points', () => map.getCanvas().style.cursor = '');
 
       setTimeout(() => {
-        applyFilters();
+        applyFilters(false);
       }, 100);
     });
   });
 };
 
 // Apply filter conditions
-const applyFilters = () => {
+const applyFilters = (triggeredByReset = false) =>  {
   if (!mapLoaded.value) {
     console.log('Map not ready yet');
     return;
@@ -518,23 +518,40 @@ const applyFilters = () => {
     return;
   }
 
-  // Update map data
+  // Record the number of schools before filtering (for comparison)
+  const beforeCount = schools.value.length;
+  const filtered = filteredSchools.value;
+
+  // Clear currently selected school to reset icon color to default (blue)
+  selectedSchool.value = null;
+
   try {
-    map.getSource('schools').setData(buildSchoolsGeoJSON(filteredSchools.value, selectedSchool.value?.id || null));
+    // Update the map's data source with filtered schools
+    map.getSource('schools').setData(buildSchoolsGeoJSON(filtered, null));
 
+    if (!triggeredByReset) {
+      if (filtered.length === beforeCount) {
+        showToast('info', 'filterAppliedNoChange');
+      }
+    }
 
-    // If there are schools after filtering, zoom the map to these school locations
-    if (filteredSchools.value.length > 0) {
+    // If there are filtered schools, zoom the map to their bounds
+    if (filtered.length > 0) {
       const bounds = new mapboxgl.LngLatBounds();
-      filteredSchools.value.forEach(school => {
+      filtered.forEach(school => {
         bounds.extend([school.Longitude, school.Latitude]);
       });
       map.fitBounds(bounds, { padding: 50 });
+    } else {
+      // If no schools match the filters, show warning toast
+      showToast('warning', 'noMatchingSchools');
     }
   } catch (error) {
     console.error('Error updating map data:', error);
   }
-}
+};
+
+
 
 function buildSchoolsGeoJSON(schoolList, selectedId = null) {
   return {
@@ -561,8 +578,9 @@ function buildSchoolsGeoJSON(schoolList, selectedId = null) {
 const resetFilters = () => {
   filters.schoolType = 'ALL'
   filters.languageProgram = 'ALL'
-  applyFilters()
   selectedSchool.value = null
+  applyFilters(true)
+  showToast('info', 'resetFilters')
 }
 
 const updateMapData = () => {
@@ -572,6 +590,14 @@ const updateMapData = () => {
     map.getSource('schools').setData(
       buildSchoolsGeoJSON(schools.value, selectedSchool.value?.id || null)
     );
+
+    if (schools.value.length > 0) {
+      const bounds = new mapboxgl.LngLatBounds();
+      schools.value.forEach(school => {
+        bounds.extend([school.Longitude, school.Latitude]);
+      });
+      map.fitBounds(bounds, { padding: 50 });
+    }
   }
 };
 

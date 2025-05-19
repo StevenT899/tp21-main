@@ -73,13 +73,18 @@ export default {
             },
             warning: {
                 alreadyInCompare: 'Already in your compare list.',
-                compareLimit: 'You can only compare up to 3 schools.'
+                compareLimit: 'You can only compare up to 3 schools.',
+                noMatchingSchools: 'No schools match the current filter criteria.'
             },
             success: {
                 addedToCompare: 'Added to compare!',
                 schoolAdded: 'School added successfully!',
                 removedFromCompare: 'Removed from your compare list successfully.',
                 allSchoolsRemoved: 'All schools have been removed from your compare list.'
+            },
+            info: {
+                filterAppliedNoChange: 'Filters have been applied.',
+                resetFilters: 'Filters have been reset.'
             }
         },
         school: {

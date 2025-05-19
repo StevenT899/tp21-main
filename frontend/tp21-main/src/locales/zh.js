@@ -71,13 +71,18 @@ export default {
             },
             warning: {
                 alreadyInCompare: '已在您的比较列表中。',
-                compareLimit: '您最多只能比较3所学校。'
+                compareLimit: '您最多只能比较3所学校。',
+                noMatchingSchools: '没有学校匹配当前筛选条件。'
             },
             success: {
                 addedToCompare: '已添加到比较！',
                 schoolAdded: '学校添加成功！',
                 removedFromCompare: '已成功从比较列表中移除。',
                 allSchoolsRemoved: '所有学校已从比较列表中移除。'
+            },
+            info: {
+                filterAppliedNoChange: '已经应用筛选。',
+                resetFilters: '已经重置。'
             }
         },
         school: {
