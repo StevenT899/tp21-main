@@ -55,8 +55,8 @@
         <template v-if="schools[i - 1]">
           
           <button @click="removeSchool(i - 1)"
-  class="flex items-center absolute top-2 right-2 text-sm font-semibold hover:text-blue-500 z-10 bg-white px-2 py-1 rounded shadow"
-  title="{{ $t('compareView.schoolCard.removeButton') }}">
+  class="flex items-center absolute top-2 right-2 text-sm font-semibold hover:text-blue-500 z-10 bg-white px-2 py-1 rounded shadow cursor-pointer"
+ >
 
   <svg
     class="w-4 h-4 mr-1 self-center"
