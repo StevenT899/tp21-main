@@ -506,6 +506,17 @@ const initializeSchools = () => {
   });
 };
 
+watch(availableLanguages, (newLanguages) => {
+  if (filters.languageProgram !== 'ALL' && !newLanguages.includes(filters.languageProgram)) {
+    filters.languageProgram = 'ALL';
+  }
+});
+watch(availableSchoolTypes, (newTypes) => {
+  if (filters.schoolType !== 'ALL' && !newTypes.includes(filters.schoolType)) {
+    filters.schoolType = 'ALL';
+  }
+});
+
 // Apply filter conditions
 const applyFilters = (triggeredByReset = false) =>  {
   if (!mapLoaded.value) {
