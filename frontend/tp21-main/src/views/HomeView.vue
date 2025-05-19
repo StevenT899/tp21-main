@@ -27,27 +27,49 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import HeroSection from '@/components/home/HeroSection.vue';
-import HelpSection from '@/components/home/HelpSection.vue';
-
-import { onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, onActivated } from 'vue'
+import HeroSection from '@/components/home/HeroSection.vue'
+import HelpSection from '@/components/home/HelpSection.vue'
 
 const showBackToTop = ref(false)
+let ignoreScrollEvents = true
 
-function handleScroll() {
-  showBackToTop.value = window.scrollY > 300
-}
+const handleScroll = () => {
+  const y = window.scrollY
 
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  if (ignoreScrollEvents) return
+
+  if (y > 500) {
+    sessionStorage.setItem('homeScrollY', String(y))
+    // console.log('💾 Saved scrollY =', y)
+  }
+
+  showBackToTop.value = y > 300
 }
 
 onMounted(() => {
+  window.history.scrollRestoration = 'manual'
   window.addEventListener('scroll', handleScroll)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
 })
+
+onActivated(() => {
+  const saved = sessionStorage.getItem('homeScrollY')
+  const parsed = parseInt(saved)
+
+  // console.log('🔄 onActivated. session savedY =', saved, '| parsedY =', parsed)
+
+  if (parsed > 0) {
+    window.scrollTo(0, parsed)
+    //console.log('🟢 Instantly restored scrollY =', parsed)
+  }
+  ignoreScrollEvents = false
+})
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 </script>

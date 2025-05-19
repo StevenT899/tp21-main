@@ -11,7 +11,7 @@
     - Uses Vue Router's `router-view` to render page content dynamically
     - Watches login state reactively to handle mid-session logouts
  / -->
- 
+
 <script setup>
 import { watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -20,7 +20,7 @@ import Footer from './components/base/FooterTeam.vue';
 import { isLoggedIn } from './auth';
 
 const router = useRouter();
-const route  = useRoute();
+const route = useRoute();
 
 if (!isLoggedIn.value && route.path !== '/login') {
   router.push('/login');
@@ -36,11 +36,14 @@ watch(isLoggedIn, (val) => {
 <template>
   <NavBar v-if="isLoggedIn" />
   <main>
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <keep-alive include="HomeView">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
+
   </main>
   <Footer v-if="isLoggedIn" />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

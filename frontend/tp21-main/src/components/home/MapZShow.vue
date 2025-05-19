@@ -372,6 +372,34 @@ function initializeSchools() {
 
       map.value.on('mouseenter', 'school-points', () => map.value.getCanvas().style.cursor = 'pointer');
       map.value.on('mouseleave', 'school-points', () => map.value.getCanvas().style.cursor = '');
+
+      if (props.schools.length === 1) {
+        const s = props.schools[0];
+        selectedSchool.value = {
+          id: s.School_AGE_ID,
+          name: s.School_Name,
+          type: s.School_Sector,
+          languages: s.languages || []
+        };
+
+        isSchoolLoaded.value = false;
+        map.value.getSource('schools')?.setData(buildSchoolsGeoJSON(props.schools, s.School_AGE_ID));
+
+        fetch(`${import.meta.env.VITE_API_URL}/school/${s.School_AGE_ID}`)
+          .then(res => res.json())
+          .then(fullData => {
+            if (fullData && !fullData.error) {
+              selectedSchool.value = {
+                ...fullData,
+                id: fullData.School_AGE_ID,
+                name: fullData.School_Name,
+                type: fullData.School_Sector,
+                languages: fullData.languages || []
+              };
+              isSchoolLoaded.value = true;
+            }
+          });
+      }
     });
   });
 }
@@ -429,6 +457,37 @@ watch(() => props.polygonValue, poly => {
 watch(() => props.coordinates, coords => {
   map.value.getSource('search-point').setData(buildSearchPointGeoJSON(coords));
 });
+watch(() => props.schools, (newSchools) => {
+  if (!map.value || !newSchools || newSchools.length !== 1) return;
+
+  const s = newSchools[0];
+  selectedSchool.value = {
+    id: s.School_AGE_ID,
+    name: s.School_Name,
+    type: s.School_Sector,
+    languages: s.languages || []
+  };
+
+  isSchoolLoaded.value = false;
+  map.value.getSource('schools')?.setData(buildSchoolsGeoJSON(newSchools, s.School_AGE_ID));
+
+  fetch(`${import.meta.env.VITE_API_URL}/school/${s.School_AGE_ID}`)
+    .then(res => res.json())
+    .then(fullData => {
+      if (fullData && !fullData.error) {
+        selectedSchool.value = {
+          ...fullData,
+          id: fullData.School_AGE_ID,
+          name: fullData.School_Name,
+          type: fullData.School_Sector,
+          languages: fullData.languages || []
+        };
+        isSchoolLoaded.value = true;
+      }
+    });
+});
+
+
 
 function getCurrentLocation() {
   if (navigator.geolocation) {

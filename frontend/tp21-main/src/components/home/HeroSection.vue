@@ -1,4 +1,3 @@
-
 <!-- /**
   HeroSection.vue
  
@@ -137,7 +136,7 @@
         style="background: linear-gradient(to bottom, #ecf2fb 1%, transparent 15%);">
         <div class="max-w-7xl mx-auto">
             <MapShow :searchQuery="searchQuery" :isSchool="isSchool" :selectedSuburb="selectedSuburb"
-                :selectedType="selectedType" />
+                :selectedType="selectedType" :matchedSchools="filteredMapSchools" />
         </div>
     </section>
 
@@ -158,7 +157,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue';
+import { ref, nextTick, onMounted, computed } from 'vue';
 import MapShow from '@/components/home/MapShow.vue';
 import MapZShow from './MapZShow.vue';
 import { useClickOutside } from '@/utils/useClickOutside';
@@ -167,6 +166,24 @@ import axios from 'axios';
 import debounce from 'lodash.debounce';
 import { point, polygon, booleanPointInPolygon } from '@turf/turf';
 import ModalBox from '../base/ModalBox.vue';
+
+defineOptions({ name: 'HomeView' })
+
+const filteredMapSchools = computed(() => {
+    if (!schools.value.length) return [];
+
+    const input = searchQuery.value.toLowerCase().trim();
+    if (selectedType.value === 'school') {
+        return schools.value.filter(s => s.School_Name.toLowerCase() === input);
+    } else if (selectedType.value === 'suburb') {
+        const isPostcode = /^\d+$/.test(selectedSuburb.value);
+        if (isPostcode) {
+            return schools.value.filter(s => s.Postcode?.toString() === selectedSuburb.value);
+        }
+        return schools.value.filter(s => s.Suburb?.toLowerCase() === selectedSuburb.value.toLowerCase());
+    }
+    return [];
+});
 
 const ModalBoxRef = ref(null);
 const openModal = (modalType) => {
@@ -359,6 +376,7 @@ const showMapAndSearch = async () => {
     } else {
         showNoResultMessage.value = false;
         showMap.value = true;
+
     }
 
     // always hide suggestion box when search is confirmed
@@ -371,7 +389,7 @@ const showMapAndSearch = async () => {
             mapSection.scrollIntoView({ behavior: 'smooth' });
         }
     });
-
+    saveSearchState();
 };
 
 const selectResult = (result, type) => {
@@ -404,11 +422,14 @@ const selectResult = (result, type) => {
             mapSection.scrollIntoView({ behavior: 'smooth' });
         }
     });
+    saveSearchState();
 };
 
 
 // BUTTONS: SCHOOLS / SCHOOL ZONE 
 const onExploreSchools = async () => {
+    sessionStorage.removeItem('schoolSearchState');
+
     buttonClickTime.value = 0;
     canSchoolZoneDesripBeChecked.value = false;
     activeView.value = VIEW_SCHOOL
@@ -426,6 +447,8 @@ const onExploreSchools = async () => {
     await showMapAndSearch()
 }
 const onShowMapZone = () => {
+    sessionStorage.removeItem('schoolSearchState');
+
     buttonClickTime.value++;
     if (buttonClickTime.value === 1) {
         canSchoolZoneDesripBeChecked.value = true
@@ -655,6 +678,9 @@ const checkPointInPolygons = async () => {
                 mapSection.scrollIntoView({ behavior: 'smooth' });
             }
         });
+
+        saveSearchState();
+
     } else {
         showNoResultMessage.value = true;
         setTimeout(() => {
@@ -672,6 +698,58 @@ const handleLocationObtained = (coords) => {
 };
 
 fetchZoneSchools();
+
+
+//session storage
+const saveSearchState = () => {
+    const state = {
+        activeView: activeView.value,
+        searchQuery: searchQuery.value,
+        searchQuery2: searchQuery2.value,
+        coordinates: coordinates.value,
+        isInPolygon: isInPolygon.value,
+        selectedSuburb: selectedSuburb.value,
+        selectedType: selectedType.value,
+        isSchool: isSchool.value,
+        SearchSchoolsForMapShow: SearchSchoolsForMapShow.value,
+        polygonValue: polygonValue.value,
+        showMap: showMap.value
+    };
+    sessionStorage.setItem('schoolSearchState', JSON.stringify(state));
+};
+
+const loadSearchState = async() => {
+    const saved = sessionStorage.getItem('schoolSearchState');
+    if (saved) {
+        try {
+            const state = JSON.parse(saved);
+            if (!schools.value.length) {
+                await fetchSchools();
+            }
+            console.log('✅ loaded state:', state);
+            activeView.value = state.activeView || VIEW_SCHOOL;
+            searchQuery.value = state.searchQuery || '';
+            searchQuery2.value = state.searchQuery2 || '';
+            coordinates.value = state.coordinates || [];
+            isInPolygon.value = state.isInPolygon || false;
+            selectedSuburb.value = state.selectedSuburb || '';
+            selectedType.value = state.selectedType || '';
+            isSchool.value = state.isSchool || false;
+            SearchSchoolsForMapShow.value = state.SearchSchoolsForMapShow || [];
+            polygonValue.value = state.polygonValue || [[[]]];
+            showMap.value = state.showMap || false;
+
+            return state.showMap;
+        } catch (e) {
+            console.error('Failed to load saved state:', e);
+        }
+    }
+    return false;
+};
+onMounted(() => {
+  loadSearchState();
+});
+
 </script>
 
 <style scoped>

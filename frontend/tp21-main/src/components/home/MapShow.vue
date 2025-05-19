@@ -270,7 +270,8 @@ const props = defineProps({
   searchQuery: { type: String, default: '' },
   isSchool: { type: Boolean, default: false },
   selectedSuburb: { type: String, default: '' },
-  selectedType: { type: String, default: '' }
+  selectedType: { type: String, default: '' },
+  matchedSchools: { type: Array, default: () => [] }
 })
 
 // Reference the map container
@@ -379,17 +380,14 @@ const availableLanguages = computed(() => {
   return Array.from(languages);
 })
 
-// Watch for changes in search-related parameters and reapply filters when they change
-watch([
-  () => props.searchQuery,
-  () => props.isSchool,
-  () => props.selectedSuburb,
-  () => props.selectedType
-], (newValues, oldValues) => {
-  if (newValues !== oldValues && mapLoaded.value) {
-    applyFilters();
+
+watch(() => props.matchedSchools, (newVal) => {
+  schools.value = newVal;
+  if (mapLoaded.value && map?.getSource('schools')) {
+    map.getSource('schools').setData(buildSchoolsGeoJSON(schools.value, selectedSchool.value?.id || null));
   }
-}, { immediate: false })
+}, { immediate: true });
+
 
 // Initialize the map
 const initializeMap = () => {
@@ -543,7 +541,6 @@ function buildSchoolsGeoJSON(schoolList, selectedId = null) {
   };
 }
 
-
 // Reset filter conditions
 const resetFilters = () => {
   filters.schoolType = 'ALL'
@@ -552,45 +549,55 @@ const resetFilters = () => {
   selectedSchool.value = null
 }
 
-// Initialize the map and fetch backend data after the component is mounted
+const updateMapData = () => {
+  schools.value = props.matchedSchools;
+  console.log("xxxxxxxxxxxxxxx:",schools)
+  if (mapLoaded.value && map?.getSource('schools')) {
+    map.getSource('schools').setData(
+      buildSchoolsGeoJSON(schools.value, selectedSchool.value?.id || null)
+    );
+  }
+};
+
+// Watch for updates from props
+watch(() => props.matchedSchools, updateMapData, { immediate: true });
+
+// ========== Event Listeners ==========
+
+const handleStorageChange = (event) => {
+  console.log('MapShow: Storage event received:', event)
+  if (event.key === 'compareList') {
+    const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+    compareList.value = newCompareList;
+  }
+};
+
+const handleCompareListUpdate = (event) => {
+  console.log('MapShow: CompareListUpdated event received:', event)
+  if (event.detail) {
+    compareList.value = event.detail;
+  } else {
+    const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
+    compareList.value = newCompareList;
+  }
+};
+
+// ========== Lifecycle ==========
+
 onMounted(() => {
-  fetch(`${import.meta.env.VITE_API_URL}/schools`)
-    .then(response => response.json())
-    .then(data => {
-      schools.value = data;
-      initializeMap();
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-    });
+  initializeMap();
 
-  // Listen for storage events and custom events
-  const handleStorageChange = (event) => {
-    console.log('MapShow: Storage event received:', event)
-    if (event.key === 'compareList') {
-      const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
-      compareList.value = newCompareList;
-    }
-  };
-
-  const handleCompareListUpdate = (event) => {
-    console.log('MapShow: CompareListUpdated event received:', event)
-    if (event.detail) {
-      compareList.value = event.detail;
-    } else {
-      const newCompareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
-      compareList.value = newCompareList;
-    }
-  };
+  setTimeout(() => {
+    updateMapData();
+  }, 300);
 
   window.addEventListener('storage', handleStorageChange);
   window.addEventListener('compareListUpdated', handleCompareListUpdate);
+});
 
-  // Clean up event listeners
-  onUnmounted(() => {
-    window.removeEventListener('storage', handleStorageChange);
-    window.removeEventListener('compareListUpdated', handleCompareListUpdate);
-  });
+onUnmounted(() => {
+  window.removeEventListener('storage', handleStorageChange);
+  window.removeEventListener('compareListUpdated', handleCompareListUpdate);
 });
 </script>
 
