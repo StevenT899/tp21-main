@@ -1,4 +1,16 @@
-# tests/api/test_schools.py
+"""
+test_schools.py
+
+Description:
+    Unit tests for the /school/<id> endpoint, which retrieves detailed information
+    for a specific school by its AGE ID.
+
+Test Cases:
+    - test_get_school_by_id:
+        Verifies that a known school ID returns correct data and
+        that an unknown ID returns a 404 error.
+"""
+
 def test_get_school_by_id(client):
     # test existed school
     response = client.get('/school/743')

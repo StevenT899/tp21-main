@@ -1,4 +1,34 @@
-# app/dao.py
+"""
+app/dao.py
+
+Description:
+    Data access layer for retrieving and transforming data from the database.
+    This module provides reusable query functions for schools, languages,
+    zone-based search, and Q&A articles. It also includes logic for semantic
+    search using sentence embeddings.
+
+Key Features:
+    - Fetch school records with optional filtering (by name or zone)
+    - Return detailed school information including languages and geolocation
+    - Retrieve FAQ articles and individual article content
+    - Perform semantic similarity search using SentenceTransformer and cosine similarity
+
+Dependencies:
+    - SQLAlchemy ORM (joinedload, selectinload) for efficient relationship queries
+    - Pandas + NumPy for semantic search result handling
+    - SentenceTransformer (MiniLM-L3-v2) for natural language embeddings
+    - Flask jsonify for consistent API response formatting
+
+Exports:
+    - fetch_all_schools()
+    - fetch_all_zone_schools()
+    - fetch_zone_schools_by_name(name)
+    - fetch_school_by_id(sid)
+    - fetch_all_articles()
+    - fetch_article_by_id(article_id)
+    - fetch_search_result(query, articles)
+"""
+
 from .models import School, Language, LanguageProgram, Article, db
 from sqlalchemy.orm import joinedload, selectinload, load_only
 

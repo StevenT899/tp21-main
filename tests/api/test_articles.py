@@ -1,4 +1,17 @@
-# tests/api/test_articles.py
+"""
+test_articles.py
+
+Description:
+    Unit tests for the /articles endpoints of the SchoolMate backend.
+    These tests verify that article data can be retrieved correctly and
+    that the system handles invalid IDs appropriately.
+
+Test Cases:
+    - test_list_articles: Ensures the /articles endpoint returns a list with expected fields
+    - test_get_article_by_id_valid: Verifies valid article ID returns correct fields or 404
+    - test_get_article_by_id_invalid: Verifies invalid ID returns 404 or error
+"""
+
 def test_list_articles(client):
     response = client.get('/articles')
     assert response.status_code == 200

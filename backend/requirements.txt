@@ -1,12 +1,19 @@
-alembic==1.15.2            # Database migration tool
-Flask==3.1.1               # Web framework (latest stable version)
-flask_cors==5.0.1          # Cross-Origin Resource Sharing (CORS) support
-Flask_Migrate==4.1.0       # Database migration extension for Flask
-flask_sqlalchemy==3.1.1    # SQLAlchemy integration for Flask
-numpy==2.2.6               # Scientific computing library
-pandas==2.2.3              # Data analysis library
-python-dotenv==1.1.0       # Environment variable management
-Requests==2.32.3           # HTTP library for making API requests
-scikit_learn==1.6.1        # Machine learning library
-sentence_transformers==2.6.1  # Sentence embeddings and transformer models
-SQLAlchemy==2.0.41         # Database toolkit and ORM
+# Core Web Framework
+Flask==3.1.1                     # Web framework for building RESTful APIs
+flask_sqlalchemy==3.1.1         # SQLAlchemy ORM integration with Flask
+Flask_Migrate==4.1.0            # SQLAlchemy database migration support via Alembic
+flask_cors==5.0.1               # Enable Cross-Origin Resource Sharing (CORS)
+
+# Database & Migration Tools
+SQLAlchemy==2.0.41              # Python SQL toolkit and ORM
+alembic==1.15.2                 # Lightweight database migration tool used by Flask-Migrate
+
+# Data Processing & ML
+numpy==2.2.6                    # Numerical computing with array operations
+pandas==2.2.3                   # Data manipulation and analysis
+scikit_learn==1.6.1             # Machine learning algorithms and utilities
+sentence_transformers==2.6.1   # Sentence embedding models for semantic similarity
+
+# Utility Libraries
+Requests==2.32.3                # HTTP requests (used for Google API proxy)
+python-dotenv==1.1.0            # Load environment variables from .env files

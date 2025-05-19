@@ -1,4 +1,28 @@
-# app/routes.py
+"""
+app/routes.py
+
+Description:
+    Defines the main API endpoints for the SchoolMate backend using Flask Blueprints.
+    This module maps HTTP routes to business logic functions provided by the data access layer (dao.py),
+    handles user login, school retrieval, Google API proxies, and article-based semantic search.
+
+Key Routes:
+    - POST /login: Simple username/password login (used for frontend access control)
+    - GET /schools: Retrieve a list of all schools with basic data
+    - GET /zoneSchools: Retrieve schools with zoning and coordinate information
+    - GET /school/zone?name=:name: Search for schools by name (zone + language info)
+    - GET /school/<id>: Fetch detailed information for a specific school
+    - GET /articles: Return all educational support articles
+    - GET /articles/<id>: Retrieve a specific article by ID
+    - POST /return-articles: Perform semantic search over articles based on a query
+    - GET /api/proxy/place-autocomplete: Proxy for Google Places API with VIC filtering
+    - GET /api/proxy/geocode: Proxy for Google Geocoding API
+
+Notes:
+    - All endpoints return JSON responses
+    - External config values (e.g., credentials, API key) are imported from config.py
+"""
+
 from flask import Blueprint, jsonify, request
 import requests
 from .dao import fetch_all_schools, fetch_all_zone_schools, fetch_zone_schools_by_name, fetch_school_by_id,fetch_all_articles,fetch_article_by_id, fetch_search_result

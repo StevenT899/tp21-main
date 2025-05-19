@@ -1,4 +1,24 @@
-# app/config.py
+"""
+app/config.py
+
+Description:
+    Centralized configuration module for Flask application settings.
+    This script loads environment variables and INI configuration to define
+    database connection parameters, API credentials, and other constants.
+
+Key Features:
+    - Loads `.env` variables using python-dotenv
+    - Parses values from config.ini (if needed)
+    - Defines SQLAlchemy database URI for MariaDB/MySQL
+    - Exposes login credentials and third-party API keys for global use
+
+Exports:
+    - SQLALCHEMY_DATABASE_URI: Database connection string used by SQLAlchemy
+    - SQLALCHEMY_TRACK_MODIFICATIONS: Disable to optimize memory usage
+    - VALID_USERNAME / VALID_PASSWORD: Credentials for login verification
+    - GOOGLE_API_KEY: Used for Google API proxy endpoints
+"""
+
 import configparser
 import os
 from dotenv import load_dotenv
