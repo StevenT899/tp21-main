@@ -366,7 +366,7 @@ export default {
                 kangarooTip: "Lots to learn, lots to dream — I'll hop beside you."
             },
             tertiary: {
-                title: "Teriary Education",
+                title: "Tertiary Education",
                 age: "18+ years",
                 desc: "After secondary school, students can continue their education through university or vocational training (TAFE).<br><strong>University</strong> focuses on theory and degrees <br><strong>TAFE</strong> is more practical and job-oriented.<br> Both paths can lead to careers or further study.",
                 whatTheyLearn: {
