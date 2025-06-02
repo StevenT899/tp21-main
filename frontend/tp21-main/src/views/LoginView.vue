@@ -10,16 +10,9 @@
 <template>
     <div class="login-container">
         <div class="card">
-            <h2>Sign in</h2>
-            <p>Sign in to your account</p>
-            <label for="username">Username</label>
-            <input type="text" v-model="username" id="username" placeholder="Enter username">
-            <label for="password">Password</label>
-            <input :type="passwordType" v-model="password" id="password" placeholder="Enter password">
-            <div class="actions">
-                <label><input type="checkbox" @click="togglePassword"> Show password</label>
-            </div>
-            <button @click="login">Continue</button>
+            <h2>Welcome to SchoolMate</h2>
+            <p>Click the button below to enter the system</p>
+            <button @click="login" class="login-button">Enter System</button>
         </div>
     </div>
 </template>
@@ -29,41 +22,14 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { isLoggedIn } from '../auth.js';
 
-const username = ref('');
-const password = ref('');
-const passwordType = ref('password');
 const router = useRouter();
 
-const togglePassword = () => {
-  passwordType.value = passwordType.value === 'password' ? 'text' : 'password';
-};
-
 const login = async () => {
-  const user = username.value.trim();
-  const pass = password.value.trim();
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: user, password: pass })
-    });
-
-    if (response.status === 401) {
-      const err = await response.json();
-      return alert(err.message);
-    }
-    if (!response.ok) {
-      throw new Error(`Server error ${response.status}`);
-    }
-
-    const data = await response.json();
-    if (data.success) {
-      localStorage.setItem('isLoggedIn', 'true');
-      isLoggedIn.value = true;
-      router.push('/home');
-    } else {
-      alert(data.message);
-    }
+    // Set login state directly, skip API verification
+    localStorage.setItem('isLoggedIn', 'true');
+    isLoggedIn.value = true;
+    router.push('/home');
   } catch (error) {
     console.error('Error during login:', error);
     alert('An error occurred during login. Please try again.');
@@ -96,12 +62,14 @@ const login = async () => {
     margin: 0 0 10px;
     font-size: 24px;
     color: #333;
+    text-align: center;
 }
 
 .card p {
     margin-bottom: 20px;
     color: #666;
     font-size: 14px;
+    text-align: center;
 }
 
 label {
@@ -129,33 +97,14 @@ input[type="password"]:focus {
     outline: none;
 }
 
-.actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: -10px;
-    margin-bottom: 20px;
-}
-
-.actions label {
-    display: flex;
-    align-items: center;
-    font-size: 13px;
-    color: #666;
-    cursor: pointer;
-}
-
-.actions input {
-    margin-right: 6px;
-}
-
+.actions,
+.actions label,
+.actions input,
 .actions a {
-    font-size: 13px;
-    color: #0078d4;
-    text-decoration: none;
+    display: none;
 }
 
-button {
+.login-button {
     width: 100%;
     padding: 12px;
     background-color: #0078d4;
@@ -165,9 +114,10 @@ button {
     font-size: 15px;
     cursor: pointer;
     transition: background 0.3s;
+    margin-top: 20px;
 }
 
-button:hover {
+.login-button:hover {
     background-color: #005fa3;
 }
 </style>

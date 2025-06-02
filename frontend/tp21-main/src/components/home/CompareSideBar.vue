@@ -1,6 +1,6 @@
 <!-- CompareSideBar.vue 
   Description:
-    The CompareSideBar component displays the user’s selected schools in a sidebar.
+    The CompareSideBar component displays the user's selected schools in a sidebar.
     It provides controls to remove individual schools, clear all selections, and navigate to the comparison page,
     with toast notifications for each action.
  
@@ -10,7 +10,7 @@
     3. removeAll(): clears all schools, updates storage, and emits 'rma'.
     4. Listens for and dispatches 'compareListUpdated' custom events to keep components in sync.
     5. Adds/removes storage and compareListUpdated event listeners on mount and unmount.
-    6. “Compare Now” button routes to '/compare' and scrolls to the top.
+    6. "Compare Now" button routes to '/compare' and scrolls to the top.
  
   Emits:
     - rm  : emitted when a single school is removed.
@@ -29,10 +29,9 @@
         <div v-for="(school, index) in compareList" :key="school.id" class="school-card mt-1 mb-2">
           <div>
             <h3 class="school-name">{{ school.name || school.School_Name }}</h3>
-            <!-- <p class="school-sector">{{ school.type || school.sector || school.School_Sector }}</p> -->
+    
             <p class="school-sector">
-              {{ $t(`schoolTypes.${ school.type}`) || $t(`schoolTypes.${ school.sector}`) || $t(`schoolTypes.${ school.School_Sector}`)
-                }}
+              {{ $t(`schoolTypes.${school.School_Sector || school.type || school.sector}`) }}
             </p>
 
             <!-- School Suburb with SVG Icon -->
@@ -81,10 +80,12 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, onActivated } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import '@/assets/toast.css'
 
+const route = useRoute()
 
 const emit = defineEmits(['rm', 'rma'])
 
@@ -142,12 +143,21 @@ const removeAll = () => {
 
 // Watch sessionStorage and update compareList when the page reloads
 const loadCompareList = () => {
+  console.log('CompareSideBar: Loading compare list from storage')
   const list = sessionStorage.getItem('compareList')
   if (list) {
     try {
       const parsedList = JSON.parse(list)
-      compareList.value = parsedList
-      console.log('CompareSideBar: Loaded compare list:', parsedList)
+      // Normalize data format to ensure consistency
+      const normalizedList = parsedList.map(school => ({
+        id: school.id || school.School_AGE_ID,
+        name: school.name || school.School_Name,
+        School_Sector: school.School_Sector || school.type || school.sector,
+        suburb: school.suburb || school.Suburb,
+        School_URL: school.School_URL || school.url
+      }))
+      compareList.value = normalizedList
+      console.log('CompareSideBar: Loaded and normalized compare list:', normalizedList)
     } catch (error) {
       console.error('Error parsing compare list:', error)
       compareList.value = []
@@ -160,9 +170,17 @@ const loadCompareList = () => {
 // Update sessionStorage whenever compareList changes
 const saveCompareList = () => {
   try {
-    const listToSave = JSON.stringify(compareList.value)
+    // Normalize data format to ensure consistency
+    const normalizedList = compareList.value.map(school => ({
+      id: school.id || school.School_AGE_ID,
+      name: school.name || school.School_Name,
+      School_Sector: school.School_Sector || school.type || school.sector,
+      suburb: school.suburb || school.Suburb,
+      School_URL: school.School_URL || school.url
+    }))
+    const listToSave = JSON.stringify(normalizedList)
     sessionStorage.setItem('compareList', listToSave)
-    console.log('CompareSideBar: Saved compare list:', compareList.value)
+    console.log('CompareSideBar: Saved normalized compare list:', normalizedList)
   } catch (error) {
     console.error('Error saving compare list:', error)
   }
@@ -196,7 +214,7 @@ const handleCompareListUpdate = (event) => {
   }
 }
 
-// Add event listeners
+// Add event listeners and route watcher
 onMounted(() => {
   console.log('CompareSideBar: Component mounted')
   window.addEventListener('storage', handleStorageChange)
@@ -204,6 +222,19 @@ onMounted(() => {
   loadCompareList()
 })
 
+// Watch route changes to reload state when returning to home
+watch(() => route.path, (newPath, oldPath) => {
+  if (newPath === '/home' && oldPath !== '/home') {
+    console.log('CompareSideBar: Returning to home, reloading state')
+    loadCompareList()
+  }
+})
+
+// Add onActivated hook to reload state when component is reactivated
+onActivated(() => {
+  console.log('CompareSideBar: Component activated')
+  loadCompareList()
+})
 
 // Remove event listeners
 onUnmounted(() => {
@@ -218,7 +249,6 @@ onUnmounted(() => {
 /* Compare Sidebar Container */
 .compare-sidebar-container {
   position: relative;
-
   padding: 0.3rem;
   box-sizing: border-box;
   width: 300px;
