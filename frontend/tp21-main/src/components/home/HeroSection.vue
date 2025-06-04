@@ -167,7 +167,12 @@ import debounce from 'lodash.debounce';
 import { point, polygon, booleanPointInPolygon } from '@turf/turf';
 import ModalBox from '../base/ModalBox.vue';
 
-defineOptions({ name: 'HomeView' })
+const props = defineProps({
+    compareListCount: {
+        type: Number,
+        default: 0
+    }
+})
 
 const filteredMapSchools = computed(() => {
     if (!schools.value.length) return [];
@@ -777,5 +782,27 @@ onMounted(() => {
 
 .underline.hover:text-red-600 {
     cursor: pointer;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.compare-counter {
+    background-color: #0078d4;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.compare-counter:hover {
+    background-color: #005fa3;
 }
 </style>

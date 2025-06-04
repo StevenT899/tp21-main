@@ -4,12 +4,12 @@
   Description:
     Renders detailed information for a single school, including its name, location, website link,
     and options to add the school to the comparison list. Provides real-time zone checking
-    against the user’s current location and displays in-zone/out-of-zone status.
+    against the user's current location and displays in-zone/out-of-zone status.
  
   Key Features:
     - Header with school name, suburb, postcode, and external website link
-    - “Add to Compare” button with sessionStorage management and toast notifications
-    - “Use Location” button that prompts for geolocation and checks against the schoolzone’s polygon
+    - "Add to Compare" button with sessionStorage management and toast notifications
+    - "Use Location" button that prompts for geolocation and checks against the schoolzone's polygon
     - Displays school type, year range, and ICSEA score (with informational modal)
     - Language program section with modal details and chart of student language backgrounds
     - Staff and enrolment section showing teaching/non-teaching counts, total enrolment,
@@ -345,18 +345,38 @@ function goBack() {
 const addToCompare = () => {
     const compareList = JSON.parse(sessionStorage.getItem('compareList') || '[]');
 
+   
     if (compareList.some(item => item.School_AGE_ID === school.value?.School_AGE_ID)) {
         showToast('warning', 'alreadyInCompare');
         return;
     }
 
+  
     if (compareList.length >= 3) {
         showToast('warning', 'compareLimit');
         return;
     }
 
-    compareList.push(school.value);
+   
+    const formattedSchool = {
+        ...school.value,
+        type: school.value.School_Sector,    
+        sector: school.value.School_Sector,  
+        name: school.value.School_Name,    
+        suburb: school.value.Suburb,         
+        url: school.value.School_URL      
+    };
+
+
+    compareList.push(formattedSchool);
+    
+
     sessionStorage.setItem('compareList', JSON.stringify(compareList));
+    
+  
+    window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: compareList }));
+    
+  
     showToast('success', 'addedToCompare');
 };
 

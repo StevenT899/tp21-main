@@ -7,7 +7,7 @@
 -->
 <template>
   <div class="app">
-    <HeroSection />
+    <HeroSection :compareListCount="compareListCount" />
     <HelpSection />
   </div>
 
@@ -27,12 +27,41 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, onActivated } from 'vue'
+import { ref, onMounted, onUnmounted, onActivated, computed } from 'vue'
 import HeroSection from '@/components/home/HeroSection.vue'
 import HelpSection from '@/components/home/HelpSection.vue'
 
 const showBackToTop = ref(false)
 let ignoreScrollEvents = true
+
+// Add compare list count computation
+const compareListCount = computed(() => {
+    try {
+        const stored = sessionStorage.getItem('compareList')
+        if (stored) {
+            return JSON.parse(stored).length
+        }
+    } catch (err) {
+        console.error('Failed to parse compareList from sessionStorage:', err)
+    }
+    return 0
+})
+
+// Handle storage change event
+const handleStorageChange = (e) => {
+    if (e.key === 'compareList') {
+        // Force recomputation of compareListCount
+        compareListCount.value
+    }
+}
+
+// Handle custom event for compare list updates
+const handleCompareListUpdate = (event) => {
+    if (event.detail) {
+        // Force recomputation of compareListCount
+        compareListCount.value
+    }
+}
 
 const handleScroll = () => {
   const y = window.scrollY
@@ -50,10 +79,16 @@ const handleScroll = () => {
 onMounted(() => {
   window.history.scrollRestoration = 'manual'
   window.addEventListener('scroll', handleScroll)
+  // Add event listeners for compare list updates
+  window.addEventListener('storage', handleStorageChange)
+  window.addEventListener('compareListUpdated', handleCompareListUpdate)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  // Remove event listeners for compare list updates
+  window.removeEventListener('storage', handleStorageChange)
+  window.removeEventListener('compareListUpdated', handleCompareListUpdate)
 })
 
 onActivated(() => {

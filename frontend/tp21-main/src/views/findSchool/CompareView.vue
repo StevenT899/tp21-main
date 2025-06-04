@@ -443,6 +443,8 @@ const addToCompare = async (index) => {
     const stored = JSON.parse(sessionStorage.getItem('compareList') || '[]')
     stored.push(formatted)
     sessionStorage.setItem('compareList', JSON.stringify(stored))
+    // Trigger update event
+    window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: stored }))
     searchQueries.value[index - 1] = ''  // Clear the input field after adding
     triggerToast('messages.toast.success.schoolAdded', 'success')
   } catch (err) {
@@ -461,6 +463,8 @@ const confirmRemove = () => {
         const parsed = JSON.parse(stored)
         parsed.splice(index, 1)
         sessionStorage.setItem('compareList', JSON.stringify(parsed))
+        // Trigger update event
+        window.dispatchEvent(new CustomEvent('compareListUpdated', { detail: parsed }))
       } catch (err) {
         console.error('Failed to update compareList in sessionStorage:', err)
       }
